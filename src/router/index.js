@@ -15,14 +15,19 @@ import Login from '@/components/Login.vue'
 import NotFound from '@/components/Notfoundpage.vue'
 import Register from '@/components/Register.vue'
 
+import Home from '@/pages/Home.vue'
+import CarDetails from '@/layouts/CarDetails.vue'
+
 
 const routes = setupLayouts([
   ...autoRoutes,
   { path: '/', component: Hero },
   { path: '/login', component: Login },
   { path: '/Register', component: Register },
-  { path: '/:pathMatch(.*)*', component: NotFound } // Optional for handling unknown routes
+  { path: '/:pathMatch(.*)*', component: NotFound },
 
+  { path: '/Home', component: Home, meta: { requiresAuth: true } },
+  { path: '/car/:id', component: CarDetails, name: 'CarDetails', meta: { requiresAuth: true } },
 ]);
 
 const router = createRouter({
@@ -56,7 +61,7 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['/', '/login','/Register'];
 
   // Pages that require authentication
-  const protectedPages = [];
+  const protectedPages = ['/Home', '/car/:id'];
 
   // Redirect to login if trying to access protected pages without being logged in
   if (protectedPages.includes(to.path) && !isLoggedIn) {
