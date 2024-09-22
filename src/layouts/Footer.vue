@@ -29,7 +29,8 @@
                 <v-icon>mdi-github</v-icon>
               </v-btn>
               <v-btn icon :href="'https://web.facebook.com/centmarde.campado'" target="_blank" class="ms-3">
-                <AkFacebookFill class="mt-3" style="width: 30px; height: 30px;" />
+                
+                <v-icon>mdi-facebook</v-icon>
               </v-btn>
             </div>
           </v-col>
