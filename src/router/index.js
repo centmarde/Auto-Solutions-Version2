@@ -17,6 +17,9 @@ import Register from '@/components/Register.vue'
 
 import Home from '@/pages/Home.vue'
 import CarDetails from '@/layouts/CarDetails.vue'
+import SellContents from '@/components/SellContents.vue'
+import Dashboard from '@/components/Dashboard.vue'
+import UserInfo from '@/components/UserInfo.vue'
 
 
 const routes = setupLayouts([
@@ -27,7 +30,10 @@ const routes = setupLayouts([
   { path: '/:pathMatch(.*)*', component: NotFound },
 
   { path: '/Home', component: Home, meta: { requiresAuth: true } },
+  { path: '/SellContents', component: SellContents, meta: { requiresAuth: true } },
   { path: '/car/:id', component: CarDetails, name: 'CarDetails', meta: { requiresAuth: true } },
+  { path: '/Dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/UserInfo', component: UserInfo, meta: { requiresAuth: true } },
 ]);
 
 const router = createRouter({
@@ -61,7 +67,7 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['/', '/login','/Register'];
 
   // Pages that require authentication
-  const protectedPages = ['/Home', '/car/:id'];
+  const protectedPages = ['/Home', '/car/:id', '/SellContents', '/Dashboard', '/UserInfo'];
 
   // Redirect to login if trying to access protected pages without being logged in
   if (protectedPages.includes(to.path) && !isLoggedIn) {

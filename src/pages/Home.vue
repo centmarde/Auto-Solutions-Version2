@@ -9,11 +9,11 @@
     <div class="container">
       <hr> <br><br>
       <div class="row">
-        <div class="col-12 col-lg-6 col-md-6 col-sm-12"><div class="card shadow-lg">
+        <div class="col-12 col-lg-6 col-md-6 col-sm-12"><div >
           <div class="card-body"><SellCar/></div>
         </div>
       </div>
-      <div class="col-12 col-lg-6 col-md-6 col-sm-12"><div class="card shadow-lg">
+      <div class="col-12 col-lg-6 col-md-6 col-sm-12"><div>
           <div class="card-body"><CarRental/></div>
         </div></div>
       </div>
@@ -30,10 +30,10 @@
   import { doLogout } from "../lib/supaBase";
   import Nav from '../layouts/InsideNavbar.vue';
 //   import FeaturedCar from '../../includes/HomeSection/FeaturedCar.vue';
-//   import SellCar from '../../includes/HeroSection/SellCar.vue';
+  import SellCar from '../components/SellCar.vue';
 //   import HeroHome from "../../includes/HomeSection/HeroHome.vue";
   import CarsForSale from "../layouts/CarsForSale.vue";
-//   import CarRental from "../../includes/HomeSection/CarRental.vue";
+  import CarRental from "../layouts/CarRental.vue";
 //   import Footer from '../../includes/HeroSection/Footer.vue';
 
   
