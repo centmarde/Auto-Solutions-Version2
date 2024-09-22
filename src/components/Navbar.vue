@@ -1,109 +1,169 @@
 <template>
-    <v-app>
-      <v-app-bar
-        app
-        fixed
-        :color="theme === 'dark' ? 'grey darken-4' : 'grey lighten-3'"
-        :style="{ color: theme === 'light' ? '#333' : '#fff' }"
-      >
-        <v-toolbar-title class="d-flex align-items-center">
-         
-          <span id="gidor" class="ms-2">AUTO-SOLUTIONS</span>
-        </v-toolbar-title>
-  
-        <v-spacer></v-spacer>
-  
-      
-  
-        <v-navigation-drawer
-          v-model="isMenuVisible"
-          permanent
-          app
-        >
-          <v-list>
-            <v-list-item v-for="(item, index) in menuItems" :key="index">
-              <v-list-item-link :href="item.link" @click="closeMenu">
-                {{ item.text }}
-              </v-list-item-link>
-            </v-list-item>
-          </v-list>
-        </v-navigation-drawer>
-  
-        <v-btn
-          class="ms-3"
-          @click="closeMenu"
-          text
-        >
-          <router-link to="/login" style="color: rgb(97, 40, 255);">RENT A CAR</router-link>
-        </v-btn>
-  
-        <v-btn text @click="closeMenu">LOGIN</v-btn>
-        <v-icon class="ms-1">mdi-account-circle</v-icon>
-        
-        <v-switch
-          v-model="themeSwitch"
-          @change="toggleTheme"
-          class="ms-3 mt-5"
-          :label="theme === 'dark'"
-        >
-          <template v-slot:thumb>
-            <v-icon>{{ theme === 'dark' ? 'mdi-sun' : 'mdi-moon' }}</v-icon>
-          </template>
-        </v-switch>
-        <v-btn
-          icon
-          @click="toggleMenu"
-          aria-label="Toggle navigation"
-        >
-          <v-icon>{{ isMenuVisible ? 'mdi-menu-open' : 'mdi-menu' }}</v-icon>
-        </v-btn>
-      </v-app-bar>
-    </v-app>
-  </template>
-  
-  <script setup>
+  <header
+    class="navbar navbar-expand-lg fixed-top"
+    :class="{'navbar-dark': isDark, 'navbar-light': !isDark}"
+    :style="{ backgroundColor: isDark ? 'rgba(52, 52, 52, 0.8)' : 'rgba(200, 200, 200, 0.8)', color: isDark ? '#fff' : '#333' }"
+  >
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img
+          src="@/assets/images/logo.jpeg"
+          alt="logo"
+          class="logopic"
+          height="50"
+        />
+        <h3 id="gidor" class="ms-2 mb-0">AUTO-SOLUTIONS</h3>
+      </a>
 
-  
-  const isMenuVisible = ref(false);
-  const theme = ref(localStorage.getItem('theme') || 'dark'); // Load saved theme or default to dark
-  const themeSwitch = ref(theme.value === 'light');
-  const menuItems = [
-    { text: 'CARS FOR SALE', link: '#CarSale' },
-    { text: 'SELL YOUR CAR', link: '#sellcar23' },
-    { text: 'REVIEWS', link: '#stack' },
-  ];
-  
-  const closeMenu = () => {
-    isMenuVisible.value = false;
-  };
-  
-  const toggleMenu = () => {
-    isMenuVisible.value = !isMenuVisible.value;
-  };
-  
-  const toggleTheme = () => {
-    theme.value = theme.value === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-bs-theme', theme.value);
-    localStorage.setItem('theme', theme.value); // Save theme in local storage
-    themeSwitch.value = theme.value === 'light';
-  };
-  
-  onMounted(() => {
-    document.documentElement.setAttribute('data-bs-theme', theme.value); // Apply saved theme on mount
-  });
-  </script>
-  
-  <style scoped>
-  .logopic {
-    border-radius: 30px;
-    max-width: 100px; /* Ensures logo doesn't grow too large */
-  }
-  
+      <button
+        class="navbar-toggler"
+        type="button"
+        @click="toggleMenu"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div
+        class="collapse navbar-collapse"
+        :class="{ show: isMenuVisible }"
+        id="navbarNav"
+      >
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a href="#CarSale" class="nav-link btn">CARS FOR SALE</a>
+          </li>
+          <li class="nav-item">
+            <a href="#sellcar23" class="nav-link btn" >SELL YOUR CAR</a>
+          </li>
+          <li class="nav-item">
+            <a href="#stack" class="nav-link btn" >REVIEWS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn"><router-link to="/login" style="text-decoration: none; color:rgb(97, 40, 255);">RENT A CAR</router-link></a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto d-flex align-items-center">
+          <li class="nav-item d-flex">
+            <router-link to="/login" class="nav-link btn" @click="closeMenu">LOGIN</router-link>
+            <i class="fa fa-user-circle ms-1 mt-2" aria-hidden="true"></i>
+          </li>
+          <li class="nav-item d-flex align-items-center ms-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="themeSwitch" :checked="isDark" @change="toggleTheme">
+              <label class="form-check-label" for="themeSwitch">
+                <i :class="isDark ? 'bi bi-sun' : 'bi bi-moon'"></i>
+              </label>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useTheme } from 'vuetify';
+
+const isMenuVisible = ref(false);
+const theme = useTheme();
+const isDark = ref(theme.global.current.value.dark);
+
+const closeMenu = () => {
+  isMenuVisible.value = false;
+};
+
+const toggleMenu = () => {
+  isMenuVisible.value = !isMenuVisible.value;
+};
+
+const toggleTheme = () => {
+  const newTheme = isDark.value ? 'light' : 'dark';
+  theme.global.name.value = newTheme;
+  isDark.value = newTheme === 'dark';
+  localStorage.setItem('theme', newTheme); // Save theme in local storage
+};
+
+onMounted(() => {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  theme.global.name.value = savedTheme;
+  isDark.value = savedTheme === 'dark';
+});
+</script>
+
+<style scoped>
+.logopic {
+  border-radius: 30px;
+  max-width: 100px; /* Ensures logo doesn't grow too large */
+}
+
+#gidor {
+  font-size: 1.2rem;
+  font-family: "Merriweather", serif; 
+}
+
+@media (max-width: 992px) { /* Large tablets and small desktops */
   #gidor {
-    font-size: 1.2rem;
-    font-family: "Merriweather", serif; 
+    font-size: 1.25rem;
   }
-  
-  /* Add responsive styles as needed */
-  </style>
-  
+}
+
+@media (max-width: 768px) { /* Tablets */
+  .logopic {
+    height: 40px; /* Smaller logo for smaller screens */
+  }
+
+  #gidor {
+    font-size: 1rem; /* Smaller title for smaller screens */
+  }
+}
+
+@media (max-width: 280px) { /* Mobile devices */
+  .logopic {
+    height: 30px; /* Even smaller logo for mobile */
+  }
+
+  #gidor {
+    font-size: 0.6rem; /* Adjust title size for mobile */
+  }
+}
+
+/* From Uiverse.io by biswacpcode */
+.btn {
+ 
+  text-decoration: none;
+  font-size: 10px;
+  border: none;
+  background: none;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn::before {
+  margin-left: auto;
+}
+
+.btn::after,
+.btn::before {
+  content: '';
+  width: 0%;
+  height: 2px;
+  background: rgb(97, 40, 255);
+  display: block;
+  transition: 0.5s;
+}
+
+.btn:hover::after,
+.btn:hover::before {
+  width: 100%;
+}
+
+.drp_btn{
+  margin-top: 2px;
+}
+</style>
+

@@ -11,17 +11,18 @@
       <h1 id="dino">Auto-Solutions</h1>
       <section class="gradient"></section>
 
-      <div class="end-lottie" style="background-color: #151515; z-index: 3;"></div>
+      <div class="end-lottie" ></div>
 
-      <v-container fluid class="text-center" >
+      <v-container fluid class="text-center" style="padding: 0;">
         <v-row >
-          <v-col lg="8" md="12" sm="12" style="background-color: #151515; z-index: 3;">
-            <h5 id="animate" class="text-center">
+          <div></div>
+          <v-col cols="12" lg="8" md="12" sm="12" style="background-color: #151515; z-index: 3;" >
+            <h5  class="text-center trs">
               Here at Auto Solutions, we offer a wide selection of Toyota sports cars and car parts suited for you. As a trusted manufacturer for Toyota, our line of quality, durable, and reliable vehicles will address your needs and more!
             </h5>
           </v-col>
-          <v-col lg="4" md="12" sm="12" style="background-color: #151515; z-index: 3;">
-            <v-row class="logo-container">
+          <v-col cols="12" lg="4" md="12" sm="12" style="background-color: #151515; z-index: 3;">
+            <v-row class="logo-container trsx">
               <v-col>
                 <v-img src="https://seeklogo.com/images/T/toyota-logo-3A02221675-seeklogo.com.png" alt="Toyota" class="img-fluid" />
               </v-col>
@@ -119,12 +120,28 @@ function LottieScrollTrigger(vars) {
     ctx && ctx.add ? ctx.add(createTween) : createTween();
   });
 
-  gsap.from("#animate", {
+  gsap.from(".trs", {
     scale: 0.8, // Start with the div slightly smaller
-    opacity: 0, // Start with the div hidden
-    duration: 1.5, // Animation duration
-    ease: "power3.out", // Easing function
-  });
+  opacity: 0, // Start with the div hidden
+  duration: 0.8, // Animation duration
+  ease: "power1.out", // Easing function
+  scrollTrigger: {
+    trigger: ".trs", // The element that triggers the animation
+    start: "top 80%", // Trigger the animation when the top of the element is 80% from the top of the viewport
+    toggleActions: "play none none reverse",
+  }
+});
+gsap.from(".trsx", {
+    scale: 0.8, // Start with the div slightly smaller
+  opacity: 0, // Start with the div hidden
+  duration: 0.9, // Animation duration
+  ease: "power1.out", // Easing function
+  scrollTrigger: {
+    trigger: ".trs", // The element that triggers the animation
+    start: "top 80%", // Trigger the animation when the top of the element is 80% from the top of the viewport
+    toggleActions: "play none none reverse",
+  }
+});
 
   return animation;
 }
@@ -137,7 +154,7 @@ function LottieScrollTrigger(vars) {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* height: 100vh; */
+ /*  height: 100vh; */
   
 }
 
@@ -161,19 +178,13 @@ function LottieScrollTrigger(vars) {
   height: 300vh;
   position: relative;
   background: linear-gradient(180deg, rgba(21, 21, 21, 0) 0%, rgba(21, 21, 21, 1) 100%);
-  z-index: 2;
+  z-index: 4;
  
 }
 
-
-.end-lottie {
-  position: relative; /* Changed to relative */
-  width: 100%;
-  height: 5px; /* Keeps it minimal */
-  top: 0; /* Ensures it aligns after the gradient */
-}
 .animation{
   height: 100vh;
+  padding: 0;
 }
 
 @media (max-width: 768px) {
@@ -183,7 +194,7 @@ function LottieScrollTrigger(vars) {
   }
 }
 
-#animate{
+.trs{
   color: #EEEEEE;
   font-family: "Merriweather", serif;
   padding: 2rem;
