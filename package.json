@@ -1,6 +1,7 @@
 {
   "name": "vuetify-project",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,10 +10,17 @@
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
+    "@supabase/supabase-js": "^2.45.4",
+    "axios": "^1.7.7",
     "core-js": "^3.37.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
     "gsap": "^3.12.5",
+    "jsonwebtoken": "^9.0.2",
     "lottie-web": "^5.12.2",
     "roboto-fontface": "*",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "vue": "^3.4.31",
     "vuetify": "^3.6.11"
   },
