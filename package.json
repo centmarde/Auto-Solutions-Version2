@@ -15,6 +15,7 @@
     "core-js": "^3.37.1",
     "cors": "^2.8.5",
     "express": "^4.21.0",
+    "groq-sdk": "^0.7.0",
     "gsap": "^3.12.5",
     "jsonwebtoken": "^9.0.2",
     "lottie-web": "^5.12.2",

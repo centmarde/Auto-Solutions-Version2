@@ -22,8 +22,8 @@
 
     <v-row>
       <v-col v-for="car in cars" :key="car.id" cols="12" md="6" class="mb-4">
-        <v-card>
-          <v-img v-if="car.img" :src="car.img" alt="Car Image" class="card-img-top"></v-img>
+        <v-card elevation="8">
+          <v-img v-if="car.img" :src="car.img" alt="Car Image" class="card-img-top" contain cover></v-img>
 
           <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
 
@@ -64,14 +64,13 @@
   </v-container>
 </template>
 
-
 <script>
 import { supabase } from '../lib/supaBase';
 
 export default {
   data() {
     return {
-      cars: [], 
+      cars: [],
       loading: true,
       error: null,
     };
@@ -94,29 +93,37 @@ export default {
             )
           `)
           .eq('forSale', true) // Fetch only cars for sale
-          /* .neq('user_id', loggedInUserId);  */
+
         if (error) throw error;
 
-        this.cars = data;
+        // Randomly shuffle the cars
+        this.cars = this.shuffleArray(data);
       } catch (err) {
         this.error = err.message;
       } finally {
         this.loading = false;
       }
+    },
+    shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
   }
 };
 </script>
 
-
 <style scoped>
-.koy{
+.koy {
   text-decoration: none;
 }
+
 .card-img-top {
-  width: 100%;        
-  height: 300px;     
-  object-fit: cover;  
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
 }
 
 .cars-for-sale {

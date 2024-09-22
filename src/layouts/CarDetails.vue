@@ -2,7 +2,7 @@
   <v-container fluid class="mb-3">
     <v-row>
       <v-col>
-        <v-card>
+        <v-card elevation="10">
           <v-row no-gutters>
             <v-col cols="12" md="7">
               <!-- Image takes up more space -->
