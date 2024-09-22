@@ -20,7 +20,7 @@
     </div>
     
     <br><br><br>
-    <!-- <FeaturedCar/> -->
+    <FeaturedCar/>
     <br><br>
     <!-- <Footer/> -->
     
@@ -29,7 +29,7 @@
   <script setup>
   import { doLogout } from "../lib/supaBase";
   import Nav from '../layouts/InsideNavbar.vue';
-//   import FeaturedCar from '../../includes/HomeSection/FeaturedCar.vue';
+  import FeaturedCar from '../layouts/FeaturedCar.vue';
   import SellCar from '../components/SellCar.vue';
 //   import HeroHome from "../../includes/HomeSection/HeroHome.vue";
   import CarsForSale from "../layouts/CarsForSale.vue";
