@@ -8,7 +8,8 @@
           </v-row>
         </v-container>
       </section>
-      <h1 id="dino">Auto-Solutions</h1>
+      <h1 id="dino">Auto-Solutions </h1>
+     
       <section class="gradient"></section>
 
       <div class="end-lottie" ></div>
@@ -208,12 +209,12 @@ gsap.from(".trsx", {
 #dino {
   color: #EEEEEE;
   position: absolute;
-  top: 55%;
+  top: 35%;
   left: 50%;
   z-index: 888;
   transform: translate(-50%, -50%);
   font-family: "Merriweather", serif;
-  font-size: 5rem;
+  font-size: 6.8rem;
 }
 @media (max-width: 1300px) and (min-width: 576px) {
   #dino {
