@@ -214,7 +214,7 @@ gsap.from(".trsx", {
   z-index: 888;
   transform: translate(-50%, -50%);
   font-family: "Merriweather", serif;
-  font-size: 6.8rem;
+  font-size: 6rem;
 }
 @media (max-width: 1300px) and (min-width: 576px) {
   #dino {
