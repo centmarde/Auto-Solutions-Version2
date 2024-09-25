@@ -2,7 +2,8 @@
   <v-container class="cars-for-sale">
     <v-row>
       <v-col>
-        <h1 class="my-4">Cars for Sale</h1>
+        <div class="card"> <h1 class="my-4 text-center">Cars for Sale</h1></div>
+       
       </v-col>
     </v-row>
 
@@ -21,34 +22,11 @@
     </v-row>
 
     <v-row>
-      <v-col v-for="car in cars" :key="car.id" cols="12" md="6" class="mb-4">
+      <v-col v-for="car in cars" :key="car.id" cols="12" md="3" class="mb-4">
         <v-card elevation="8">
           <v-img v-if="car.img" :src="car.img" alt="Car Image" class="card-img-top" contain cover></v-img>
 
           <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
-
-          <v-card-text>
-            <v-list dense>
-              <v-list-item>
-                <v-list-item-content><strong>Year:</strong> {{ car.year }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Price:</strong> php{{ car.price }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Description:</strong> {{ car.description }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Years Owned:</strong> {{ car.yearsowned }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Posted By:</strong> {{ car.User.username }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Location:</strong> {{ car.User.address }}</v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
 
           <v-card-actions>
             <router-link :to="{ name: 'CarDetails', params: { id: car.id } }" exact>
