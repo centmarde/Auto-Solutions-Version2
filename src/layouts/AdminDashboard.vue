@@ -7,7 +7,7 @@
       >
         <div class="d-flex justify-content-center align-content-center flex-column h-50">
           <!-- First Link (Dashboard) -->
-          <div class="mt-5"
+          <div class="mt-5 "
           >
             <i class="fa-solid fa-house fa-lg"></i>
             <router-link
@@ -22,8 +22,9 @@
   
         <!-- Second Link (View As Client) -->
         <div
+        class="position-relative bot"
         >
-          <i class="fa-solid fa-user fa-lg"></i>
+          <i class="fa-solid fa-user fa-lg "></i>
           <router-link
             to="/home"
             class="btn wes fw-bold mt-1 text-white"
@@ -74,6 +75,9 @@
   #fonts {
     font-size: 1.2rem;
     font-family: "Merriweather", serif; 
+  }
+  .bot{
+    margin-top:-35px ;
   }
   </style>
   
