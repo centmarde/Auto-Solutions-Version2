@@ -122,49 +122,50 @@ export default {
       }
     },
     async insertTransaction() {
-  this.isSubmitting = true; // Start submission process
+      this.isSubmitting = true; // Start submission process
+      const car_ids = this.car.id;
 
-  try {
-    // Check if a transaction with the same car_id already exists
-    const { data: existingTransaction, error: checkError } = await supabase
-      .from('Transaction')
-      .select('id')
-      .eq('car_id', this.car.id)
-      .single();
+      try {
+        // Check if a transaction with the same car_id already exists
+        const { data: existingTransaction, error: checkError } = await supabase
+          .from('Transaction')
+          .select('id')
+          .eq('car_id', car_ids)
+          .single();
+          
 
-    if (checkError && checkError.code !== 'PGRST116') {
-      throw checkError; // Handle unexpected errors
+   
+
+        if (existingTransaction) {
+          alert('Transaction already exists for this car!');
+          return; // Exit if a transaction already exists
+        }
+        const buyer_ids = this.buyerId;
+        const seller_ids = this.user.id;
+        // Proceed to insert the transaction
+        const { data, error } = await supabase
+          .from('Transaction')
+          .insert([
+            {
+              buyer_id: buyer_ids, // Assuming this is the logged-in user
+              seller_id: seller_ids, // Seller's ID (from the car details)
+              car_id: car_ids, // Car's ID
+            },
+          ]);
+
+        if (error) throw error;
+
+        alert('Transaction inserted successfully!');
+      } catch (err) {
+        console.error('Error inserting transaction:', err.message);
+      } finally {
+        this.isSubmitting = false; // End submission process
+      }
     }
-
-    if (existingTransaction) {
-      alert('Transaction already exists for this car!');
-      return; // Exit if a transaction already exists
-    }
-
-    // Proceed to insert the transaction
-    const { data, error } = await supabase
-      .from('Transaction')
-      .insert([
-        {
-          buyer_id: this.buyerId, // Assuming this is the logged-in user
-          seller_id: this.user.id, // Seller's ID (from the car details)
-          car_id: this.car.id, // Car's ID
-        },
-      ]);
-
-    if (error) throw error;
-
-    alert('Transaction inserted successfully!');
-  } catch (err) {
-    console.error('Error inserting transaction:', err.message);
-  } finally {
-    this.isSubmitting = false; // End submission process
-  }
-}
-
   },
 };
 </script>
+
 
 <style scoped>
 .card-img {
