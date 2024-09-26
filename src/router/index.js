@@ -5,97 +5,116 @@
  */
 
 // Composables
-import { createRouter, createWebHistory } from 'vue-router/auto'
-import { setupLayouts } from 'virtual:generated-layouts'
-import { routes as autoRoutes } from 'vue-router/auto-routes'
+import { createRouter, createWebHistory } from "vue-router/auto";
+import { setupLayouts } from "virtual:generated-layouts";
+import { routes as autoRoutes } from "vue-router/auto-routes";
 
+import Hero from "../pages/index.vue";
+import Login from "@/components/Login.vue";
+import NotFound from "@/components/Notfoundpage.vue";
+import Register from "@/components/Register.vue";
 
-import Hero from '../pages/index.vue'
-import Login from '@/components/Login.vue'
-import NotFound from '@/components/Notfoundpage.vue'
-import Register from '@/components/Register.vue'
-
-import Home from '@/pages/Home.vue'
-import CarDetails from '@/layouts/CarDetails.vue'
-import SellContents from '@/components/SellContents.vue'
-import Dashboard from '@/components/Dashboard.vue'
-import UserInfo from '@/components/UserInfo.vue'
-import Supra from '@/layouts/Supra.vue'
-import Nissan from '@/layouts/Nissan.vue'
-import Honda from '@/layouts/Honda.vue'
-
+import Home from "@/pages/Home.vue";
+import CarDetails from "@/layouts/CarDetails.vue";
+import SellContents from "@/components/SellContents.vue";
+import Dashboard from "@/components/AdminDashboard.vue";
+import UserInfo from "@/components/UserInfo.vue";
+import Supra from "@/layouts/Supra.vue";
+import Nissan from "@/layouts/Nissan.vue";
+import Honda from "@/layouts/Honda.vue";
+import Inquires from "@/components/Inquires.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
-  { path: '/', component: Hero },
-  { path: '/login', component: Login },
-  { path: '/Register', component: Register },
-  { path: '/:pathMatch(.*)*', component: NotFound },
+  { path: "/", component: Hero },
+  { path: "/login", component: Login },
+  { path: "/Register", component: Register },
+  { path: "/:pathMatch(.*)*", component: NotFound },
 
-  { path: '/Home', component: Home, meta: { requiresAuth: true } },
-  { path: '/SellContents', component: SellContents, meta: { requiresAuth: true } },
-  { path: '/car/:id', component: CarDetails, name: 'CarDetails', meta: { requiresAuth: true } },
-  { path: '/Dashboard', component: Dashboard, meta: { requiresAuth: true } },
-  { path: '/UserInfo', component: UserInfo, meta: { requiresAuth: true } },
-  { path: '/Supra', component: Supra, meta: { requiresAuth: true } },
-  { path: '/Nissan', component: Nissan, meta: { requiresAuth: true } },
-  { path: '/Honda', component: Honda, meta: { requiresAuth: true } },
-
+  { path: "/Home", component: Home, meta: { requiresAuth: true } },
+  {
+    path: "/SellContents",
+    component: SellContents,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/car/:id",
+    component: CarDetails,
+    name: "CarDetails",
+    meta: { requiresAuth: true },
+  },
+  { path: "/Dashboard", component: Dashboard, meta: { requiresAuth: true } },
+  { path: "/Inquires", component: Inquires, meta: { requiresAuth: true } },
+  { path: "/UserInfo", component: UserInfo, meta: { requiresAuth: true } },
+  { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
+  { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
+  { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
 ]);
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 });
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (!localStorage.getItem('vuetify:dynamic-reload')) {
-      console.log('Reloading page to fix dynamic import error')
-      localStorage.setItem('vuetify:dynamic-reload', 'true')
-      location.assign(to.fullPath)
+  if (err?.message?.includes?.("Failed to fetch dynamically imported module")) {
+    if (!localStorage.getItem("vuetify:dynamic-reload")) {
+      console.log("Reloading page to fix dynamic import error");
+      localStorage.setItem("vuetify:dynamic-reload", "true");
+      location.assign(to.fullPath);
     } else {
-      console.error('Dynamic import error, reloading page did not fix it', err)
+      console.error("Dynamic import error, reloading page did not fix it", err);
     }
   } else {
-    console.error(err)
+    console.error(err);
   }
 });
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
   const userRole = JSON.parse(localStorage.getItem("Role")); // Parse the boolean stored as a string
-  const hasVisitedDashboard = JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false; // Track dashboard visit
+  const hasVisitedDashboard =
+    JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false; // Track dashboard visit
 
-  console.log('User Role:', userRole); // Debugging role
+  console.log("User Role:", userRole); // Debugging role
 
   // Pages that don't require authentication
-  const publicPages = ['/', '/login','/Register'];
+  const publicPages = ["/", "/login", "/Register"];
 
   // Pages that require authentication
-  const protectedPages = ['/Home', '/car/:id', '/SellContents', '/Dashboard', '/UserInfo', '/Supra', '/Nissan', '/Honda'];
+  const protectedPages = [
+    "/Home",
+    "/car/:id",
+    "/SellContents",
+    "/Dashboard",
+    "/UserInfo",
+    "/Supra",
+    "/Nissan",
+    "/Honda",
+    "/Inquires",
+  ];
 
   // Redirect to login if trying to access protected pages without being logged in
   if (protectedPages.includes(to.path) && !isLoggedIn) {
-    return next('/');
+    return next("/");
   }
 
   // Redirect admin to the dashboard on first login if they haven't visited it yet
   if (isLoggedIn && userRole === true && !hasVisitedDashboard) {
     localStorage.setItem("hasVisitedDashboard", true); // Set flag to true after visiting dashboard
-    return next('/Dashboard');
+    return next("/Dashboard");
   }
 
   // Redirect to home if already logged in and trying to access public pages
   if (publicPages.includes(to.path) && isLoggedIn) {
-    return next('/Home');
+    return next("/Home");
   }
 
   // Restrict non-admin users from accessing the dashboard
-  if (to.path.startsWith('/Dashboard') && userRole !== true) {
-    alert('You do not have permission to access this page.');
-    return next('/Home');
+  if (to.path.startsWith("/Dashboard") && userRole !== true) {
+    alert("You do not have permission to access this page.");
+    return next("/Home");
   }
 
   // Default behavior: proceed to the requested route
@@ -103,7 +122,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload');
+  localStorage.removeItem("vuetify:dynamic-reload");
 });
 
 export default router;
