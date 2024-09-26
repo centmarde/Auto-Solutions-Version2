@@ -22,7 +22,7 @@ import UserInfo from "@/components/UserInfo.vue";
 import Supra from "@/layouts/Supra.vue";
 import Nissan from "@/layouts/Nissan.vue";
 import Honda from "@/layouts/Honda.vue";
-import Inquires from "@/layouts/Inquires.vue";
+import Inquires from "@/components/Inquires.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,

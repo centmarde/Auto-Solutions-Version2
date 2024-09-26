@@ -2,21 +2,21 @@
   <v-container class="cars-for-sale">
     <v-row>
       <v-col>
-        <div class="card"> <h1 class="my-4 text-center">Cars for Sale</h1></div>
+        <v-card class="pa-5" elevation="8"> <h1 class="my-4 text-center">Cars for Sale</h1></v-card>
        
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row v-if="loading || error || cars.length === 0">
       <v-col v-if="loading" class="loading">
         <v-alert type="info">Loading...</v-alert>
       </v-col>
-
+  
       <v-col v-if="error" class="error">
         <v-alert type="error">{{ error }}</v-alert>
       </v-col>
-
-      <v-col v-if="cars.length === 0" class="no-cars">
+  
+      <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
         <v-alert type="warning">No cars available for sale.</v-alert>
       </v-col>
     </v-row>
@@ -71,6 +71,7 @@ export default {
             )
           `)
           .eq('forSale', true) // Fetch only cars for sale
+          .neq('user_id', loggedInUserId);
 
         if (error) throw error;
 

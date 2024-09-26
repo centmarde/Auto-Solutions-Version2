@@ -50,11 +50,6 @@
   </script>
   
   <style scoped>
-   #footer {
-    background: #151515;
-    color: #FFFFFF;
-    /* Example text color */
-    padding: 50px 0;
-  }
+  
   </style>
   
