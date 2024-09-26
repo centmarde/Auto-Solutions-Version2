@@ -1,13 +1,51 @@
 <template>
     <div>
-        <InquiresNavbar/>
-        <br><br><br><br>
-        <InsideInquires/>
-        
-    </div>
-</template>
-<script setup>
-import InquiresNavbar from '../layouts/InquiresNavbar.vue';
-import InsideInquires from '@/layouts/InsideInquires.vue';
+      <InquiresNavbar />
+      <br><br><br><br>
+      <v-container fluid>
+        <v-card class="p-3 vh-80 d-flex flex-column">
+          <v-row class="fill-height">
+            <v-col cols="12" md="4">
+  <router-link to="/RentedCar" class="d-block mb-3">
+                           <v-btn block color="primary">Rented Car</v-btn>
+  </router-link>
+  <router-link to="/Garage" class="d-block mb-3">
+    <v-btn block color="primary">Garage</v-btn>
+  </router-link>
+  <router-link to="/BuyCar" class="d-block mb-3">
+    <v-btn block color="primary">Buy Car</v-btn>
+  </router-link>
+  <router-link to="/Inquires" class="d-block mb-3">
+    <v-btn block color="primary">Sell Car</v-btn>
+  </router-link>
+</v-col>
 
-</script>
+  
+            <v-col cols="12" md="8" class="scrollable-col">
+              <InsideInquires />
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-container>
+    </div>
+  </template>
+  
+  <script setup>
+  import InquiresNavbar from '../layouts/InquiresNavbar.vue';
+  import InsideInquires from '@/layouts/InsideInquires/InsideInquires.vue';
+  </script>
+  
+  <style>
+  .vh-80 {
+    height:80vh;
+  }
+  
+  .scrollable-col {
+    overflow-y: auto;
+    max-height: 100%;
+  }
+  .d-block{
+    text-decoration: none;
+  }
+  </style>
+  

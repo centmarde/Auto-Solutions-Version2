@@ -124,7 +124,7 @@ function LottieScrollTrigger(vars) {
   gsap.from(".trs", {
     scale: 0.8, // Start with the div slightly smaller
   opacity: 0, // Start with the div hidden
-  duration: 0.8, // Animation duration
+  duration: 0.1, // Animation duration
   ease: "power1.out", // Easing function
   scrollTrigger: {
     trigger: ".trs", // The element that triggers the animation
@@ -135,7 +135,7 @@ function LottieScrollTrigger(vars) {
 gsap.from(".trsx", {
     scale: 0.8, // Start with the div slightly smaller
   opacity: 0, // Start with the div hidden
-  duration: 0.9, // Animation duration
+  duration: 0.4, // Animation duration
   ease: "power1.out", // Easing function
   scrollTrigger: {
     trigger: ".trs", // The element that triggers the animation
