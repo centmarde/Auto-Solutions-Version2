@@ -24,7 +24,6 @@
       <v-col v-for="car in cars" :key="car.id" cols="12" md="6" class="mb-4">
         <v-card elevation="8">
           <v-img v-if="car.img" :src="car.img" alt="Car Image" class="card-img-top" contain cover></v-img>
-
           <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
 
           <v-card-text>
@@ -81,37 +80,23 @@ export default {
   methods: {
     async fetchCars() {
       this.loading = true;
-      const loggedInUserId = localStorage.getItem("user_id"); // Get the logged-in user's ID
-
       try {
         const { data, error } = await supabase
           .from('Car')
-          .select(`
-            *,
-            User (
-             *
-            )
-          `)
-          .eq('forSale', true) // Fetch only cars for sale
+          .select('*, User (*)')
+          .eq('forSale', true); // Fetch only cars for sale
 
         if (error) throw error;
 
-        // Randomly shuffle the cars
-        this.cars = this.shuffleArray(data);
+        this.cars = data;  // Store fetched cars
+        this.$emit('update-car-count', this.cars.length); // Emit only the number of cars
       } catch (err) {
         this.error = err.message;
       } finally {
         this.loading = false;
       }
     },
-    shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-  }
+  },
 };
 </script>
 

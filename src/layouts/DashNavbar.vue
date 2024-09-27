@@ -22,7 +22,13 @@
           <div class="ms-auto d-flex align-items-center justify-content-end w-100">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <router-link to="/" class="nav-link btn wes" @click="handleLogout">LOGOUT</router-link>
+                <router-link to="/" class="nav-link btn wes   d-md-none d-block" @click="handleLogout">LOGOUT</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/Admin" class="nav-link btn   d-md-none d-block" >Dashboard</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/home" class="nav-link btn   d-md-none d-block">View As Client</router-link>
               </li>
             </ul>
             <router-link to="/UserInfo" @click="closeMenu">

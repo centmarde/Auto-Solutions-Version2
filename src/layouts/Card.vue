@@ -44,9 +44,10 @@ defineProps({
 });
 </script>
 <style>
-.mt{
-margin-top: 100px;
+.mt {
+  margin-top: 100px;
 }
+
 .height{
     height: 150px;
 }

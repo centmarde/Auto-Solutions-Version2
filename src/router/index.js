@@ -17,7 +17,7 @@ import Register from "@/components/Register.vue";
 import Home from "@/pages/Home.vue";
 import CarDetails from "@/layouts/CarDetails.vue";
 import SellContents from "@/components/SellContents.vue";
-import Dashboard from "@/components/AdminDashboard.vue";
+import Admin from "@/pages/Admin.vue";
 import UserInfo from "@/components/UserInfo.vue";
 import Supra from "@/layouts/Supra.vue";
 import Nissan from "@/layouts/Nissan.vue";
@@ -42,7 +42,7 @@ const routes = setupLayouts([
     name: "CarDetails",
     meta: { requiresAuth: true },
   },
-  { path: "/Dashboard", component: Dashboard, meta: { requiresAuth: true } },
+  { path: "/Admin", component: Admin, meta: { requiresAuth: true } },
   { path: "/UserInfo", component: UserInfo, meta: { requiresAuth: true } },
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
@@ -85,7 +85,7 @@ router.beforeEach((to, from, next) => {
     "/Home",
     "/car/:id",
     "/SellContents",
-    "/Dashboard",
+    "/Admin",
     "/UserInfo",
     "/Supra",
     "/Nissan",
@@ -100,7 +100,7 @@ router.beforeEach((to, from, next) => {
   // Redirect admin to the dashboard on first login if they haven't visited it yet
   if (isLoggedIn && userRole === true && !hasVisitedDashboard) {
     localStorage.setItem("hasVisitedDashboard", true); // Set flag to true after visiting dashboard
-    return next("/Dashboard");
+    return next("/Admin");
   }
 
   // Redirect to home if already logged in and trying to access public pages
@@ -109,7 +109,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // Restrict non-admin users from accessing the dashboard
-  if (to.path.startsWith("/Dashboard") && userRole !== true) {
+  if (to.path.startsWith("/Admin") && userRole !== true) {
     alert("You do not have permission to access this page.");
     return next("/Home");
   }
