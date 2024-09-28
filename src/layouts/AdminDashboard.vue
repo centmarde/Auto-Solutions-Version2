@@ -1,60 +1,17 @@
 <template>
   
   <div class="w-100 d-flex h-100 gap-5">
-    <div
-      class="w-25 h-100 p-5 d-none d-md-block"
-      :class="{'navbar-dark': isDark, 'navbar-light': !isDark}"
-      :style="{ backgroundColor: isDark ? 'rgba(52, 52, 52, 0.8)' : 'rgba(200, 200, 200, 0.8)', color: isDark ? '#fff' : '#333' }"
-    >
-   
-      <div class="d-flex justify-content-center align-content-center flex-column h-50 position-fixed ">
-        <!-- First Link (Dashboard) -->
-        <div class="mt-5  ">
-          <i class="fa-solid fa-house fa-lg"></i>
-          <router-link
-            to="/Admin"
-            class="btn wes fw-bold mt-1 text-white "
-            :class="{ underline: route.path === '/Admin' }"
-          >
-            <p id="fonts" class="mt-4  ">Dashboard</p>
-          </router-link>
-        </div>
-
-        <!-- Second Link (View As Client) -->
-        <div class="position-relative bot">
-          <i class="fa-solid fa-user fa-lg"></i>
-          <router-link
-            to="/home"
-            class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: route.path === '/home' }"
-          >
-            <p id="fonts" class="mt-4">View As Client</p>
-          </router-link>
-
-          
-        </div>
-
-           <!-- Third Link (Logout) -->
-
-        <div class="position-relative bot tops ">
-          <i class="fa-solid fa-right-from-bracket fa-lg"></i>
-          <router-link
-            to="/"
-            class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: route.path === '/' }"
-            @click="handleLogout"
-          >
-            <p id="fonts" class="mt-4">Logout</p>
-          </router-link>
-
-          
-        </div>
-      </div>
-    </div>
+    <Sidebar />
     <div class="d-flex justify-content-center gap-5 w-100 flex-wrap">
       <!-- Pass the car count to the Card component -->
-      <Card title="Total Cars for Sale" :num="carCount" />
-      <Card class="mt" title="Total Cars for Rent" :num="totalCarsForRent" />
+       <div class="row gap-5 justify-content-center mt">
+        <Card class="col-6" title="Total Cars for Sale" :num="carCount" />
+        <Card class="col-6"  title="Total Cars for Rent" :num="totalCarsForRent" />
+        <Card class="col-6"  title="Car purchased" />
+        <Card class="col-6"  title="Car in rent" />
+       </div>
+ 
+      
     </div>
   </div>
 </template>
@@ -65,6 +22,7 @@ import { useTheme } from 'vuetify';
 import { useRoute } from 'vue-router';
 import { supabase, doLogout as supabaseLogout } from '../lib/supaBase'; 
 import Card from './Card.vue';
+import Sidebar from './Sidebar.vue';
 
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);
@@ -134,6 +92,9 @@ const handleLogout = async () => {
 }
 .tops{
   top: 350px;
+}
+.mt{
+  margin-top: 100px;
 }
 
 </style>
