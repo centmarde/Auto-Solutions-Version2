@@ -39,9 +39,6 @@
             <a href="#sellcar23" class="nav-link btn" >SELL YOUR CAR</a>
           </li>
           <li class="nav-item">
-            <a href="#stack" class="nav-link btn" >REVIEWS</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link btn"><router-link to="/login" style="text-decoration: none; color:rgb(97, 40, 255);">RENT A CAR</router-link></a>
           </li>
         </ul>

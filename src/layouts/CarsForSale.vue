@@ -2,52 +2,30 @@
   <v-container class="cars-for-sale">
     <v-row>
       <v-col>
-        <h1 class="my-4">Cars for Sale</h1>
+        <v-card class="pa-5" elevation="8"> <h1 class="my-4 text-center">Cars for Sale</h1></v-card>
+       
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row v-if="loading || error || cars.length === 0">
       <v-col v-if="loading" class="loading">
         <v-alert type="info">Loading...</v-alert>
       </v-col>
-
+  
       <v-col v-if="error" class="error">
         <v-alert type="error">{{ error }}</v-alert>
       </v-col>
-
-      <v-col v-if="cars.length === 0" class="no-cars">
+  
+      <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
         <v-alert type="warning">No cars available for sale.</v-alert>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col v-for="car in cars" :key="car.id" cols="12" md="6" class="mb-4">
+      <v-col v-for="car in cars" :key="car.id" cols="12" md="3" class="mb-4">
         <v-card elevation="8">
           <v-img v-if="car.img" :src="car.img" alt="Car Image" class="card-img-top" contain cover></v-img>
           <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
-
-          <v-card-text>
-            <v-list dense>
-              <v-list-item>
-                <v-list-item-content><strong>Year:</strong> {{ car.year }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Price:</strong> php{{ car.price }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Description:</strong> {{ car.description }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Years Owned:</strong> {{ car.yearsowned }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Posted By:</strong> {{ car.User.username }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content><strong>Location:</strong> {{ car.User.address }}</v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
 
           <v-card-actions>
             <router-link :to="{ name: 'CarDetails', params: { id: car.id } }" exact>
@@ -84,7 +62,8 @@ export default {
         const { data, error } = await supabase
           .from('Car')
           .select('*, User (*)')
-          .eq('forSale', true); // Fetch only cars for sale
+          .eq('forSale', true) // Fetch only cars for sale
+          .neq('user_id', loggedInUserId);
 
         if (error) throw error;
 

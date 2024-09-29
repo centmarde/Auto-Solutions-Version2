@@ -28,7 +28,10 @@
               <router-link to="/Inquires" class="nav-link btn wes" @click="closeMenu">INQUIRES</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/UserInfo" class="nav-link btn wes" @click="closeMenu">{{ username }}</router-link>
+              <router-link to="/UserInfo" class="nav-link btn wes" @click="closeMenu" style="text-transform: uppercase;">
+  {{ username }}
+</router-link>
+
             </li>
             <li class="nav-item">
               <router-link to="/" class="nav-link btn wes" @click="handleLogout">LOGOUT</router-link>
@@ -196,4 +199,9 @@ onMounted(() => {
 .drp_btn {
   margin-top: 2px;
 }
+
+.uppercase-text {
+  text-transform: uppercase;
+}
+
 </style>
