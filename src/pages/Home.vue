@@ -1,49 +1,66 @@
 <template>
-    <Nav />
-    <br><br><br><br>
-    <div class="container">
-     
-    </div>
-    <div class="container">
-       <br><br>
-      <div class="row">
-        <div class="col-12 col-lg-6 col-md-6 col-sm-12"><div >
-          <div class="card-body"><SellCar/></div>
-        </div>
-      </div>
-      <div class="col-12 col-lg-6 col-md-6 col-sm-12"><div>
-          <div class="card-body"><CarRental/></div>
-        </div></div>
-      </div>
-
-     
-    </div>
-    <hr>
+  <v-app>
     <br><br><br>
-    <FeaturedCar/>
-    <br><br>
-    <hr>
-    <div class="row">
-        <div class="col"> <CarsForSale/></div>
-      </div>
-    <Footer/>
+    <Nav />
+    <v-spacer height="100"></v-spacer>
     
-  </template>
-  
-  <script setup>
-  import { doLogout } from "../lib/supaBase";
-  import Nav from '../layouts/InsideNavbar.vue';
-  import FeaturedCar from '../layouts/FeaturedCar.vue';
-  import SellCar from '../components/SellCar.vue';
-//   import HeroHome from "../../includes/HomeSection/HeroHome.vue";
-  import CarsForSale from "../layouts/CarsForSale.vue";
-  import CarRental from "../layouts/CarRental.vue";
-  import Footer from '../layouts/Footer.vue';
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-card>
+            
+              <SellCarInside />
+           
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-card>
+            
+              <CarRental />
+           
+          </v-card>
+        </v-col>
 
-  
-  
-  const logout = async () => {
-    await doLogout();
-  };
-  </script>
-  
+        <v-col cols="12" md="4">
+          <v-card>
+            
+            <SellCarInside />
+           
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+    
+    <v-divider></v-divider>
+    
+    <v-container>
+      <FeaturedCar />
+    </v-container>
+    
+    <v-divider></v-divider>
+    
+    <v-container>
+      <v-row>
+        <v-col>
+          <CarsForSale />
+        </v-col>
+      </v-row>
+    </v-container>
+    
+    <Footer />
+  </v-app>
+</template>
+
+<script setup>
+import { doLogout } from "../lib/supaBase";
+import Nav from '../layouts/InsideNavbar.vue';
+import FeaturedCar from '../layouts/FeaturedCar.vue';
+import CarsForSale from "../layouts/CarsForSale.vue";
+import CarRental from "../layouts/CarRental.vue";
+import Footer from '../layouts/Footer.vue';
+import SellCarInside from "@/layouts/SellCarInside.vue";
+
+const logout = async () => {
+  await doLogout();
+};
+</script>

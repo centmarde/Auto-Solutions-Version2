@@ -88,7 +88,7 @@
           </v-col>
 
           <v-card-title class="text-center mb-4">
-            <h5>Addtional Contents (Optional)</h5>
+            <h5>Additional Contents (Optional)</h5>
           </v-card-title>
 
           <!-- Year of Manufacture -->
@@ -160,39 +160,60 @@
           </v-col>
 
           <v-container>
-            <v-row> <v-col cols="12" md="6" class="text-center">
-            <v-btn @click="submitCarDetails" :loading="loading" class="lofi" style="width: 30rem;">
-              <template v-if="loading">
-                <v-progress-circular indeterminate color="white" size="20" class="mr-2"></v-progress-circular>
-                Loading...
-              </template>
-              <template v-else>
-                Submit
-              </template>
-              <v-icon right>mdi-arrow-right</v-icon>
-            </v-btn>
-          </v-col>
+            <v-row>
+              <v-col cols="12" md="4" class="text-center">
+                <v-btn 
+    @click="generateAISuggestions" 
+    :loading="loading2" 
+    class="attention-btn" 
+    ref="attentionBtn"
+    style="width: 30rem; position: relative; overflow: hidden; transition: all 0.3s ease-in-out;"
+  >
+    <template v-if="loading2">
+      <v-progress-circular 
+        indeterminate 
+        color="white" 
+        size="20" 
+        class="mr-2"
+      ></v-progress-circular>
+      Loading...
+    </template>
+    <template v-else>
+      Generate AI Suggestions
+    </template>
+    <v-icon right ref="lightbulbIcon">mdi-lightbulb</v-icon>
+  </v-btn>
+              </v-col>
 
-          <v-col cols="12" md="6" class="text-center">
-            <router-link to="/Home" class="tr" exact>
-              <v-btn class="lofi" style="width: 30rem;">
-                Exit
-                <v-icon right>mdi-arrow-left</v-icon>
-              </v-btn>
-            </router-link>
-          </v-col>
-       
-        
-        </v-row>
-           
+              <v-col cols="12" md="4" class="text-center">
+                <v-btn @click="submitCarDetails" :loading="loading" class="lofi" style="width: 30rem;">
+                  <template v-if="loading">
+                    <v-progress-circular indeterminate color="white" size="20" class="mr-2"></v-progress-circular>
+                    Loading...
+                  </template>
+                  <template v-else>
+                    Submit
+                  </template>
+                  <v-icon right>mdi-arrow-right</v-icon>
+                </v-btn>
+              </v-col>
+
+              <v-col cols="12" md="4" class="text-center">
+                <router-link to="/Home" class="tr" exact>
+                  <v-btn class="lofi" style="width: 30rem;">
+                    Exit
+                    <v-icon right>mdi-arrow-left</v-icon>
+                  </v-btn>
+                </router-link>
+              </v-col>
+            </v-row>
           </v-container>
-       
+
         </v-row>
       </v-form>
     </v-card>
   </v-container>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -216,6 +237,7 @@ export default {
                 transmission: '',
                 yearsowned: '',
             },
+            
             carData: [],
             makesData: [],
             suggestedBrands: [],
@@ -223,72 +245,91 @@ export default {
             imagePreview: null,
             selectedImage: null,
             loading: false,
+            loading2: false,
         };
     },
+    
     methods: {
+      async generateAISuggestions() {
+    // Check if required fields are filled
+    const requiredFields = [];
+    if (!this.car.brand) requiredFields.push('Brand');
+    if (!this.car.model) requiredFields.push('Model');
+    if (!this.car.price) requiredFields.push('Price');
+    if (!this.car.yearsowned) requiredFields.push('Years Owned');
+
+    if (requiredFields.length > 0) {
+        alert(`Please fill in the following required fields: ${requiredFields.join(', ')}`);
+        return; // Stop further execution if required fields are missing
+    }
+
+    // Identify the optional fields that need AI suggestions
+    const fieldsToFill = [];
+    if (!this.car.mileage) fieldsToFill.push('Mileage');
+    if (!this.car.engine) fieldsToFill.push('Engine');
+    if (!this.car.description) fieldsToFill.push('Description');
+    if (!this.car.horsepower) fieldsToFill.push('Horsepower');
+    if (!this.car.torque) fieldsToFill.push('Torque');
+    if (!this.car.topSpeed) fieldsToFill.push('TopSpeed');
+    if (!this.car.year) fieldsToFill.push('YearModel');
+    if (!this.car.transmission) fieldsToFill.push('Transmission');
+
+    // If there are fields that need AI suggestions, call the AI API
+    if (fieldsToFill.length > 0) {
+        try {
+            this.loading2 = true;
+            const aiResponse = await getChatCompletion(this.car.brand, this.car.model, fieldsToFill);
+            const lines = aiResponse.split('\n').map(line => line.trim()).filter(line => line);
+
+            // Parse AI response into car data
+            lines.forEach(line => {
+                const [key, value] = line.split(':').map(part => part.trim());
+                switch (key) {
+                    case 'Mileage':
+                        this.car.mileage = value;
+                        break;
+                    case 'Engine':
+                        this.car.engine = value;
+                        break;
+                    case 'Description':
+                        this.car.description = value;
+                        break;
+                    case 'Horsepower':
+                        this.car.horsepower = value;
+                        break;
+                    case 'Torque':
+                        this.car.torque = value;
+                        break;
+                    case 'TopSpeed':
+                        this.car.topSpeed = value;
+                        break;
+                    case 'YearModel':
+                        this.car.year = value;
+                        break;
+                    case 'Transmission':
+                        this.car.transmission = value;
+                        break;
+                }
+            });
+            alert("AI suggestions generated successfully!");
+        } catch (error) {
+            console.log("Error generating AI suggestions:", error);
+           console.log("Failed to generate AI suggestions.");
+        } finally {
+            this.loading2 = false;
+        }
+    } else {
+        alert("No additional suggestions needed. All fields are filled.");
+    }
+},
+
+
         async submitCarDetails() {
-            // Check if required fields are filled
-            if (!this.car.model || !this.car.brand || !this.car.price|| !this.car.yearsowned) {
+            if (!this.car.model || !this.car.brand || !this.car.price || !this.car.yearsowned) {
                 alert('Please fill in all required fields!');
                 return;
             }
 
-            // Check if any additional fields are missing
-            const fieldsToFill = [];
-            if (!this.car.year) fieldsToFill.push('YearModel');
-            if (!this.car.engine) fieldsToFill.push('Engine');
-            if (!this.car.horsepower) fieldsToFill.push('Horsepower');
-            if (!this.car.torque) fieldsToFill.push('Torque');
-            if (!this.car.topSpeed) fieldsToFill.push('Top Speed');
-            if (!this.car.transmission) fieldsToFill.push('Transmission');
-            if (!this.car.mileage) fieldsToFill.push('Mileage');
-            if (!this.car.description) fieldsToFill.push('Description');
-
-            // If there are missing fields, get suggestions from AI
-            if (fieldsToFill.length > 0) {
-                try {
-                    const aiResponse = await getChatCompletion(this.car.brand, this.car.model, fieldsToFill);
-                    const lines = aiResponse.split('\n').map(line => line.trim()).filter(line => line);
-
-                    // Parse AI response into car data
-                    lines.forEach(line => {
-                        const [key, value] = line.split(':').map(part => part.trim());
-                        switch (key) {
-                            case 'Mileage':
-                                this.car.mileage = value;
-                                break;
-                            case 'Engine':
-                                this.car.engine = value;
-                                break;
-                            case 'Description':
-                                this.car.description = value;
-                                break;
-                            case 'Horsepower':
-                                this.car.horsepower = value;
-                                break;
-                            case 'Torque':
-                                this.car.torque = value;
-                                break;
-                            case 'TopSpeed':
-                                this.car.topSpeed = value;
-                                break;
-                            case 'YearModel':
-                                this.car.year = value;
-                                break;
-                            case 'Transmission':
-                                this.car.transmission = value;
-                                break;
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error fetching AI suggestions:', error);
-                    alert('Failed to get AI suggestions.');
-                    this.loading = false;
-                    return;
-                }
-            }
-
-            // Proceed with form submission
             this.loading = true;
             const userId = localStorage.getItem('user_id');
 
@@ -359,7 +400,6 @@ export default {
                 const imageUrl = `https://xgjgtijbrkcwwsliqubk.supabase.co/storage/v1/object/public/cars/${fileName}`;
                 console.log('Image uploaded successfully:', imageUrl);
 
-                // Return the image URL for further use
                 return imageUrl;
             } catch (error) {
                 console.error('Error uploading image:', error);
@@ -378,6 +418,7 @@ export default {
                 console.error("Error fetching car data:", error);
             }
         },
+
         async fetchModelsForMake(make) {
             try {
                 const response = await axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${make}?format=json`);
@@ -386,25 +427,31 @@ export default {
                 console.error(`Error fetching models for make ${make}:`, error);
             }
         },
+
         filterBrands() {
             const inputBrand = this.car.brand.toLowerCase();
             this.suggestedBrands = this.makesData
                 .filter(brand => brand.toLowerCase().includes(inputBrand));
         },
+
         async selectBrand(brand) {
             this.car.brand = brand;
             this.suggestedBrands = [];
             await this.fetchModelsForMake(brand);
         },
+
         filterModels() {
             const inputModel = this.car.model.toLowerCase();
             this.suggestedModels = this.suggestedModels
                 .filter(model => model.toLowerCase().includes(inputModel));
         },
+
         selectModel(model) {
             this.car.model = model;
             this.suggestedModels = [];
         },
+       
+
         onImageChange(event) {
             const file = event.target.files[0];
             if (file) {
@@ -417,13 +464,62 @@ export default {
             }
         }
     },
+
     mounted() {
         this.fetchCarData();
-    },
+     
+
+    }
 };
 </script>
 
 
+<style scoped>
+.attention-btn {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  padding-block: 0.5rem;
+  padding-inline: 1.25rem;
+  background-color: rgb(0, 151, 106);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffff;
+  gap: 10px;
+  font-weight: bold;
+  border: 3px solid #ffffff4d;
+  outline: none;
+  overflow: hidden;
+  font-size: 15px;
+  cursor: pointer;
+}
+.attention-btn:hover {
+  transform: scale(1.05);
+  border-color: #fff9;
+}
 
+.attention-btn:hover .icon {
+  transform: translate(4px);
+}
 
-<style lang="scss" scoped></style>
+.attention-btn:hover::before {
+  animation: shine 1.5s ease-out infinite;
+}
+
+.attention-btn::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0) 70%
+  );
+  top: 0;
+  left: -100px;
+  opacity: 0.6;
+}</style>

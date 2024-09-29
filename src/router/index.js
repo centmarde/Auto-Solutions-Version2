@@ -45,7 +45,7 @@ const routes = setupLayouts([
     name: "CarDetails",
     meta: { requiresAuth: true },
   },
-  { path: "/Dashboard", component: Dashboard, meta: { requiresAuth: true } },
+  { path: "/Admin", component: Admin, meta: { requiresAuth: true } },
   { path: "/Inquires", component: Inquires, meta: { requiresAuth: true } },
   { path: "/UserInfo", component: UserInfo, meta: { requiresAuth: true } },
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },

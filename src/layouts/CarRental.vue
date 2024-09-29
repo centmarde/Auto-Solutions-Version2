@@ -1,51 +1,20 @@
 <template>
-  <v-card class="p-5" elevation="10">
+  <v-card class="p-4" elevation="10">
     <v-row>
-      <v-col cols="12" lg="7" md="6" sm="5">
-        <h3 id="title">RENT A CAR</h3>
+      <v-col cols="12" >
+        <h3 id="title" class="text-center">RENT A CAR</h3>
+  
         <v-row class="d-flex align-center">
-          <v-col cols="auto">
-            <v-img
-              class="erd3 me-2"
-              src="https://example.com/rent-car-choose.png"
-              alt="Choose Your Car"
-              width="50"
-              height="50"
-            ></v-img>
-          </v-col>
-          <v-col>
-            <span>
-              Explore a wide range of vehicles and choose the one that fits your needs.
-            </span>
-          </v-col>
-        </v-row>
-
-        <v-divider></v-divider>
-
-        <v-row class="d-flex align-center">
-          <v-col cols="auto">
-            <v-img
-              class="erd3 me-2"
-              src="https://example.com/rent-car-book.png"
-              alt="Book Your Car"
-              width="50"
-              height="50"
-            ></v-img>
-          </v-col>
-          <v-col>
-            <span>
-              Reserve your car easily online. Enjoy a hassle-free booking experience with instant confirmation.
-            </span>
-          </v-col>
+         
         </v-row>
       </v-col>
 
-      <v-col cols="12" lg="5" md="6" sm="5">
+      <v-col cols="12" >
         <v-img
           src="https://cdn-icons-png.flaticon.com/512/8566/8566110.png"
-          style="width: 10rem;"
+          style="width: 10.5rem;"
           class="position-relative"
-        id="sts4"
+          id="sts4"
           alt="Rent a Car"
         ></v-img>
       </v-col>
@@ -98,6 +67,12 @@ export default {
 
 #title {
   font-family: "Merriweather", serif;
+}
+
+#sts4 {
+  top: 20%;
+  left: 20%;
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 800px) and (min-width: 350px) {
