@@ -159,7 +159,8 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" class="text-center">
+          <v-container>
+            <v-row> <v-col cols="12" md="6" class="text-center">
             <v-btn @click="submitCarDetails" :loading="loading" class="lofi" style="width: 30rem;">
               <template v-if="loading">
                 <v-progress-circular indeterminate color="white" size="20" class="mr-2"></v-progress-circular>
@@ -172,7 +173,7 @@
             </v-btn>
           </v-col>
 
-          <v-col cols="12" class="text-center">
+          <v-col cols="12" md="6" class="text-center">
             <router-link to="/Home" class="tr" exact>
               <v-btn class="lofi" style="width: 30rem;">
                 Exit
@@ -180,6 +181,12 @@
               </v-btn>
             </router-link>
           </v-col>
+       
+        
+        </v-row>
+           
+          </v-container>
+       
         </v-row>
       </v-form>
     </v-card>
