@@ -84,7 +84,7 @@
           <v-text-field v-model="editedCar.torque" label="Torque" required></v-text-field>
           <v-text-field v-model="editedCar.topSpeed" label="Top Speed" required></v-text-field>
           <v-text-field v-model="editedCar.transmission" label="Transmission" required></v-text-field>
-          <v-text-field v-model="editedCar.yearsOwned" label="Years Owned" required></v-text-field>
+          <v-text-field v-model="editedCar.yearsowned" label="Years Owned" required></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>
