@@ -17,12 +17,14 @@ import Register from "@/components/Register.vue";
 import Home from "@/pages/Home.vue";
 import CarDetails from "@/layouts/CarDetails.vue";
 import SellContents from "@/components/SellContents.vue";
-import Dashboard from "@/components/AdminDashboard.vue";
+import Admin from "@/pages/Admin.vue";
 import UserInfo from "@/components/UserInfo.vue";
 import Supra from "@/layouts/Supra.vue";
 import Nissan from "@/layouts/Nissan.vue";
 import Honda from "@/layouts/Honda.vue";
-import Inquires from "@/components/Inquires.vue";
+import Inquires from "@/components/InquiresPage/Inquires.vue";
+import CarListing from "@/components/InquiresPage/CarListing.vue";
+
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -49,6 +51,8 @@ const routes = setupLayouts([
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
+
+  { path: "/CarListing", component: CarListing, meta: { requiresAuth: true } },
 ]);
 
 const router = createRouter({
@@ -87,12 +91,13 @@ router.beforeEach((to, from, next) => {
     "/Home",
     "/car/:id",
     "/SellContents",
-    "/Dashboard",
+    "/Admin",
     "/UserInfo",
     "/Supra",
     "/Nissan",
     "/Honda",
     "/Inquires",
+    "/CarListing",
   ];
 
   // Redirect to login if trying to access protected pages without being logged in
@@ -103,7 +108,7 @@ router.beforeEach((to, from, next) => {
   // Redirect admin to the dashboard on first login if they haven't visited it yet
   if (isLoggedIn && userRole === true && !hasVisitedDashboard) {
     localStorage.setItem("hasVisitedDashboard", true); // Set flag to true after visiting dashboard
-    return next("/Dashboard");
+    return next("/Admin");
   }
 
   // Redirect to home if already logged in and trying to access public pages
@@ -112,7 +117,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // Restrict non-admin users from accessing the dashboard
-  if (to.path.startsWith("/Dashboard") && userRole !== true) {
+  if (to.path.startsWith("/Admin") && userRole !== true) {
     alert("You do not have permission to access this page.");
     return next("/Home");
   }
