@@ -71,31 +71,39 @@ export default {
   },
   methods: {
     async fetchCars() {
-      this.loading = true;
-      const loggedInUserId = localStorage.getItem('user_id');
+  this.loading = true;
+  const loggedInUserId = localStorage.getItem('user_id');
+  console.log(loggedInUserId);
 
-      try {
-        const { data, error } = await supabase
-          .from('Transaction')
-          .select(`*, Car (*), User:buyer_id (*)`)
-          .eq('Car.forSale', true);
+  try {
+    const { data, error } = await supabase
+      .from('Transaction')
+      .select(`*, Car (*), User:buyer_id (*)`)
+      .eq('Car.forSale', true)
+      .eq('buyer_id', loggedInUserId); // Fixed misplaced semicolon
 
-        if (error) throw error;
+    if (error) throw error;
 
-        const carsForSale = data.map(transaction => transaction.Car).filter(car => car !== null);
+    // Ensure data is an array and filter out null cars
+    const carsForSale = data
+      .map(transaction => transaction.Car)
+      .filter(car => car !== null);
 
-        this.cars = this.shuffleArray(carsForSale);
+    // Shuffle the cars for sale
+    this.cars = this.shuffleArray(carsForSale);
 
-        this.carsWithTransactions = data.map((transaction, index) => ({
-          car: transaction.Car,
-          transaction: transaction
-        }));
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.loading = false;
-      }
-    },
+    // Create an array of transactions with corresponding cars
+    this.carsWithTransactions = data.map(transaction => ({
+      car: transaction.Car,
+      transaction: transaction,
+    })).filter(item => item.car !== null); // Filter out null cars from transactions
+  } catch (err) {
+    this.error = err.message;
+  } finally {
+    this.loading = false;
+  }
+},
+
     async deleteCar(carId) {
       try {
         const { error } = await supabase.from('Transaction').delete().eq('car_id', carId);

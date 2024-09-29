@@ -108,8 +108,7 @@
           localStorage.setItem("user_id", profiles[0].id);
           localStorage.setItem("Role", profiles[0].isadmin ? "true" : "false");
   
-          // Redirect to home page after successful login
-          alert("Login Successfully");
+         
           router.push("/Home");
         } else {
           throw new Error("Profile fetch error.");
