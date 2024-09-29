@@ -12,12 +12,16 @@
   <router-link to="/Garage" class="d-block mb-3">
     <v-btn block color="primary">Garage</v-btn>
   </router-link>
-  <router-link to="/BuyCar" class="d-block mb-3">
+  <router-link to="/Inquires" class="d-block mb-3">
     <v-btn block color="primary">Buy Car</v-btn>
   </router-link>
-  <router-link to="/Inquires" class="d-block mb-3">
-    <v-btn block color="primary">Sell Car</v-btn>
+  <router-link to="/CarListing" class="d-block mb-3">
+    <v-btn block color="primary">My Listings</v-btn>
   </router-link>
+  <router-link to="/Home" class="d-block mb-3">
+    <v-btn block color="primary">Home</v-btn>
+  </router-link>
+ 
 </v-col>
 
   
@@ -31,7 +35,7 @@
   </template>
   
   <script setup>
-  import InquiresNavbar from '../layouts/InquiresNavbar.vue';
+  import InquiresNavbar from '../../layouts/InquiresNavbar.vue';
   import InsideInquires from '@/layouts/InsideInquires/InsideInquires.vue';
   </script>
   

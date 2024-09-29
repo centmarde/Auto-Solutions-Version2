@@ -22,7 +22,9 @@ import UserInfo from "@/components/UserInfo.vue";
 import Supra from "@/layouts/Supra.vue";
 import Nissan from "@/layouts/Nissan.vue";
 import Honda from "@/layouts/Honda.vue";
-import Inquires from "@/components/Inquires.vue";
+import Inquires from "@/components/InquiresPage/Inquires.vue";
+import CarListing from "@/components/InquiresPage/CarListing.vue";
+
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -49,6 +51,8 @@ const routes = setupLayouts([
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
+
+  { path: "/CarListing", component: CarListing, meta: { requiresAuth: true } },
 ]);
 
 const router = createRouter({
@@ -93,6 +97,7 @@ router.beforeEach((to, from, next) => {
     "/Nissan",
     "/Honda",
     "/Inquires",
+    "/CarListing",
   ];
 
   // Redirect to login if trying to access protected pages without being logged in
