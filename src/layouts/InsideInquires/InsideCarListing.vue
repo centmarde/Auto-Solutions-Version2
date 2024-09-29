@@ -34,11 +34,18 @@
               <p class="truncate-text single-line">
                 {{ car.description }}
               </p>
+              <p class="car-status">
+                {{ car.forSale && car.forRent ? 'For Sale and Open for Rent' : car.forSale ? 'For Sale' : car.forRent ? 'Open for Rent' : '' }}
+              </p>
             </v-card-text>
             <v-card-actions class="d-flex justify-content-end">
               <v-btn color="red" @click.stop="deleteCar(car.id)">
                 <v-icon left>mdi-delete</v-icon>
                 Delete
+              </v-btn>
+              <v-btn color="blue" @click.stop="openEditModal(car)">
+                <v-icon left>mdi-pencil</v-icon>
+                Edit
               </v-btn>
             </v-card-actions>
           </v-col>
@@ -46,6 +53,47 @@
       </v-card>
     </v-col>
   </v-row>
+
+  <!-- Edit Car Modal -->
+  <v-dialog v-model="editModal" max-width="600px">
+    <v-card>
+      <v-card-title>
+        <span class="headline">Edit Car Details</span>
+      </v-card-title>
+      <v-card-text>
+        <v-form ref="editForm" v-model="valid">
+          <v-text-field v-model="editedCar.year" label="Year" required></v-text-field>
+          <v-text-field v-model="editedCar.price" label="Price" required></v-text-field>
+
+          <!-- For Sale Radio Buttons -->
+          <v-radio-group v-model="editedCar.forSale" label="For Sale" required>
+            <v-radio label="True" :value="true"></v-radio>
+            <v-radio label="False" :value="false"></v-radio>
+          </v-radio-group>
+
+          <!-- For Rent Radio Buttons -->
+          <v-radio-group v-model="editedCar.forRent" label="For Rent" required>
+            <v-radio label="True" :value="true"></v-radio>
+            <v-radio label="False" :value="false"></v-radio>
+          </v-radio-group>
+
+          <v-textarea v-model="editedCar.description" label="Description" required></v-textarea>
+          <v-text-field v-model="editedCar.mileage" label="Mileage" required></v-text-field>
+          <v-text-field v-model="editedCar.engine" label="Engine" required></v-text-field>
+          <v-text-field v-model="editedCar.horsepower" label="Horsepower" required></v-text-field>
+          <v-text-field v-model="editedCar.torque" label="Torque" required></v-text-field>
+          <v-text-field v-model="editedCar.topSpeed" label="Top Speed" required></v-text-field>
+          <v-text-field v-model="editedCar.transmission" label="Transmission" required></v-text-field>
+          <v-text-field v-model="editedCar.yearsOwned" label="Years Owned" required></v-text-field>
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" @click="updateCar" :disabled="!valid">Save</v-btn>
+        <v-btn @click="editModal = false">Cancel</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -59,6 +107,9 @@ export default {
       loading: true,
       error: null,
       selectedCarId: null, 
+      editModal: false,
+      editedCar: {},
+      valid: false,
     };
   },
   async created() {
@@ -79,7 +130,6 @@ export default {
 
         this.userCars = data || []; 
 
-        
         this.userCars.forEach(car => {
           console.log(`Car ID: ${car.id}`); 
         });
@@ -90,24 +140,45 @@ export default {
       }
     },
     handleCardClick(carId) {
-   
       this.selectedCarId = carId; 
     },
+    openEditModal(car) {
+      this.editedCar = { ...car }; // Clone the car object to edit
+      this.editModal = true; // Show the modal
+    },
+    async updateCar() {
+      const { id, ...updatedData } = this.editedCar; 
+
+      try {
+        const { error } = await supabase.from('Car').update(updatedData).eq('id', id); 
+        if (error) throw error;
+
+       
+        const index = this.userCars.findIndex(car => car.id === id);
+        if (index !== -1) {
+          this.userCars[index] = { ...this.userCars[index], ...updatedData };
+        }
+
+        this.editModal = false; 
+        alert(`Car Updated Successfully!`);
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
     async deleteCar(carId) {
-  const confirmDelete = confirm("Are you sure you want to delete this car?"); // Confirmation dialog
-  if (!confirmDelete) return; // Exit if the user cancels
+      const confirmDelete = confirm("Are you sure you want to delete this car?");
+      if (!confirmDelete) return; 
 
-  try {
-    const { error } = await supabase.from('Car').delete().eq('id', carId); 
-    if (error) throw error;
+      try {
+        const { error } = await supabase.from('Car').delete().eq('id', carId); 
+        if (error) throw error;
 
-    this.userCars = this.userCars.filter(car => car.id !== carId);
-    alert(`Car Deleted Successfully!`); 
-  } catch (err) {
-    this.error = err.message;
-  }
-},
-
+        this.userCars = this.userCars.filter(car => car.id !== carId);
+        alert(`Car Deleted Successfully!`); 
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
   },
 };
 </script>
@@ -136,5 +207,9 @@ export default {
 
 .v-card-text p {
   margin: 0;
+}
+
+.car-status {
+  font-weight: bold; 
 }
 </style>
