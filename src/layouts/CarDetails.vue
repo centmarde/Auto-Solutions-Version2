@@ -129,8 +129,8 @@ export default {
         // Check if a transaction with the same car_id already exists
         const { data: existingTransaction, error: checkError } = await supabase
           .from('Transaction')
-          .select('id')
-          .eq('car_id', car_ids)
+          .select('*')
+          .eq('car_id', this.car.id)
           .single();
           
 
