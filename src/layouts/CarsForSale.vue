@@ -79,8 +79,6 @@ export default {
   methods: {
     async fetchCars() {
       this.loading = true;
-      const loggedInUserId = localStorage.getItem("user_id"); // Get the logged-in user's ID
-
       try {
         const { data, error } = await supabase
           .from('Car')
