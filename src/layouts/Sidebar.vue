@@ -1,6 +1,6 @@
 <template>
     <div
-      class="view h-100 p-5 display  align-items-center"
+      class="view h-100 p-5 display  position-relative"
       :class="{'navbar-dark': isDark, 'navbar-light': !isDark}"
       :style="{ backgroundColor: isDark ? 'rgba(52, 52, 52, 0.8)' : 'rgba(200, 200, 200, 0.8)', color: isDark ? '#fff' : '#333' }"
     >

@@ -10,6 +10,7 @@ import { setupLayouts } from "virtual:generated-layouts";
 import { routes as autoRoutes } from "vue-router/auto-routes";
 
 import Hero from "../pages/index.vue";
+import CarInSale from "../pages/CarInSale.vue";
 import Login from "@/components/Login.vue";
 import NotFound from "@/components/Notfoundpage.vue";
 import Register from "@/components/Register.vue";
@@ -24,7 +25,7 @@ import Nissan from "@/layouts/Nissan.vue";
 import Honda from "@/layouts/Honda.vue";
 import Inquires from "@/components/InquiresPage/Inquires.vue";
 import CarListing from "@/components/InquiresPage/CarListing.vue";
-
+import CarSaleView from "@/components/CarSaleView.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -32,6 +33,7 @@ const routes = setupLayouts([
   { path: "/login", component: Login },
   { path: "/Register", component: Register },
   { path: "/:pathMatch(.*)*", component: NotFound },
+  { path: "/CarInSale", component: CarInSale },
 
   { path: "/Home", component: Home, meta: { requiresAuth: true } },
   {
@@ -53,6 +55,11 @@ const routes = setupLayouts([
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
 
   { path: "/CarListing", component: CarListing, meta: { requiresAuth: true } },
+  {
+    path: "/CarSaleView",
+    component: CarSaleView,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
