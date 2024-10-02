@@ -1,6 +1,6 @@
 <template>
-  <div class="p-5 mt-5">
-    <h1 class="text-center" id="fonts">Car In Sale</h1>
+  <div class="p-5 mts">
+    <h1 class="text-center fw-bolder" >Car In Sale</h1>
 
 
     <div class="table-responsive">
@@ -73,9 +73,7 @@ onMounted(() => {
   max-width: 1100px;
 }
 
-#fonts {
-  margin-top: 30px;
-  font-size: 1.2rem;
-  font-family: "Merriweather", serif;
+.mts{
+  margin-top: 40px ;
 }
 </style>

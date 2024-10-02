@@ -13,7 +13,7 @@
 <script setup>
 
 import CarSaleView from '@/components/Admin/CarSaleView.vue';
-import Sidebar from '@/layouts/Sidebar.vue';
+import Sidebar from '@/components/Admin/Sidebar.vue';
 import DashNavbarVue from "./DashNavbar.vue";
 </script>
 
