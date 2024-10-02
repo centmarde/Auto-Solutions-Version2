@@ -12,9 +12,9 @@
 
 <script setup>
 
-import CarSaleView from '@/components/CarSaleView.vue';
+import CarSaleView from '@/components/Admin/CarSaleView.vue';
 import Sidebar from '@/layouts/Sidebar.vue';
-import DashNavbarVue from "../layouts/DashNavbar.vue";
+import DashNavbarVue from "./DashNavbar.vue";
 </script>
 
 <style>

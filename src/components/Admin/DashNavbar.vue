@@ -62,7 +62,7 @@
   import { ref, onMounted } from 'vue';
   import { useTheme } from 'vuetify';
   import { useRouter } from 'vue-router';
-  import { supabase, doLogout as supabaseLogout } from '../lib/supaBase';
+  import { supabase, doLogout as supabaseLogout } from '../../lib/supaBase';
   
   const router = useRouter();
   const username = ref('Guest');

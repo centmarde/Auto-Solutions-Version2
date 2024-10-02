@@ -2,7 +2,7 @@
   <div class="p-5 mt-5">
     <h1 class="text-center" id="fonts">Car In Sale</h1>
 
-    <!-- Use Bootstrap's table-responsive class -->
+
     <div class="table-responsive">
       <table
         class="table table-dark table-hover"
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { supabase } from '../lib/supaBase';
+import { supabase } from '../../lib/supaBase';
 import { ref, onMounted } from 'vue';
 
 const cars = ref([]);

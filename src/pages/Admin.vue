@@ -4,8 +4,8 @@
   </template>
   
   <script setup>
-  import AdminDashboardVue from "@/layouts/AdminDashboard.vue";
-  import DashNavbarVue from "../layouts/DashNavbar.vue";
+  import AdminDashboardVue from "@/components/Admin/AdminDashboard.vue";
+  import DashNavbarVue from "../components/Admin/DashNavbar.vue";
   
   </script>
   

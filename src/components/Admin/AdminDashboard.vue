@@ -20,9 +20,9 @@
 import { ref, onMounted } from 'vue';
 import { useTheme } from 'vuetify';
 import { useRoute } from 'vue-router';
-import { supabase, doLogout as supabaseLogout } from '../lib/supaBase'; 
+import { supabase, doLogout as supabaseLogout } from '../../lib/supaBase'; 
 import Card from './Card.vue';
-import Sidebar from './Sidebar.vue';
+import Sidebar from '../../layouts/Sidebar.vue';
 
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);
