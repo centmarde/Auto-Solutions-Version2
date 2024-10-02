@@ -2,11 +2,8 @@
     <DashNavbarVue />
     <div class="w-100 d-flex h-100 gap-5 ">
         <Sidebar class="sukod" />
-        <CarSaleView />
+        <slot name="admin"> </slot>
     </div>
-    
-
-
 
 </template>
 
@@ -14,7 +11,7 @@
 
 import CarSaleView from '@/components/Admin/CarSaleView.vue';
 import Sidebar from '@/components/Admin/Sidebar.vue';
-import DashNavbarVue from "./DashNavbar.vue";
+import DashNavbarVue from "@/components/Admin/DashNavbar.vue";
 </script>
 
 <style>

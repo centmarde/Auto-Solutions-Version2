@@ -11,7 +11,7 @@
       <RouterLink :to="link">  
         <v-btn
           color="primary"
-
+          
           class="btnn32"
         >
           View

@@ -6,7 +6,7 @@
 
        <div class="row gap-5 justify-content-center mt">
         <Card class="col-6" title="Total Cars for Sale" link="/CarInSale" :num="carCount" />
-        <Card class="col-6"  title="Total Cars for Rent" :num="totalCarsForRent" />
+        <Card class="col-6"  title="Total Cars for Rent" link="/CarInRent" :num="totalCarsForRent" />
         <Card class="col-6"  title="Car purchased" />
         <Card class="col-6"  title="Car in rent" /> 
        </div>
@@ -47,9 +47,25 @@ const fetchCarCount = async () => {
   }
 };
 
+const fetchtotalCarsForRent = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('Car')
+      .select('id') 
+      .eq('forSale', false); 
+
+    if (error) throw error;
+
+    totalCarsForRent.value = data.length;  
+  } catch (err) {
+    console.error("Error fetching car count:", err.message);
+  }
+};
+
 
 onMounted(() => {
   fetchCarCount();  
+  fetchtotalCarsForRent();
 });
 
 const toggleTheme = () => {
