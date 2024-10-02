@@ -46,6 +46,14 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <v-container>
+      <v-row>
+        <v-col>
+          <CarsForRent />
+        </v-col>
+      </v-row>
+    </v-container>
     
     <Footer />
   </v-app>
@@ -59,6 +67,7 @@ import CarsForSale from "../layouts/CarsForSale.vue";
 import CarRental from "../layouts/CarRental.vue";
 import Footer from '../layouts/Footer.vue';
 import SellCarInside from "@/layouts/SellCarInside.vue";
+import CarsForRent from "../layouts/CarsForRent.vue";
 
 const logout = async () => {
   await doLogout();
