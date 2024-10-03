@@ -8,7 +8,7 @@
         <Card class="col-6" title="Total Cars for Sale" link="/CarInSale" :num="carCount" />
         <Card class="col-6"  title="Total Cars for Rent" link="/CarInRent" :num="totalCarsForRent" />
         <Card class="col-6"  title="Car purchased" />
-        <Card class="col-6"  title="Car in rent" /> 
+        <Card class="col-6"  title="Car Rented" /> 
        </div>
  
       

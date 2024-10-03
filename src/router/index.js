@@ -17,6 +17,7 @@ import Register from "@/components/Register.vue";
 
 import Home from "@/pages/Home.vue";
 import CarInRent from "@/pages/adminPages/CarInRent.vue";
+import ViewAsClient from "@/pages/adminPages/ViewAsClient.vue";
 import CarDetails from "@/layouts/CarDetails.vue";
 import SellContents from "@/components/SellContents.vue";
 import Admin from "@/pages/adminPages/Admin.vue";
@@ -74,6 +75,11 @@ const routes = setupLayouts([
   {
     path: "/CarInRent",
     component: CarInRent,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/ClientView",
+    component: ViewAsClient,
     meta: { requiresAuth: true },
   },
 ]);

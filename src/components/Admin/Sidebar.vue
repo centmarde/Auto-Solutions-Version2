@@ -21,11 +21,11 @@
         <div class="position-relative bot">
           <i class="fa-solid fa-user fa-lg"></i>
           <router-link
-            to="/home"
+            to="/ClientView"
             class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: isActiveRoute('/home').value }"
+            :class="{ underline: isActiveRoute('/ClientView').value }"
           >
-            <p class="mt-4 fw-bold fst">View As Client</p>
+            <p class="mt-4 fw-bold fst">View Client Side</p>
           </router-link>
         </div>
   
@@ -54,7 +54,7 @@
         </div>
   
         <!-- Footer Link (Logout) -->
-        <div class="position-relative bot tops">
+        <div class="fixed-bottom fixed-start side">
           <i class="fa-solid fa-right-from-bracket fa-lg"></i>
           <router-link
             to="/"
@@ -62,7 +62,7 @@
             :class="{ underline: isActiveRoute('/').value }"
             @click="handleLogout"
           >
-            <p  class="mt-4 fw-bold fst">Logout</p>
+            <p  class=" fw-bold fst">Logout</p>
           </router-link>
         </div>
       </div>
@@ -121,11 +121,8 @@ const handleLogout = async () => {
   font-size: 18px;
   font-weight: bold;
 }
-.bot {
-  margin-top: -35px;
-}
-.tops{
-  top: 200px;
+.side{
+  margin-left: 45px;
 }
 .mt{
   margin-top: 100px;
