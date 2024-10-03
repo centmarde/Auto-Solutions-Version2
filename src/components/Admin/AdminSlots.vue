@@ -5,6 +5,7 @@
         <slot name="admin"> </slot>
     </div>
 
+
 </template>
 
 <script setup>
@@ -18,4 +19,5 @@ import DashNavbarVue from "@/components/Admin/DashNavbar.vue";
 .sukod{
     min-width: 300px;
 }
+
 </style>
