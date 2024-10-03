@@ -1,6 +1,6 @@
 <template>
     <DashNavbarVue />
-    <div class="w-100 d-flex h-100 gap-5 ">
+    <div class="w-100 d-flex h-100 gap-5 align-center">
         <Sidebar class="sukod" />
         <slot name="admin"> </slot>
     </div>

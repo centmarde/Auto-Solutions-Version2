@@ -1,7 +1,9 @@
 <template>
     <AdminSlots> 
         <template #admin>
+            <div class="w-100 side">
             <CarRentView />    
+        </div>
         </template>
         
     </AdminSlots> 
@@ -18,5 +20,10 @@ import DashNavbarVue from "../../components/Admin/DashNavbar.vue";
 <style>
 .sukod{
     min-width: 300px;
+}
+.side {
+    overflow-x: auto; 
+    overflow-y: hidden; 
+    white-space: nowrap; 
 }
 </style>
