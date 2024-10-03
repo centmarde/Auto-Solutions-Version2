@@ -13,7 +13,7 @@
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/Admin').value }"
           >
-            <p id="fonts" class="mt-4">Dashboard</p>
+            <p  class="mt-4 fw-bold fst">Dashboard</p>
           </router-link>
         </div>
   
@@ -21,11 +21,11 @@
         <div class="position-relative bot">
           <i class="fa-solid fa-user fa-lg"></i>
           <router-link
-            to="/home"
+            to="/ClientView"
             class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: isActiveRoute('/home').value }"
+            :class="{ underline: isActiveRoute('/ClientView').value }"
           >
-            <p id="fonts" class="mt-4">View As Client</p>
+            <p class="mt-4 fw-bold fst">View Client Side</p>
           </router-link>
         </div>
   
@@ -37,7 +37,7 @@
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/admin-members').value }"
           >
-            <p id="fonts" class="mt-4">Admin Members</p>
+            <p  class="mt-4 fw-bold fst">Admin Members</p>
           </router-link>
         </div>
   
@@ -49,12 +49,12 @@
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/client-members').value }"
           >
-            <p id="fonts" class="mt-4">Client Members</p>
+            <p  class="mt-4 fw-bold fst">Client Members</p>
           </router-link>
         </div>
   
         <!-- Footer Link (Logout) -->
-        <div class="position-relative bot tops">
+        <div class="fixed-bottom fixed-start side">
           <i class="fa-solid fa-right-from-bracket fa-lg"></i>
           <router-link
             to="/"
@@ -62,7 +62,7 @@
             :class="{ underline: isActiveRoute('/').value }"
             @click="handleLogout"
           >
-            <p id="fonts" class="mt-4">Logout</p>
+            <p  class=" fw-bold fst">Logout</p>
           </router-link>
         </div>
       </div>
@@ -117,15 +117,12 @@ const handleLogout = async () => {
 .underline {
   text-decoration: underline;
 }
-#fonts {
-  font-size: 1.2rem;
-  font-family: "Merriweather", serif;
+.fst {
+  font-size: 18px;
+  font-weight: bold;
 }
-.bot {
-  margin-top: -35px;
-}
-.tops{
-  top: 200px;
+.side{
+  margin-left: 45px;
 }
 .mt{
   margin-top: 100px;

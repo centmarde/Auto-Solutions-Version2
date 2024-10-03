@@ -10,22 +10,24 @@ import { setupLayouts } from "virtual:generated-layouts";
 import { routes as autoRoutes } from "vue-router/auto-routes";
 
 import Hero from "../pages/index.vue";
-import CarInSale from "../pages/CarInSale.vue";
+import CarInSale from "../pages/adminPages/CarInSale.vue";
 import Login from "@/components/Login.vue";
 import NotFound from "@/components/Notfoundpage.vue";
 import Register from "@/components/Register.vue";
 
 import Home from "@/pages/Home.vue";
+import CarInRent from "@/pages/adminPages/CarInRent.vue";
+import ViewAsClient from "@/pages/adminPages/ViewAsClient.vue";
 import CarDetails from "@/layouts/CarDetails.vue";
 import SellContents from "@/components/SellContents.vue";
-import Admin from "@/pages/Admin.vue";
+import Admin from "@/pages/adminPages/Admin.vue";
 import UserInfo from "@/components/UserInfo.vue";
 import Supra from "@/layouts/Supra.vue";
 import Nissan from "@/layouts/Nissan.vue";
 import Honda from "@/layouts/Honda.vue";
 import Inquires from "@/components/InquiresPage/Inquires.vue";
 import CarListing from "@/components/InquiresPage/CarListing.vue";
-import CarSaleView from "@/components/CarSaleView.vue";
+import CarSaleView from "@/components/Admin/CarSaleView.vue";
 import RentContents from "@/components/RentContents.vue";
 import Garage from "@/components/InquiresPage/Garage.vue";
 import RentedCars from "@/components/InquiresPage/RentedCars.vue";
@@ -56,7 +58,11 @@ const routes = setupLayouts([
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
-  { path: "/RentContents", component: RentContents, meta: { requiresAuth: true } },
+  {
+    path: "/RentContents",
+    component: RentContents,
+    meta: { requiresAuth: true },
+  },
   { path: "/Garage", component: Garage, meta: { requiresAuth: true } },
   { path: "/RentedCars", component: RentedCars, meta: { requiresAuth: true } },
 
@@ -64,6 +70,16 @@ const routes = setupLayouts([
   {
     path: "/CarSaleView",
     component: CarSaleView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/CarInRent",
+    component: CarInRent,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/ClientView",
+    component: ViewAsClient,
     meta: { requiresAuth: true },
   },
 ]);
