@@ -68,9 +68,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { supabase } from "../lib/supaBase";
+import { supabase } from "../lib/supaBase"; // importing Supabase client
 import axios from "axios";
-import { requiredValidator, emailValidator } from '../utils/validator.js';
 
 const email = ref("");
 const password = ref("");
@@ -82,32 +81,40 @@ const login = async () => {
   isSubmitting.value = true;
 
   try {
-    let { data, error } = await supabase.auth.signInWithPassword({
+    // Supabase Auth using new `signInWithPassword`
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value,
     });
 
+    if (error) {
+      throw new Error(error.message);
+    }
+
     if (data.session) {
       const { session, user } = data;
 
+      // Storing tokens in localStorage
       localStorage.setItem("access_token", session.access_token);
       localStorage.setItem("refresh_token", session.refresh_token);
-      localStorage.setItem("auth_id", user?.id);
+      localStorage.setItem("auth_id", user.id);
 
-      let { data: profiles } = await supabase
+      // Fetching user profile from 'User' table
+      const { data: profiles, error: profileError } = await supabase
         .from("User")
         .select("*")
-        .eq("auth_id", localStorage.getItem("auth_id"));
+        .eq("auth_id", user.id);
 
-      if (profiles && profiles.length > 0) {
-        localStorage.setItem("user_id", profiles[0].id);
-        localStorage.setItem("Role", profiles[0].isadmin ? "true" : "false");
-
-        router.push("/Home");
-      } else {
+      if (profileError || profiles.length === 0) {
         throw new Error("Profile fetch error.");
       }
+
+      localStorage.setItem("user_id", profiles[0].id);
+      localStorage.setItem("Role", profiles[0].isadmin ? "true" : "false");
+
+      router.push("/Home");
     } else {
+      // Axios fallback for custom login API (Optional)
       const response = await axios.post("http://localhost:3001/login", {
         email: email.value,
         password: password.value,
@@ -131,6 +138,7 @@ const login = async () => {
   }
 };
 </script>
+
 
 <style scoped>
 .create-account {
