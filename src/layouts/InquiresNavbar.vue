@@ -22,7 +22,7 @@
           <div class="ms-auto d-flex align-items-center justify-content-end w-100">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <router-link to="/Supra" class="nav-link btn wes" @click="closeMenu">GARAGE</router-link>
+                <router-link to="/Inbox" class="nav-link btn wes" @click="closeMenu">INBOX</router-link>
               </li>
               <li class="nav-item">
                 <router-link to="/Home" class="nav-link btn wes" @click="closeMenu">HOME</router-link>

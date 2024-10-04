@@ -131,6 +131,7 @@ export default {
           .from('Transaction')
           .select('*')
           .eq('car_id', this.car.id)
+          .eq('buyer_id', this.buyerId)
           .single();
           
 

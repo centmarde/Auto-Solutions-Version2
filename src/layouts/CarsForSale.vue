@@ -8,20 +8,22 @@
       </v-col>
     </v-row>
 
-    <v-row v-if="loading || error || cars.length === 0">
-      <v-col v-if="loading" class="loading">
+    <!-- Loading, Error, or No Cars -->
+    <v-row v-if="carStore.loading || carStore.error || carStore.cars.length === 0">
+      <v-col v-if="carStore.loading" class="loading">
         <v-alert type="info">Loading...</v-alert>
       </v-col>
 
-      <v-col v-if="error" class="error">
-        <v-alert type="error">{{ error }}</v-alert>
+      <v-col v-if="carStore.error" class="error">
+        <v-alert type="error">{{ carStore.error }}</v-alert>
       </v-col>
 
-      <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
+      <v-col v-if="carStore.cars.length === 0 && !carStore.loading && !carStore.error" class="no-cars">
         <v-alert type="warning">No cars available for sale.</v-alert>
       </v-col>
     </v-row>
 
+    <!-- Car List Carousel -->
     <v-row v-else>
       <v-carousel hide-delimiters cycle show-arrows autoplay>
         <v-carousel-item v-for="(chunk, index) in chunkedCars" :key="index">
@@ -47,78 +49,38 @@
   </v-container>
 </template>
 
-<script>
-import { supabase } from '../lib/supaBase';
+<script setup>
+import { useCarStore } from '../stores/carStore.js';
+import { onMounted, onBeforeUnmount, computed, ref } from 'vue';
 
-export default {
-  data() {
-    return {
-      cars: [],
-      loading: true,
-      error: null,
-      chunkSize: 4, // Default chunk size for larger screens
-    };
-  },
-  async created() {
-    await this.fetchCars();
-    this.updateChunkSize(); // Set initial chunk size
-    window.addEventListener('resize', this.updateChunkSize); // Listen for window resize
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.updateChunkSize); // Clean up the listener
-  },
-  computed: {
-    chunkedCars() {
-      const result = [];
-      for (let i = 0; i < this.cars.length; i += this.chunkSize) {
-        result.push(this.cars.slice(i, i + this.chunkSize));
-      }
-      return result;
-    }
-  },
-  methods: {
-    async fetchCars() {
-      this.loading = true;
-      const loggedInUserId = localStorage.getItem("user_id"); // Get the logged-in user's ID
+const carStore = useCarStore();
+const chunkSize = ref(4); // Default chunk size for larger screens
 
-      try {
-        const { data, error } = await supabase
-          .from('Car')
-          .select(`*
-            User (
-              *
-            )
-          `)
-          .eq('forSale', true) // Fetch only cars for sale
-          .neq('user_id', loggedInUserId);
-
-        if (error) throw error;
-
-        // Shuffle the cars immediately after fetching them
-        this.cars = this.shuffleArray(data);
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.loading = false;
-      }
-    },
-    shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    },
-    updateChunkSize() {
-      // Update chunk size based on window width
-      this.chunkSize = window.innerWidth < 600 ? 1 : 4; // Adjust the threshold as needed
-    }
-  }
+// Method to update chunk size
+const updateChunkSize = () => {
+  chunkSize.value = window.innerWidth < 600 ? 1 : 4; // Adjust threshold as needed
 };
+
+// Computed property to chunk cars for layout
+const chunkedCars = computed(() => {
+  const result = [];
+  for (let i = 0; i < carStore.cars.length; i += chunkSize.value) {
+    result.push(carStore.cars.slice(i, i + chunkSize.value));
+  }
+  return result;
+});
+
+// Lifecycle hooks
+onMounted(async () => {
+  await carStore.fetchCars(); // Fetch cars from Pinia store
+  updateChunkSize(); // Set initial chunk size
+  window.addEventListener('resize', updateChunkSize); // Listen for window resize
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateChunkSize); // Clean up the listener
+});
 </script>
-
-
-
 
 <style scoped>
 .koy {
