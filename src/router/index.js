@@ -31,6 +31,7 @@ import CarSaleView from "@/components/Admin/CarSaleView.vue";
 import RentContents from "@/components/RentContents.vue";
 import Garage from "@/components/InquiresPage/Garage.vue";
 import RentedCars from "@/components/InquiresPage/RentedCars.vue";
+import Inbox from "@/components/Inbox.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -58,6 +59,7 @@ const routes = setupLayouts([
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
+  { path: "/Inbox", component: Inbox, meta: { requiresAuth: true } },
   {
     path: "/RentContents",
     component: RentContents,
@@ -131,6 +133,7 @@ router.beforeEach((to, from, next) => {
     "/RentContents",
     "/Garage",
     "/RentedCars",
+    "/Inbox",
   ];
 
   // Redirect to login if trying to access protected pages without being logged in

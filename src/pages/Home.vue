@@ -7,14 +7,14 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="4">
-          <v-card>
+          <v-card elevation="8">
             
               <SellCarInside />
            
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <v-card>
+          <v-card elevation="8">
             
               <CarRental />
            
@@ -22,7 +22,7 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <v-card>
+          <v-card elevation="8">
             
             <SellCarInside />
            
