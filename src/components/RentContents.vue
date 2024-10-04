@@ -218,7 +218,7 @@
   <script>
   import axios from 'axios';
   import { supabase } from '../lib/supaBase';
-  import { getChatCompletion } from '../api/generate-car-details';
+  import { getChatCompletion } from '../seed/generate-car-details';
   
   export default {
       data() {
