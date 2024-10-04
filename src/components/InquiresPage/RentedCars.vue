@@ -26,7 +26,7 @@
 
   
             <v-col cols="12" md="8" class="scrollable-col">
-              <InsideInquires />
+              <InsideRent />
             </v-col>
           </v-row>
         </v-card>
@@ -36,7 +36,7 @@
   
   <script setup>
   import InquiresNavbar from '../../layouts/InquiresNavbar.vue';
-  import InsideInquires from '@/layouts/InsideInquires/InsideInquires.vue';
+  import InsideRent from '@/layouts/InsideInquires/InsideRent.vue';
   </script>
   
   <style>

@@ -95,6 +95,7 @@
                   class="form-control"
                   placeholder="Password"
                   v-model="password"
+                  rules="[requiredValidator, passwordValidator]"
                   required
                 />
               </v-col>
@@ -284,6 +285,12 @@
 <script>
 import axios from 'axios';
 import { supabase } from '../lib/supaBase'; // Adjust the import based on your project structure
+import {
+  requiredValidator,
+  emailValidator,
+  passwordValidator,
+  confirmedValidator
+} from '../utils/validator.js';
 
 export default {
   data() {

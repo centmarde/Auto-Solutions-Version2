@@ -6,7 +6,7 @@
         <v-card class="p-3 vh-80 d-flex flex-column">
           <v-row class="fill-height">
             <v-col cols="12" md="4">
-  <router-link to="/RentedCar" class="d-block mb-3">
+  <router-link to="/RentedCars" class="d-block mb-3">
                            <v-btn block color="primary">Rented Car</v-btn>
   </router-link>
   <router-link to="/Garage" class="d-block mb-3">

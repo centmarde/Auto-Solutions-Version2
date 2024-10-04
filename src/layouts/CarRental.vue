@@ -47,7 +47,7 @@ export default {
 
       if (isLoggedIn) {
         // If logged in, redirect to sell contents page (e.g., Home)
-        this.$router.push("/SellContents");
+        this.$router.push("/RentContents");
       } else {
         // If not logged in, redirect to Register page
         this.$router.push("/login");

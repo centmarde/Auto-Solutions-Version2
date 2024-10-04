@@ -87,9 +87,9 @@
             ></v-textarea>
           </v-col>
 
-          <v-card-title class="text-center mb-4">
-            <h5>Additional Contents (Optional)</h5>
-          </v-card-title>
+          <v-col cols="12" class="text-center mb-4">
+              <h5>Additional Contents (Optional)</h5>
+            </v-col>
 
           <!-- Year of Manufacture -->
           <v-col cols="12" md="6" class="mb-3">
