@@ -43,45 +43,39 @@
 
 <script setup>
 import { onMounted } from 'vue';
+import { useAnimationStore } from '../stores/animationStore.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import lottie from 'lottie-web';
 
 gsap.registerPlugin(ScrollTrigger);
 
-onMounted(() => {
+// Access the animation store
+const animationStore = useAnimationStore();
+
+onMounted(async () => {
+  if (!animationStore.animationData) {
+    // Fetch animation data only if not already loaded
+    await animationStore.fetchAnimationData();
+  }
+
   const lottieContainers = document.querySelectorAll(".animation");
 
   lottieContainers.forEach(container => {
-    // Fetch param.json for each animation container
-    fetch('/param.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to load param.json');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Initialize LottieScrollTrigger with the fetched animation data
-        LottieScrollTrigger({
-          trigger: container,
-          start: "top top",
-          endTrigger: ".end-lottie",
-          end: `bottom center += ${container.offsetHeight}`,
-          renderer: "svg",
-          target: container,
-          animationData: data,  // Pass the fetched animation data
-          scrub: 0.5,           // Adjust scrub for smoother animation
-          fps: 60,              // Request high FPS for smoother animation
-        });
-      })
-      .catch(error => {
-        console.error('Error loading Lottie animation:', error);
-      });
+    LottieScrollTrigger({
+      trigger: container,
+      start: "top top",
+      endTrigger: ".end-lottie",
+      end: `bottom center += ${container.offsetHeight}`,
+      renderer: "svg",
+      target: container,
+      animationData: animationStore.animationData,  // Use stored animation data
+      scrub: 0.5,
+      fps: 60,
+    });
   });
 });
 
-// Function to create scroll-triggered Lottie animation
 function LottieScrollTrigger(vars) {
   let playhead = { frame: 0 },
     target = gsap.utils.toArray(vars.target)[0],
@@ -122,24 +116,24 @@ function LottieScrollTrigger(vars) {
   });
 
   gsap.from(".trs", {
-    scale: 0.8, // Start with the div slightly smaller
-  opacity: 0, // Start with the div hidden
-  duration: 0.1, // Animation duration
-  ease: "power1.out", // Easing function
+    scale: 0.8,
+  opacity: 0, 
+  duration: 0.1, 
+  ease: "power1.out", 
   scrollTrigger: {
-    trigger: ".trs", // The element that triggers the animation
-    start: "top 80%", // Trigger the animation when the top of the element is 80% from the top of the viewport
+    trigger: ".trs",
+    start: "top 80%",
     toggleActions: "play none none reverse",
   }
 });
 gsap.from(".trsx", {
-    scale: 0.8, // Start with the div slightly smaller
-  opacity: 0, // Start with the div hidden
-  duration: 0.4, // Animation duration
-  ease: "power1.out", // Easing function
+    scale: 0.8, 
+  opacity: 0, 
+  duration: 0.4, 
+  ease: "power1.out", 
   scrollTrigger: {
-    trigger: ".trs", // The element that triggers the animation
-    start: "top 80%", // Trigger the animation when the top of the element is 80% from the top of the viewport
+    trigger: ".trs",
+    start: "top 80%", 
     toggleActions: "play none none reverse",
   }
 });
@@ -147,6 +141,7 @@ gsap.from(".trsx", {
   return animation;
 }
 </script>
+
 
 
 <style scoped>
