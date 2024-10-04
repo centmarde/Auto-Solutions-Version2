@@ -56,75 +56,21 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue';
-  import { useTheme } from 'vuetify';
-  import { useRouter } from 'vue-router';
-  import { supabase, doLogout as supabaseLogout } from '../lib/supaBase';
+  import { onMounted } from 'vue';
+  import { useUserStore } from '../stores/store';
   
-  const router = useRouter();
-  const username = ref('Guest');
-  const userImage = ref('');
-  const isMenuVisible = ref(false);
-  const theme = useTheme();
-  const isDark = ref(theme.global.current.value.dark);
+  const userStore = useUserStore();
   
-  // Fetch user data on component mount
-  const fetchUserData = async () => {
-    const userId = localStorage.getItem('user_id');
-    if (!userId) return; // Exit if no user ID
   
-    const { data, error } = await supabase
-      .from('User')
-      .select('*')
-      .eq('id', userId)
-      .single();
+  const { username, userImage, isMenuVisible, isDark, fetchUserData, handleLogout, toggleMenu, closeMenu, toggleTheme, initTheme } = userStore;
   
-    if (error) {
-      console.error('Error fetching user data:', error);
-      return; // Exit on error
-    }
   
-    username.value = data.username || 'Guest';
-    userImage.value = data.img || ''; // Set user image URL
-  };
-  
-  // Logout handler
-  const handleLogout = async () => {
-    try {
-      await supabaseLogout(); // Use the imported logout function
-      localStorage.removeItem('user_id');
-      localStorage.removeItem('axios_id');
-      router.push('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-  
-  // Menu toggle functions
-  const toggleMenu = () => {
-    isMenuVisible.value = !isMenuVisible.value;
-  };
-  
-  const closeMenu = () => {
-    isMenuVisible.value = false;
-  };
-  
-  // Theme toggle
-  const toggleTheme = () => {
-    const newTheme = isDark.value ? 'light' : 'dark';
-    theme.global.name.value = newTheme;
-    isDark.value = newTheme === 'dark';
-    localStorage.setItem('theme', newTheme); // Save theme in local storage
-  };
-  
-  // On component mount, set the initial theme and fetch user data
   onMounted(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    theme.global.name.value = savedTheme;
-    isDark.value = savedTheme === 'dark';
-    fetchUserData();
+    initTheme(); 
+    fetchUserData(); 
   });
   </script>
+  
   
   <style scoped>
   .logopic {

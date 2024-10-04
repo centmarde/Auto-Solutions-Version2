@@ -54,6 +54,7 @@
                         <h1 class="headertext">Auto-Solutions</h1>
                     </div>
                     <div class="col mt-3 me-10 d-flex justify-content-end">
+                        <button class="custom-button me-2 my-auto d-flex"> <v-icon class="me-1 my-auto">mdi-shopping</v-icon> PURCHASE</button>
                         <button class="custom-button ms-2" @click="BodyButton">BODY</button>
                         <button class="custom-button ms-2" @click="BackButton">BACK</button>
                         <button class="custom-button ms-2" @click="TireButton">TIRES</button>
