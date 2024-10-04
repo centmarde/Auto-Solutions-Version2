@@ -36,6 +36,7 @@
   
   <script setup>
   import InquiresNavbar from '../../layouts/InquiresNavbar.vue';
+  import InsideRent from '@/layouts/InsideInquires/InsideRent.vue';
   </script>
   
   <style>
