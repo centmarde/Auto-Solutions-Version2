@@ -41,7 +41,7 @@
                 <v-icon left>mdi-delete</v-icon>
                 Delete
               </v-btn>
-              <v-btn color="blue" @click="chatWithSupplier(item.transaction.supplier_id)">
+              <v-btn color="blue" @click="chatWithSupplier(item.transaction.seller_id, item.car.id)">
                 <v-icon left>mdi-chat</v-icon>
                 Chat
               </v-btn>
@@ -63,7 +63,7 @@ export default {
       transactions: [],
       carsWithTransactions: [],
       loading: true,
-      error: null
+      error: null,
     };
   },
   async created() {
@@ -71,56 +71,125 @@ export default {
   },
   methods: {
     async fetchCars() {
-  this.loading = true;
-  const loggedInUserId = localStorage.getItem('user_id');
-  console.log(loggedInUserId);
+      this.loading = true;
+      const loggedInUserId = localStorage.getItem('user_id');
+      console.log(loggedInUserId);
 
-  try {
-    const { data, error } = await supabase
-      .from('Transaction')
-      .select(`*, Car (*), User:buyer_id (*)`)
-      .eq('Car.forSale', true)
-      .eq('buyer_id', loggedInUserId); // Fixed misplaced semicolon
+      try {
+        const { data, error } = await supabase
+          .from('Transaction')
+          .select(`*, Car (*), User:buyer_id (*)`)
+          .eq('Car.forSale', true)
+          .eq('buyer_id', loggedInUserId);
 
-    if (error) throw error;
+        if (error) throw error;
 
-    // Ensure data is an array and filter out null cars
-    const carsForSale = data
-      .map(transaction => transaction.Car)
-      .filter(car => car !== null);
+        const carsForSale = data
+          .map(transaction => transaction.Car)
+          .filter(car => car !== null);
 
-    // Shuffle the cars for sale
-    this.cars = this.shuffleArray(carsForSale);
+        this.cars = this.shuffleArray(carsForSale);
 
-    // Create an array of transactions with corresponding cars
-    this.carsWithTransactions = data.map(transaction => ({
-      car: transaction.Car,
-      transaction: transaction,
-    })).filter(item => item.car !== null); // Filter out null cars from transactions
-  } catch (err) {
-    this.error = err.message;
-  } finally {
-    this.loading = false;
-  }
-},
+        this.carsWithTransactions = data
+          .map(transaction => ({
+            car: transaction.Car,
+            transaction: transaction,
+          }))
+          .filter(item => item.car !== null);
+      } catch (err) {
+        this.error = err.message;
+      } finally {
+        this.loading = false;
+      }
+    },
 
     async deleteCar(carId) {
       try {
-        const { error } = await supabase.from('Transaction').delete().eq('car_id', carId);
+        const { error } = await supabase
+          .from('Transaction')
+          .delete()
+          .eq('car_id', carId);
         if (error) throw error;
         this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
       } catch (err) {
         this.error = err.message;
       }
     },
+
+    async chatWithSupplier(sellerId, carId) {
+      try {
+        const loggedInUserId = localStorage.getItem('user_id');
+        if (!loggedInUserId) {
+          throw new Error('User is not logged in');
+        }
+
+        // Insert into Participants table
+        const { data: participantData, error: participantError } = await supabase
+          .from('Participants')
+          .insert([{ user_id: loggedInUserId, supplier_id: sellerId }])
+          .select();
+
+        if (participantError) throw participantError;
+
+        const participantId = participantData[0].id;
+
+        // Fetch the existing conversation
+        const { data: chatData, error: chatError } = await supabase
+          .from('Conversation')
+          .select('id')
+          .eq('user_id', loggedInUserId)
+          .eq('car_id', carId);
+
+        if (chatError) throw chatError;
+
+        if (chatData && chatData.length > 0) {
+          const chatId = chatData[0].id;
+
+          // Update the participant with the conversation_id
+          const { error: updateError } = await supabase
+            .from('Participants')
+            .update({ conversation_id: chatId })
+            .eq('id', participantId);
+
+          if (updateError) throw updateError;
+
+          // Navigate to the Chat view
+          this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
+        } else {
+          // Create a new conversation if none exists
+          const { data: newConversationData, error: newConversationError } = await supabase
+            .from('Conversation')
+            .insert([{ user_id: loggedInUserId, car_id: carId }])
+            .select();
+
+          if (newConversationError) throw newConversationError;
+
+          const newChatId = newConversationData[0].id;
+
+          // Update the participant with the new conversation_id
+          const { error: updateError } = await supabase
+            .from('Participants')
+            .update({ conversation_id: newChatId })
+            .eq('id', participantId);
+
+          if (updateError) throw updateError;
+
+          // Navigate to the Chat view
+          this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
+        }
+      } catch (err) {
+        console.error('Error starting chat:', err);
+      }
+    },
+
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
       return array;
-    }
-  }
+    },
+  },
 };
 </script>
 
