@@ -80,7 +80,7 @@ export default {
           .from('Transaction')
           .select(`*, Car (*), User:buyer_id (*)`)
           .eq('Car.forSale', true)
-          .eq('buyer_id', loggedInUserId); // Filter by logged-in buyer
+          .eq('buyer_id', loggedInUserId);
 
         if (error) throw error;
 
@@ -131,7 +131,7 @@ export default {
 
         if (participantError) throw participantError;
 
-        const participantId = participantData[0].id; // Get the new participant_id
+        const participantId = participantData[0].id;
 
         // Fetch the existing conversation
         const { data: chatData, error: chatError } = await supabase
@@ -153,10 +153,29 @@ export default {
 
           if (updateError) throw updateError;
 
-          // Navigate to the Chat view, passing both seller_id and car_id
+          // Navigate to the Chat view
           this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
         } else {
-          console.log('No existing conversation found.');
+          // Create a new conversation if none exists
+          const { data: newConversationData, error: newConversationError } = await supabase
+            .from('Conversation')
+            .insert([{ user_id: loggedInUserId, car_id: carId }])
+            .select();
+
+          if (newConversationError) throw newConversationError;
+
+          const newChatId = newConversationData[0].id;
+
+          // Update the participant with the new conversation_id
+          const { error: updateError } = await supabase
+            .from('Participants')
+            .update({ conversation_id: newChatId })
+            .eq('id', participantId);
+
+          if (updateError) throw updateError;
+
+          // Navigate to the Chat view
+          this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
         }
       } catch (err) {
         console.error('Error starting chat:', err);
@@ -173,7 +192,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .fixed-card {
