@@ -52,22 +52,25 @@ import Inbox from '@/layouts/Inbox.vue';
 export default {
   data() {
     return {
-      input: '',
-      messages: [],
-      username: '',
+      isFetching: false, // Flag to prevent multiple fetches
       chatId: null,
+      username: '',
       carBrand: '',
       carModel: '',
+      messages: []
     };
   },
-
   async created() {
+    if (this.isFetching) return; // Prevent fetching if already in progress
+
+    this.isFetching = true;
     const sellerId = this.$route.query.seller_id;
-    const carId = this.$route.query.car_id; // Get car_id from query
+    const carId = this.$route.query.car_id;
     const loggedInUserId = localStorage.getItem('user_id');
 
     if (sellerId && loggedInUserId) {
       try {
+        // Fetch seller's username
         const { data: userData, error: userError } = await supabase
           .from('User')
           .select('username')
@@ -88,32 +91,31 @@ export default {
         this.carBrand = carData.brand;
         this.carModel = carData.model;
 
-        // Check if a chat already exists between the buyer and seller for this specific car
+        // Check if a chat already exists
         const { data: chatData, error: chatError } = await supabase
           .from('Conversation')
           .select('id')
           .eq('user_id', loggedInUserId)
-          .eq('car_id', carId) // Ensure to filter by car_id
+          .eq('car_id', carId)
           .maybeSingle();
 
         if (chatError) throw chatError;
 
         if (chatData) {
           this.chatId = chatData.id;
-          console.log('Chat ID:', this.chatId);
           await this.fetchMessages(); // Fetch messages if chat exists
         } else {
           // Create a new chat if none exists
           const { data: newChatData, error: newChatError } = await supabase
             .from('Conversation')
-            .insert([{ user_id: loggedInUserId, car_id: carId }]) // Include seller_id and car_id
+            .insert([{ user_id: loggedInUserId, car_id: carId }])
             .select()
             .single();
 
           if (newChatError) throw newChatError;
           this.chatId = newChatData.id;
 
-          // Insert the initial message into the Messages table
+          // Insert initial message
           const initialMessage = 'has initiated a chat';
           const { error: inboxError } = await supabase
             .from('Messages')
@@ -121,14 +123,16 @@ export default {
 
           if (inboxError) throw inboxError;
 
-          // Add the initial message to the message list for display
           this.messages.push({ sender: 'System', text: initialMessage });
         }
       } catch (err) {
         console.error('Error during chat setup:', err);
+      } finally {
+        this.isFetching = false; // Reset the flag after fetch
       }
     }
   },
+
 
   methods: {
     async fetchMessages() {

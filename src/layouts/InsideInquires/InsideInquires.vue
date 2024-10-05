@@ -117,63 +117,51 @@ export default {
     },
 
     async chatWithSupplier(sellerId, carId) {
-  try {
-    const loggedInUserId = localStorage.getItem('user_id');
-    if (!loggedInUserId) {
-      throw new Error('User is not logged in');
-    }
+      try {
+        const loggedInUserId = localStorage.getItem('user_id');
+        if (!loggedInUserId) {
+          throw new Error('User is not logged in');
+        }
 
-    // Insert into Participants table first
-    const { data: participantData, error: participantError } = await supabase
-      .from('Participants')
-      .insert([{ user_id: loggedInUserId, supplier_id: sellerId }])
-      .select();
+        // Insert into Participants table
+        const { data: participantData, error: participantError } = await supabase
+          .from('Participants')
+          .insert([{ user_id: loggedInUserId, supplier_id: sellerId }])
+          .select();
 
-    if (participantError) throw participantError;
+        if (participantError) throw participantError;
 
-    // Get the participant's conversation_id (assuming it's available right after insertion)
-    const participantId = participantData[0].id; // Get the new participant_id
+        const participantId = participantData[0].id; // Get the new participant_id
 
-    // Now check if a conversation exists or create a new one
-    const { data: chatData, error: chatError } = await supabase
-      .from('Conversation')
-      .select('id')
-      .eq('user_id', loggedInUserId);
+        // Fetch the existing conversation
+        const { data: chatData, error: chatError } = await supabase
+          .from('Conversation')
+          .select('id')
+          .eq('user_id', loggedInUserId)
+          .eq('car_id', carId);
 
-    if (chatError) throw chatError;
+        if (chatError) throw chatError;
 
-    let chatId;
+        if (chatData && chatData.length > 0) {
+          const chatId = chatData[0].id;
 
-    // If no chat exists, create a new one
-    if (!chatData || chatData.length === 0) {
-      const { data: newChatData, error: newChatError } = await supabase
-        .from('Conversation')
-        .insert([{ user_id: loggedInUserId }])
-        .select();
+          // Update the participant with the conversation_id
+          const { error: updateError } = await supabase
+            .from('Participants')
+            .update({ conversation_id: chatId })
+            .eq('id', participantId);
 
-      if (newChatError) throw newChatError;
-      chatId = newChatData[0].id; // Get the new chat_id
-    } else {
-      chatId = chatData[0].id; // Use the existing chat_id
-    }
+          if (updateError) throw updateError;
 
-    // Now update the participant with the conversation_id
-    const { error: updateError } = await supabase
-      .from('Participants')
-      .update({ conversation_id: chatId })
-      .eq('id', participantId);
-
-    if (updateError) throw updateError;
-
-    // Navigate to the Chat view, passing both seller_id and car_id
-    this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
-  } catch (err) {
-    console.error('Error starting chat:', err);
-  }
-},
-
-
-
+          // Navigate to the Chat view, passing both seller_id and car_id
+          this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
+        } else {
+          console.log('No existing conversation found.');
+        }
+      } catch (err) {
+        console.error('Error starting chat:', err);
+      }
+    },
 
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -185,7 +173,6 @@ export default {
   },
 };
 </script>
-
 
 
 <style scoped>
