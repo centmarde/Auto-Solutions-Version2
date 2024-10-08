@@ -70,6 +70,9 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "../lib/supaBase"; // importing Supabase client
 import axios from "axios";
+import { requiredValidator, emailValidator } from '../utils/validator.js';
+
+// udfw jvvl ikom emdl SMTP password
 
 const email = ref("");
 const password = ref("");

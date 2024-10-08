@@ -62,7 +62,7 @@
             :class="{ underline: isActiveRoute('/').value }"
             @click="handleLogout"
           >
-            <p  class=" fw-bold fst">Logout</p>
+            <p  class=" fw-bold fst">Exit</p>
           </router-link>
         </div>
       </div>
