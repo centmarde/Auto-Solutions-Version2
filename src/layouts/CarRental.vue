@@ -71,14 +71,14 @@ export default {
 
 #sts4 {
   top: 20%;
-  left: 20%;
+  left: 25%;
   margin-bottom: 2rem;
 }
 
 @media (max-width: 800px) and (min-width: 350px) {
   #sts4 {
     top: 20%;
-    left: 10%;
+    left: 26%;
     margin-bottom: 2rem;
   }
 }
