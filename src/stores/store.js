@@ -16,7 +16,10 @@ export const useUserStore = defineStore('user', () => {
 
   const fetchUserData = async () => {
     const userId = localStorage.getItem('user_id');
-    if (!userId) return; 
+    if (!userId) {
+      console.log('No user_id found, using default guest settings');
+      return; 
+    }
 
     const { data, error } = await supabase
       .from('User')
@@ -31,6 +34,7 @@ export const useUserStore = defineStore('user', () => {
 
     username.value = data.username || 'Guest';
     userImage.value = data.img || '';
+    console.log('User data fetched successfully:', data);
   };
 
   const handleLogout = async () => {
@@ -57,12 +61,14 @@ export const useUserStore = defineStore('user', () => {
     theme.global.name.value = newTheme;
     isDark.value = newTheme === 'dark';
     localStorage.setItem('theme', newTheme);
+    console.log('Theme toggled to:', newTheme);
   };
 
   const initTheme = () => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'light';
     theme.global.name.value = savedTheme;
     isDark.value = savedTheme === 'dark';
+    console.log('Theme initialized to:', savedTheme);
   };
 
   return {
@@ -75,6 +81,7 @@ export const useUserStore = defineStore('user', () => {
     toggleMenu,
     closeMenu,
     toggleTheme,
-    initTheme
+    initTheme,
   };
 });
+

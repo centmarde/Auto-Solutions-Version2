@@ -24,7 +24,7 @@
         <v-col cols="12" md="4">
           <v-card elevation="8">
             
-            <SellCarInside />
+            <Garage />
            
           </v-card>
         </v-col>
@@ -68,6 +68,7 @@ import CarRental from "../layouts/CarRental.vue";
 import Footer from '../layouts/Footer.vue';
 import SellCarInside from "@/layouts/SellCarInside.vue";
 import CarsForRent from "../layouts/CarsForRent.vue";
+import Garage from "../layouts/GarageOuter.vue";
 
 const logout = async () => {
   await doLogout();

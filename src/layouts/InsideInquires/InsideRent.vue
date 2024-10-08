@@ -41,10 +41,10 @@
                   <v-icon left>mdi-delete</v-icon>
                   Delete
                 </v-btn>
-                <v-btn color="blue" @click="chatWithSupplier(item.transaction.supplier_id)">
-                  <v-icon left>mdi-chat</v-icon>
-                  Chat
-                </v-btn>
+                <v-btn color="blue" @click="chatWithSupplier(item.transaction.seller_id, item.car.id)">
+                <v-icon left>mdi-chat</v-icon>
+                Chat
+              </v-btn>
               </v-card-actions>
             </v-col>
           </v-row>
@@ -113,6 +113,49 @@
           this.error = err.message;
         }
       },
+      async chatWithSupplier(sellerId, carId) {
+  try {
+    const loggedInUserId = localStorage.getItem('user_id');
+    if (!loggedInUserId) {
+      throw new Error('User is not logged in');
+    }
+
+    // Check if the logged-in user is the buyer or supplier
+    const isBuyer = loggedInUserId !== sellerId;
+
+    // Fetch the existing conversation
+    const { data: conversationData, error: conversationError } = await supabase
+      .from('Conversation')
+      .select('id')
+      .eq('buyer_id', isBuyer ? loggedInUserId : sellerId)
+      .eq('supplier_id', isBuyer ? sellerId : loggedInUserId)
+      .eq('car_id', carId);
+
+    if (conversationError) throw conversationError;
+
+    if (conversationData && conversationData.length > 0) {
+      const chatId = conversationData[0].id;
+
+      // Navigate to the Chat view with existing conversation
+      this.$router.push({ path: '/Chat', query: { chat_id: chatId, seller_id: sellerId, car_id: carId } });
+    } else {
+      // Create a new conversation if none exists
+      const { data: newConversationData, error: newConversationError } = await supabase
+        .from('Conversation')
+        .insert([{ buyer_id: isBuyer ? loggedInUserId : null, supplier_id: sellerId, car_id: carId }])
+        .select();
+
+      if (newConversationError) throw newConversationError;
+
+      const newChatId = newConversationData[0].id;
+
+      // Navigate to the Chat view with the new conversation
+      this.$router.push({ path: '/Chat', query: { chat_id: newChatId, seller_id: sellerId, car_id: carId } });
+    }
+  } catch (err) {
+    console.error('Error starting chat:', err);
+  }
+},
       shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));

@@ -21,11 +21,20 @@
                     :class="{'buyer-message': message.senderName === userName, 'supplier-message': message.senderName !== userName}"
                   >
                     <v-list-item-content>
-                      <v-list-item-title>
-                        <span>{{ message.senderName }}:</span>
-                        <span class="message-text">{{ message.text }}</span>
-                        <span class="timestamp">{{ new Date(message.created_at).toLocaleTimeString() }}</span>
-                      </v-list-item-title>
+                      <v-list-item>
+                        <v-list-item-icon>
+                          <v-icon>{{ message.senderName === buyerName ? 'mdi mdi-face-agent' : 'mdi-account-circle' }}</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            <span class="font-weight-bold">{{ message.senderName }}:</span>
+                          </v-list-item-title>
+                          <span class="message-text">{{ message.text }}</span>
+                          <v-list-item-subtitle class="timestamp" style="text-align: right; margin-top: 4px;">
+                            {{ new Date(message.created_at).toLocaleTimeString() }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list-item-group>
@@ -48,7 +57,6 @@
     </v-row>
   </v-container>
 </template>
-
 
 <script>
 import { supabase } from '@/lib/supaBase';
@@ -101,11 +109,8 @@ export default {
 
         if (conversationData) {
           this.chatId = conversationData.id;
+          this.isSupplier = conversationData.supplier_id === loggedInUserId;
 
-          // Determine if the logged-in user is the supplier or buyer
-          this.isSupplier = conversationData.supplier_id == loggedInUserId;
-
-          // Fetch usernames based on buyer_id and supplier_id
           const { data: buyerData, error: buyerError } = await supabase
             .from('User')
             .select('username')
@@ -125,7 +130,7 @@ export default {
           this.supplierName = supplierData.username;
 
           await this.fetchMessages();
-          this.setupRealtimeSubscription(); // Setup real-time subscription
+          this.setupRealtimeSubscription();
         }
       } catch (err) {
         console.error('Error during chat setup:', err);
@@ -201,9 +206,6 @@ export default {
 };
 </script>
 
-
-
-
 <script setup>
 import InsideNavbar from '@/layouts/InsideNavbar.vue';
 </script>
@@ -223,8 +225,7 @@ import InsideNavbar from '@/layouts/InsideNavbar.vue';
   margin: 5px 0;
 }
 .messages-container {
-  max-height: 400px; /* Adjust the height as needed */
+  max-height: 55vh;
   overflow-y: auto;
 }
-
 </style>

@@ -16,10 +16,14 @@
             />
             <v-list-item-content>
               <v-list-item-avatar />
+             
+
               <v-list-item-title>{{ conversation.username }}</v-list-item-title>
               <v-list-item-subtitle>
-                Car: {{ conversation.car_brand }} - {{ conversation.car_model }}
-              </v-list-item-subtitle>
+  <v-icon>mdi-car</v-icon>
+  Car: {{ conversation.car_brand }} - {{ conversation.car_model }}
+</v-list-item-subtitle>
+
               <v-list-item-subtitle>
                 <strong>Latest Message:</strong> 
                 {{ conversation.latestMessage.message || 'No messages yet' }}
@@ -35,7 +39,13 @@
       <div v-else class="empty-state">
         <v-icon large color="grey lighten-1">mdi-message-outline</v-icon>
         <p>No messages yet</p>
-        <v-btn color="primary" @click="browseCars">Browse Cars</v-btn>
+        <router-link to="/Home">
+  <v-btn color="primary">
+    Browse Cars
+  </v-btn>
+</router-link>
+
+
       </div>
     </v-card-text>
   </v-card>
@@ -80,7 +90,8 @@ export default {
     const uniqueConversations = [];
 
     data.forEach(conversation => {
-      const latestMessage = conversation.Messages.length > 0 ? conversation.Messages[0] : null;
+      const latestMessage = conversation.Messages.length > 0 ? conversation.Messages[conversation.Messages.length - 1] : null;
+
       
       if (latestMessage) {
         const isBuyer = conversation.buyer_id === loggedInUserId;
