@@ -36,6 +36,7 @@
   
   <script setup>
   import InquiresNavbar from '../../layouts/InquiresNavbar.vue';
+  import InsideGarage from '../../layouts/InsideInquires/InsideGarage.vue';
   </script>
   
   <style>
