@@ -104,83 +104,69 @@ export default {
     },
 
     async deleteCar(carId) {
-      try {
-        const { error } = await supabase
-          .from('Transaction')
-          .delete()
-          .eq('car_id', carId);
-        if (error) throw error;
-        this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
-      } catch (err) {
-        this.error = err.message;
-      }
-    },
+  const confirmation = window.confirm("Are you sure you want to delete this Listing?");
+  
+  if (confirmation) {
+    try {
+      const { error } = await supabase
+        .from('Transaction')
+        .delete()
+        .eq('car_id', carId);
+      
+      if (error) throw error;
+      
+      this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
+    } catch (err) {
+      this.error = err.message;
+    }
+  }
+},
 
-    async chatWithSupplier(sellerId, carId) {
-      try {
-        const loggedInUserId = localStorage.getItem('user_id');
-        if (!loggedInUserId) {
-          throw new Error('User is not logged in');
-        }
 
-        // Insert into Participants table
-        const { data: participantData, error: participantError } = await supabase
-          .from('Participants')
-          .insert([{ user_id: loggedInUserId, supplier_id: sellerId }])
-          .select();
+async chatWithSupplier(sellerId, carId) {
+  try {
+    const loggedInUserId = localStorage.getItem('user_id');
+    if (!loggedInUserId) {
+      throw new Error('User is not logged in');
+    }
 
-        if (participantError) throw participantError;
+    // Check if the logged-in user is the buyer or supplier
+    const isBuyer = loggedInUserId !== sellerId;
 
-        const participantId = participantData[0].id;
+    // Fetch the existing conversation
+    const { data: conversationData, error: conversationError } = await supabase
+      .from('Conversation')
+      .select('id')
+      .eq('buyer_id', isBuyer ? loggedInUserId : sellerId)
+      .eq('supplier_id', isBuyer ? sellerId : loggedInUserId)
+      .eq('car_id', carId);
 
-        // Fetch the existing conversation
-        const { data: chatData, error: chatError } = await supabase
-          .from('Conversation')
-          .select('id')
-          .eq('user_id', loggedInUserId)
-          .eq('car_id', carId);
+    if (conversationError) throw conversationError;
 
-        if (chatError) throw chatError;
+    if (conversationData && conversationData.length > 0) {
+      const chatId = conversationData[0].id;
 
-        if (chatData && chatData.length > 0) {
-          const chatId = chatData[0].id;
+      // Navigate to the Chat view with existing conversation
+      this.$router.push({ path: '/Chat', query: { chat_id: chatId, seller_id: sellerId, car_id: carId } });
+    } else {
+      // Create a new conversation if none exists
+      const { data: newConversationData, error: newConversationError } = await supabase
+        .from('Conversation')
+        .insert([{ buyer_id: isBuyer ? loggedInUserId : null, supplier_id: sellerId, car_id: carId }])
+        .select();
 
-          // Update the participant with the conversation_id
-          const { error: updateError } = await supabase
-            .from('Participants')
-            .update({ conversation_id: chatId })
-            .eq('id', participantId);
+      if (newConversationError) throw newConversationError;
 
-          if (updateError) throw updateError;
+      const newChatId = newConversationData[0].id;
 
-          // Navigate to the Chat view
-          this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
-        } else {
-          // Create a new conversation if none exists
-          const { data: newConversationData, error: newConversationError } = await supabase
-            .from('Conversation')
-            .insert([{ user_id: loggedInUserId, car_id: carId }])
-            .select();
+      // Navigate to the Chat view with the new conversation
+      this.$router.push({ path: '/Chat', query: { chat_id: newChatId, seller_id: sellerId, car_id: carId } });
+    }
+  } catch (err) {
+    console.error('Error starting chat:', err);
+  }
+},
 
-          if (newConversationError) throw newConversationError;
-
-          const newChatId = newConversationData[0].id;
-
-          // Update the participant with the new conversation_id
-          const { error: updateError } = await supabase
-            .from('Participants')
-            .update({ conversation_id: newChatId })
-            .eq('id', participantId);
-
-          if (updateError) throw updateError;
-
-          // Navigate to the Chat view
-          this.$router.push({ path: '/Chat', query: { seller_id: sellerId, car_id: carId } });
-        }
-      } catch (err) {
-        console.error('Error starting chat:', err);
-      }
-    },
 
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {

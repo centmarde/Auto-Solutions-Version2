@@ -1,45 +1,51 @@
 <template>
+  <br><br><br>
   <InsideNavbar />
-  <br /><br /><br />
   <v-container fluid>
     <v-row>
       <v-col lg="4" md="4" sm="12" cols="12">
         <Inbox />
-    </v-col>
-    <v-col lg="8" md="8" sm="12" cols="12">
-      <v-card>
-      <v-card-title>
-        Chat with {{ username }} about {{ carBrand }} {{ carModel }}
-      </v-card-title>
-      <v-card-text>
-        <v-list>
-          <v-list-item-group>
-            <v-list-item v-for="(message, index) in messages" :key="index">
-              <v-list-item-content>
-                <v-list-item-title
-                  :class="{'buyer-message': message.sender === 'Buyer', 'supplier-message': message.sender === 'Supplier'}"
-                >
-                  {{ message.sender }}: {{ message.text }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-card-text>
-      <v-card-actions>
-        <v-text-field
-          v-model="input"
-          label="Type your message"
-          @keyup.enter="sendMessage"
-          outlined
-          clearable
-        ></v-text-field>
-        <v-btn @click="sendMessage" color="primary">Send</v-btn>
-      </v-card-actions>
-    </v-card>
-    </v-col>
+      </v-col>
+      <v-col lg="8" md="8" sm="12" cols="12">
+        <v-card class="chat-card">
+          <v-card-title class="chat-title">
+            Chat with {{ isSupplier ? buyerName : supplierName }} about {{ carBrand }} {{ carModel }}
+          </v-card-title>
+          <v-card-text class="chat-messages">
+            <v-list>
+              <div class="messages-container">
+                <v-list-item-group>
+                  <v-list-item
+                    v-for="(message, index) in messages"
+                    :key="index"
+                    :class="{'buyer-message': message.senderName === userName, 'supplier-message': message.senderName !== userName}"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        <span>{{ message.senderName }}:</span>
+                        <span class="message-text">{{ message.text }}</span>
+                        <span class="timestamp">{{ new Date(message.created_at).toLocaleTimeString() }}</span>
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </div>
+            </v-list>
+          </v-card-text>
+          <v-card-actions>
+            <v-text-field
+              v-model="input"
+              label="Type your message"
+              @keyup.enter="sendMessage"
+              outlined
+              clearable
+              class="message-input"
+            ></v-text-field>
+            <v-btn @click="sendMessage" color="primary">Send</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
     </v-row>
-   
   </v-container>
 </template>
 
@@ -48,39 +54,32 @@
 import { supabase } from '@/lib/supaBase';
 import Inbox from '@/layouts/Inbox.vue';
 
-
 export default {
   data() {
     return {
-      isFetching: false, // Flag to prevent multiple fetches
+      isFetching: false,
       chatId: null,
-      username: '',
+      supplierName: '',
+      buyerName: '',
       carBrand: '',
       carModel: '',
-      messages: []
+      input: '',
+      messages: [],
+      userName: '',
+      isSupplier: false,
     };
   },
-  async created() {
-    if (this.isFetching) return; // Prevent fetching if already in progress
 
+  async created() {
+    if (this.isFetching) return;
     this.isFetching = true;
+
     const sellerId = this.$route.query.seller_id;
     const carId = this.$route.query.car_id;
     const loggedInUserId = localStorage.getItem('user_id');
 
     if (sellerId && loggedInUserId) {
       try {
-        // Fetch seller's username
-        const { data: userData, error: userError } = await supabase
-          .from('User')
-          .select('username')
-          .eq('id', sellerId)
-          .single();
-
-        if (userError) throw userError;
-        this.username = userData.username;
-
-        // Fetch car brand and model
         const { data: carData, error: carError } = await supabase
           .from('Car')
           .select('brand, model')
@@ -91,48 +90,50 @@ export default {
         this.carBrand = carData.brand;
         this.carModel = carData.model;
 
-        // Check if a chat already exists
-        const { data: chatData, error: chatError } = await supabase
+        const { data: conversationData, error: conversationError } = await supabase
           .from('Conversation')
-          .select('id')
-          .eq('user_id', loggedInUserId)
+          .select('id, buyer_id, supplier_id')
           .eq('car_id', carId)
+          .or(`supplier_id.eq.${loggedInUserId},buyer_id.eq.${loggedInUserId}`)
           .maybeSingle();
 
-        if (chatError) throw chatError;
+        if (conversationError) throw conversationError;
 
-        if (chatData) {
-          this.chatId = chatData.id;
-          await this.fetchMessages(); // Fetch messages if chat exists
-        } else {
-          // Create a new chat if none exists
-          const { data: newChatData, error: newChatError } = await supabase
-            .from('Conversation')
-            .insert([{ user_id: loggedInUserId, car_id: carId }])
-            .select()
+        if (conversationData) {
+          this.chatId = conversationData.id;
+
+          // Determine if the logged-in user is the supplier or buyer
+          this.isSupplier = conversationData.supplier_id == loggedInUserId;
+
+          // Fetch usernames based on buyer_id and supplier_id
+          const { data: buyerData, error: buyerError } = await supabase
+            .from('User')
+            .select('username')
+            .eq('id', conversationData.buyer_id)
             .single();
 
-          if (newChatError) throw newChatError;
-          this.chatId = newChatData.id;
+          if (buyerError) throw buyerError;
+          this.buyerName = buyerData.username;
 
-          // Insert initial message
-          const initialMessage = 'has initiated a chat';
-          const { error: inboxError } = await supabase
-            .from('Messages')
-            .insert([{ conversation_id: this.chatId, message: initialMessage, user_id: loggedInUserId }]);
+          const { data: supplierData, error: supplierError } = await supabase
+            .from('User')
+            .select('username')
+            .eq('id', conversationData.supplier_id)
+            .single();
 
-          if (inboxError) throw inboxError;
+          if (supplierError) throw supplierError;
+          this.supplierName = supplierData.username;
 
-          this.messages.push({ sender: 'System', text: initialMessage });
+          await this.fetchMessages();
+          this.setupRealtimeSubscription(); // Setup real-time subscription
         }
       } catch (err) {
         console.error('Error during chat setup:', err);
       } finally {
-        this.isFetching = false; // Reset the flag after fetch
+        this.isFetching = false;
       }
     }
   },
-
 
   methods: {
     async fetchMessages() {
@@ -145,16 +146,22 @@ export default {
 
         if (messagesError) throw messagesError;
 
-        // Map messages to include sender name
         this.messages = await Promise.all(messagesData.map(async (message) => {
-          const { data: userData, error: userError } = await supabase
+          const senderId = message.user_id;
+
+          const { data: senderData, error: senderError } = await supabase
             .from('User')
             .select('username')
-            .eq('id', message.user_id)
+            .eq('id', senderId)
             .single();
-          
-          if (userError) throw userError;
-          return { sender: userData.username, text: message.message };
+
+          if (senderError) throw senderError;
+
+          return {
+            senderName: senderData.username,
+            text: message.message,
+            created_at: message.created_at,
+          };
         }));
       } catch (err) {
         console.error('Error fetching messages:', err);
@@ -166,27 +173,36 @@ export default {
         try {
           const loggedInUserId = localStorage.getItem('user_id');
 
-        
-          const { error: messageError } = await supabase
+          const { data, error: messageError } = await supabase
             .from('Messages')
             .insert([{ conversation_id: this.chatId, message: this.input, user_id: loggedInUserId }]);
 
           if (messageError) throw messageError;
 
-        
-          this.messages.push({ sender: 'Buyer', text: this.input });
+          this.messages.push({ senderName: this.userName, text: this.input, created_at: new Date().toISOString() });
           this.input = '';
-
-          // Simulate a response from the supplier
-        
         } catch (err) {
           console.error('Error sending message:', err);
         }
       }
     },
+
+    setupRealtimeSubscription() {
+      const channel = supabase
+        .channel('public:messages')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'Messages' }, (payload) => {
+          if (payload.new.conversation_id === this.chatId) {
+            this.fetchMessages(); 
+          }
+        })
+        .subscribe();
+    },
   },
 };
 </script>
+
+
+
 
 <script setup>
 import InsideNavbar from '@/layouts/InsideNavbar.vue';
@@ -206,4 +222,9 @@ import InsideNavbar from '@/layouts/InsideNavbar.vue';
   border-radius: 10px;
   margin: 5px 0;
 }
+.messages-container {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
 </style>
