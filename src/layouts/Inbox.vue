@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>User Inbox</v-card-title>
+    <v-card-title><v-icon class="mx-2">mdi-message-outline</v-icon>User Inbox</v-card-title>
     <v-card-text>
       <v-list v-if="conversations.length > 0">
         <v-list-item-group>
@@ -78,7 +78,8 @@ export default {
         buyer:buyer_id (username, img),
         supplier:supplier_id (username, img)
       `)
-      .or(`buyer_id.eq.${loggedInUserId},supplier_id.eq.${loggedInUserId}`);
+      .or(`buyer_id.eq.${loggedInUserId},supplier_id.eq.${loggedInUserId}`)
+      .neq('buyer_id', loggedInUserId);
 
     if (error) {
       console.error('Error fetching conversations:', error);

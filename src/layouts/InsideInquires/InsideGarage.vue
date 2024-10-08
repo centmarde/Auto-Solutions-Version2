@@ -35,17 +35,12 @@
   
                 <v-card class="mx-auto text-center mt-2" color="dark" max-width="600" dark>
                   <v-card-text>
-                    <div class="text-h4 font-weight-thin">Global Market Value Based on the Last 5 Recent Sales</div>
+                    <div class="text-h5 font-weight-thin">Global Market Value Based on the Last 5 Recent Sales in USD</div>
                     <canvas :id="'chart-' + item.car.id"></canvas>
                   </v-card-text>
   
-                  <v-divider></v-divider>
   
-                  <v-card-actions class="justify-center">
-                    <v-btn variant="text" block>
-                      Go to Report
-                    </v-btn>
-                  </v-card-actions>
+                
                 </v-card>
               </v-card-text>
               <v-card-actions class="d-flex justify-content-end">
@@ -102,21 +97,23 @@
           this.cars = data.filter(car => car !== null);
   
           await Promise.all(this.cars.map(async (car) => {
-            const marketValueData = await getMarketValue(car.brand, car.model);
-            const randomNames = [
-              'Alice', 'Bob', 'Charlie', 'David', 'Eve', 'Frank', 'Grace', 'Hannah', 'Ivy', 'Jack',
-              'Karen', 'Leo', 'Mona', 'Nina', 'Oscar', 'Paul', 'Quincy', 'Rita', 'Sam', 'Tina'
-            ];
+  const marketValueData = await getMarketValue(car.brand, car.model);
   
-            car.marketValue = marketValueData.map((value) => {
-              const randomIndex = Math.floor(Math.random() * randomNames.length);
-              return {
-                name: randomNames[randomIndex],
-                value: value
-              };
-            });
-          }));
+  // Fetch random names using randomuser.me API
+  const randomNamesResponse = await fetch('https://randomuser.me/api/?results=' + marketValueData.length);
+  const randomNamesData = await randomNamesResponse.json();
   
+  const randomNames = randomNamesData.results.map(user => `${user.name.first} ${user.name.last}`);
+
+  // Map market value data to random names
+  car.marketValue = marketValueData.map((value, index) => {
+    return {
+      name: randomNames[index],
+      value: value
+    };
+  });
+}));
+
           this.carsWithTransactions = data.map(transaction => ({
             car: transaction,
             transaction: transaction,
@@ -169,7 +166,7 @@
               const chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                  labels: marketValues.map(value => `${value.name} (Sold)`),
+                  labels: marketValues.map(value => `${value.name}`),
                   datasets: [{
                     label: 'Market Value',
                     data: marketValues.map(value => value.value),
