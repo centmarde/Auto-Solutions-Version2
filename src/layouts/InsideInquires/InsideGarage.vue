@@ -131,23 +131,25 @@
       },
   
       async deleteCar(carId) {
-        const confirmation = window.confirm("Are you sure you want to delete this Listing?");
-        
-        if (confirmation) {
-          try {
-            const { error } = await supabase
-              .from('Transaction')
-              .delete()
-              .eq('car_id', carId);
-            
-            if (error) throw error;
-            
-            this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
-          } catch (err) {
-            this.error = err.message;
-          }
-        }
-      },
+  const confirmation = window.confirm("Are you sure you want to delete this Listing?");
+
+  if (confirmation) {
+    try {
+      const { error } = await supabase
+        .from('Car')
+        .update({ is_garage: false }) // Set is_garage to false
+        .eq('id', carId); // Find the car by its ID
+
+      if (error) throw error;
+
+      // Update the local carsWithTransactions state to reflect the change
+      this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
+    } catch (err) {
+      this.error = err.message;
+    }
+  }
+},
+
   
       shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
