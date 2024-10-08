@@ -32,33 +32,11 @@
               <v-card-title>{{ item.car.brand }} {{ item.car.model }}</v-card-title>
               <v-card-text>
                 <p><small class="text-body-secondary">added at: {{ item.transaction.created_at }}</small></p>
-                <v-card
-                  class="mx-auto text-center mt-2"
-                  color="dark"
-                  max-width="600"
-                  dark
-                >
-                  <v-card-text>
-                    <v-sheet color="#151515">
-                      <v-sparkline
-                        :model-value="item.car.marketValue"
-                        color="rgba(255, 255, 255, .7)"
-                        height="100"
-                        padding="24"
-                        stroke-linecap="round"
-                        smooth
-                      >
-                        <template v-slot:label="value">
-                          ${{ value }}
-                        </template>
-                      </v-sparkline>
-                    </v-sheet>
-                  </v-card-text>
   
+                <v-card class="mx-auto text-center mt-2" color="dark" max-width="600" dark>
                   <v-card-text>
-                    <div class="text-h4 font-weight-thin">
-                      Market Value Over Last 5 Months
-                    </div>
+                    <div class="text-h4 font-weight-thin">Global Market Value Based on the Last 5 Recent Sales</div>
+                    <canvas :id="'chart-' + item.car.id"></canvas>
                   </v-card-text>
   
                   <v-divider></v-divider>
@@ -84,86 +62,153 @@
   </template>
   
   <script>
-import { supabase } from '../../lib/supaBase';
-import { getMarketValue } from '../../seed/get-market-value'; 
-
-export default {
-  data() {
-    return {
-      cars: [],
-      transactions: [],
-      carsWithTransactions: [],
-      loading: true,
-      error: null,
-    };
-  },
-  async created() {
-    await this.fetchCars();
-  },
-  methods: {
-  async fetchCars() {
-    this.loading = true;
-    const loggedInUserId = localStorage.getItem('user_id');
-
-    try {
-      const { data, error } = await supabase
-        .from('Transaction')
-        .select(`*, Car (*), User:buyer_id (*)`)
-        .eq('Car.is_garage', true)
-        .eq('seller_id', loggedInUserId);
-
-      if (error) throw error;
-
-      const carsForSale = data.map(transaction => transaction.Car).filter(car => car !== null);
-      this.cars = this.shuffleArray(carsForSale);
-
-      // Fetch the latest market values for the cars
-      await Promise.all(this.cars.map(async (car) => {
-        const marketValueData = await getMarketValue(car.brand, car.model);
-        car.marketValue = marketValueData; // Store the latest market value
-      }));
-
-      this.carsWithTransactions = data.map(transaction => ({
-        car: transaction.Car,
-        transaction: transaction,
-      })).filter(item => item.car !== null);
-    } catch (err) {
-      this.error = err.message;
-    } finally {
-      this.loading = false;
-    }
-  },
-
-    async deleteCar(carId) {
-      const confirmation = window.confirm("Are you sure you want to delete this Listing?");
-      
-      if (confirmation) {
+  import { supabase } from '../../lib/supaBase';
+  import { getMarketValue } from '../../seed/get-market-value';
+  import { Chart, registerables } from 'chart.js';
+  
+  Chart.register(...registerables);
+  
+  export default {
+    data() {
+      return {
+        cars: [],
+        transactions: [],
+        carsWithTransactions: [],
+        loading: true,
+        error: null,
+        charts: [],
+      };
+    },
+    async created() {
+      await this.fetchCars();
+    },
+    beforeDestroy() {
+      this.charts.forEach(chart => chart.destroy());
+    },
+    methods: {
+      async fetchCars() {
+        this.loading = true;
+        const loggedInUserId = localStorage.getItem('user_id');
+  
         try {
-          const { error } = await supabase
-            .from('Transaction')
-            .delete()
-            .eq('car_id', carId);
-          
+          const { data, error } = await supabase
+            .from('Car')
+            .select('*')
+            .eq('is_garage', true)
+            .eq('user_id', loggedInUserId);
+  
           if (error) throw error;
-          
-          this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
+  
+          this.cars = data.filter(car => car !== null);
+  
+          await Promise.all(this.cars.map(async (car) => {
+            const marketValueData = await getMarketValue(car.brand, car.model);
+            const randomNames = [
+              'Alice', 'Bob', 'Charlie', 'David', 'Eve', 'Frank', 'Grace', 'Hannah', 'Ivy', 'Jack',
+              'Karen', 'Leo', 'Mona', 'Nina', 'Oscar', 'Paul', 'Quincy', 'Rita', 'Sam', 'Tina'
+            ];
+  
+            car.marketValue = marketValueData.map((value) => {
+              const randomIndex = Math.floor(Math.random() * randomNames.length);
+              return {
+                name: randomNames[randomIndex],
+                value: value
+              };
+            });
+          }));
+  
+          this.carsWithTransactions = data.map(transaction => ({
+            car: transaction,
+            transaction: transaction,
+          })).filter(item => item.car !== null);
+  
+          this.renderCharts();
         } catch (err) {
           this.error = err.message;
+        } finally {
+          this.loading = false;
         }
-      }
+      },
+  
+      async deleteCar(carId) {
+        const confirmation = window.confirm("Are you sure you want to delete this Listing?");
+        
+        if (confirmation) {
+          try {
+            const { error } = await supabase
+              .from('Transaction')
+              .delete()
+              .eq('car_id', carId);
+            
+            if (error) throw error;
+            
+            this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
+          } catch (err) {
+            this.error = err.message;
+          }
+        }
+      },
+  
+      shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      },
+  
+      renderCharts() {
+        this.$nextTick(() => {
+          this.carsWithTransactions.forEach(item => {
+            const ctx = document.getElementById(`chart-${item.car.id}`);
+            if (ctx) {
+              const marketValues = item.car.marketValue;
+  
+              const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: marketValues.map(value => `${value.name} (Sold)`),
+                  datasets: [{
+                    label: 'Market Value',
+                    data: marketValues.map(value => value.value),
+                    borderColor: 'rgba(255, 255, 255, 0.6)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    fill: true,
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: 'white',
+                      }
+                    }
+                  },
+                  scales: {
+                    x: {
+                      ticks: {
+                        color: 'white',
+                      }
+                    },
+                    y: {
+                      ticks: {
+                        color: 'white',
+                      }
+                    }
+                  }
+                }
+              });
+              this.charts.push(chart);
+            } else {
+              console.error(`Canvas for car ID ${item.car.id} not found.`);
+            }
+          });
+        });
+      },
     },
-
-    shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    },
-  },
-};
-</script>
-
+  };
+  </script>
   
   <style scoped>
   .fixed-card {
