@@ -12,6 +12,7 @@
     "@mdi/font": "7.4.47",
     "@supabase/supabase-js": "^2.45.4",
     "axios": "^1.7.7",
+    "chart.js": "^4.4.4",
     "core-js": "^3.37.1",
     "cors": "^2.8.5",
     "express": "^4.21.0",

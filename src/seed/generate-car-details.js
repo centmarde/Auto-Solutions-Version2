@@ -34,3 +34,4 @@ export async function getChatCompletion(make, model, fieldsToFill) {
   }
   return result;
 }
+
