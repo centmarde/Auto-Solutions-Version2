@@ -3,34 +3,59 @@
       <InquiresNavbar />
       <br><br><br><br>
       <v-container fluid>
-        <v-card class="p-3 vh-80 d-flex flex-column">
-          <v-row class="fill-height">
-            <v-col cols="12" md="4">
-  <router-link to="/RentedCars" class="d-block mb-3">
-                           <v-btn block color="primary">Rented Car</v-btn>
-  </router-link>
-  <router-link to="/Garage" class="d-block mb-3">
-    <v-btn block color="primary">Garage</v-btn>
-  </router-link>
-  <router-link to="/Inquires" class="d-block mb-3">
-    <v-btn block color="primary">Buy Car</v-btn>
-  </router-link>
-  <router-link to="/CarListing" class="d-block mb-3">
-    <v-btn block color="primary">My Listings</v-btn>
-  </router-link>
-  <router-link to="/Home" class="d-block mb-3">
-    <v-btn block color="primary">Home</v-btn>
-  </router-link>
- 
-</v-col>
+      <v-card class="p-3 vh-80 d-flex flex-column">
+        <v-row class="fill-height">
+          <v-col cols="12" md="4">
+            <v-row>
+              <v-col cols="6" sm="6" md="12">
+                <router-link to="/RentedCars" class="d-block">
+                  <v-btn block color="primary">
+                    <v-icon left>mdi-car</v-icon>
+                    Rented Car
+                  </v-btn>
+                </router-link>
+              </v-col>
+              <v-col cols="6" sm="6" md="12">
+                <router-link to="/CarListing" class="d-block">
+                  <v-btn block color="primary">
+                    <v-icon left>mdi-format-list-bulleted</v-icon>
+                    My Listings
+                  </v-btn>
+                </router-link>
+              </v-col>
+              <v-col cols="6" sm="6" md="12">
+                <router-link to="/Inquires" class="d-block">
+                  <v-btn block color="primary">
+                    <v-icon left>mdi-car-search</v-icon>
+                    Buy Car
+                  </v-btn>
+                </router-link>
+              </v-col>
+              <v-col cols="6" sm="6" md="12">
+                <router-link to="/Garage" class="d-block">
+                  <v-btn block color="primary">
+                    <v-icon left>mdi-garage</v-icon>
+                    Garage
+                  </v-btn>
+                </router-link>
+              </v-col>
+              <v-col cols="12" sm="6" md="12">
+                <router-link to="/Home" class="d-block">
+                  <v-btn block color="primary">
+                    <v-icon left>mdi-home</v-icon>
+                    Home
+                  </v-btn>
+                </router-link>
+              </v-col>
+            </v-row>
+          </v-col>
 
-  
-            <v-col cols="12" md="8" class="scrollable-col">
-              <InsideInquires />
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-container>
+          <v-col cols="12" md="8" class="scrollable-col">
+           <InsideInquires />
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-container>
     </div>
   </template>
   

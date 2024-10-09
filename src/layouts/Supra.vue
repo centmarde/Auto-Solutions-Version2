@@ -65,16 +65,17 @@
                 </div>
 
                 <div v-if="modalBody" class="modal-overlay">
-                    <div class="card"
-                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 20%; margin-left: 75%; margin-right: auto;">
-                        <div class="card-body">
-                            <h5 class="card-title">Card Title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p>
-                            <a href="#" class="btn btn-primary" @click="closeModal">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
+    <div class="card modal-card-body"
+       >
+        <div class="card-body">
+            <h5 class="card-title">Card Title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                of the card's content.</p>
+            <a href="#" class="btn btn-primary" @click="closeModal">Go somewhere</a>
+        </div>
+    </div>
+</div>
+
 
                 <div v-if="modalTire" class="modal-overlay">
                     <div class="card"
@@ -101,8 +102,8 @@
                 </div>
 
                 <div v-if="modalInterior" class="modal-overlay">
-                    <div class="card"
-                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 15%; margin-left: 60%; margin-right: auto;">
+                    <div class="card modal-card-Interior"
+                        style="">
                         <div class="card-body">
                             <h5 class="card-title">Card Title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk
@@ -363,5 +364,31 @@ model-viewer {
 
 .card-body {
     color: #000;
+}
+
+.modal-card-body {
+width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 20%; margin-left: 75%; margin-right: auto;
+}
+.modal-card-Interior{
+    width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 15%; margin-left: 60%; margin-right: auto;
+
+}
+
+/* small screen */
+@media (max-width: 768px) {
+    .modal-card-body {
+        position: fixed;
+        top: 78%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0; /* Override the original margins */
+    }
+    .modal-card-Interior {
+        position: fixed;
+        top: 78%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0; /* Override the original margins */
+    }
 }
 </style>

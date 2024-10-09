@@ -33,10 +33,11 @@ import Garage from "@/components/InquiresPage/Garage.vue";
 import RentedCars from "@/components/InquiresPage/RentedCars.vue";
 import Chat from "@/components/Chat.vue";
 import Inbox from "@/layouts/Inbox.vue";
+import GarageContents from "@/components/GarageContents.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
-  { path: "/", component: Hero },
+  { path: "/", component: Hero, meta: { hideAi: true } },
   { path: "/login", component: Login },
   { path: "/Register", component: Register },
   { path: "/:pathMatch(.*)*", component: NotFound },
@@ -62,6 +63,7 @@ const routes = setupLayouts([
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
   { path: "/Chat", component: Chat, meta: { requiresAuth: true } },
   { path: "/Inbox", component: Inbox, meta: { requiresAuth: true } },
+  { path: "/GarageContents", component: GarageContents, meta: { requiresAuth: true } },
   {
     path: "/RentContents",
     component: RentContents,
@@ -137,6 +139,7 @@ router.beforeEach((to, from, next) => {
     "/RentedCars",
     "/Chat",
     "/Inbox",
+    "/GarageContents",
   ];
 
   // Redirect to login if trying to access protected pages without being logged in

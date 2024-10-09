@@ -2,7 +2,7 @@
   <v-container class="my-5">
     <v-card class="p-5">
       <v-card-title class="text-center">
-        <h1>Sell Your Car</h1>
+        <h1>Insert A Car into your Garage</h1>
       </v-card-title>
       <v-form @submit.prevent="submitCarDetails">
         <v-row>
@@ -13,7 +13,7 @@
               @change="onImageChange"
               required
               show-size
-             prepend-inner-icon="mdi-image"
+              prepend-inner-icon="mdi-image"
             ></v-file-input>
             <v-img
               v-if="imagePreview"
@@ -47,7 +47,7 @@
           </v-col>
 
           <!-- Car Model with Suggestions -->
-          <v-col cols="12" md="6" class="mb-3 position-relative">
+          <v-col cols="12" md="12" class="mb-3 position-relative">
             <v-text-field
               label="Car Model"
               v-model="car.model"
@@ -68,14 +68,7 @@
             </v-list>
           </v-col>
 
-          <!-- Price -->
-          <v-col cols="12" md="6" class="mb-3">
-            <v-text-field
-              label="Price (PHP)"
-              v-model="car.price"
-              placeholder="Enter price in PHP"
-            ></v-text-field>
-          </v-col>
+        
 
           <!-- Description -->
           <v-col cols="12" class="mb-3">
@@ -142,7 +135,7 @@
           </v-col>
 
           <!-- Mileage -->
-          <v-col cols="12" md="6" class="mb-3">
+          <v-col cols="12" md="12" class="mb-3">
             <v-text-field
               label="Mileage (in KM)"
               v-model="car.mileage"
@@ -150,14 +143,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" md="6" class="mb-3">
-            <v-text-field
-              label="Years Owned"
-              v-model="car.yearsowned"
-              placeholder="Years Owned"
-              required
-            ></v-text-field>
-          </v-col>
+          
 
           <v-container>
             <v-row>
@@ -228,14 +214,14 @@ export default {
                 model: '',
                 year: null,
                 mileage: null,
-                price: null,
+             
                 description: '',
                 engine: '',
                 horsepower: '',
                 torque: '',
                 topSpeed: '',
                 transmission: '',
-                yearsowned: '',
+              
             },
             
             carData: [],
@@ -255,8 +241,8 @@ export default {
     const requiredFields = [];
     if (!this.car.brand) requiredFields.push('Brand');
     if (!this.car.model) requiredFields.push('Model');
-    if (!this.car.price) requiredFields.push('Price');
-    if (!this.car.yearsowned) requiredFields.push('Years Owned');
+   
+   
 
     if (requiredFields.length > 0) {
         alert(`Please fill in the following required fields: ${requiredFields.join(', ')}`);
@@ -325,7 +311,7 @@ export default {
 
 
         async submitCarDetails() {
-            if (!this.car.model || !this.car.brand || !this.car.price || !this.car.yearsowned) {
+            if (!this.car.model || !this.car.brand) {
                 alert('Please fill in all required fields!');
                 return;
             }
@@ -338,17 +324,17 @@ export default {
                 model: this.car.model,
                 year: this.car.year,
                 mileage: this.car.mileage,
-                price: this.car.price,
+              
                 description: this.car.description,
                 engine: this.car.engine,
                 horsepower: this.car.horsepower,
                 torque: this.car.torque,
                 topSpeed: this.car.topSpeed,
                 transmission: this.car.transmission,
-                yearsowned: this.car.yearsowned,
-                forSale: true,
+              
+                forSale: false,
                 forRent: false,
-                is_garage: false,
+                is_garage: true,
                 user_id: userId,
             };
 

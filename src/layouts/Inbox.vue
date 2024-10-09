@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>User Inbox</v-card-title>
+    <v-card-title><v-icon class="mx-2">mdi-message-outline</v-icon>User Inbox</v-card-title>
     <v-card-text>
       <v-list v-if="conversations.length > 0">
         <v-list-item-group>
@@ -16,10 +16,14 @@
             />
             <v-list-item-content>
               <v-list-item-avatar />
+             
+
               <v-list-item-title>{{ conversation.username }}</v-list-item-title>
               <v-list-item-subtitle>
-                Car: {{ conversation.car_brand }} - {{ conversation.car_model }}
-              </v-list-item-subtitle>
+  <v-icon>mdi-car</v-icon>
+  Car: {{ conversation.car_brand }} - {{ conversation.car_model }}
+</v-list-item-subtitle>
+
               <v-list-item-subtitle>
                 <strong>Latest Message:</strong> 
                 {{ conversation.latestMessage.message || 'No messages yet' }}
@@ -35,7 +39,13 @@
       <div v-else class="empty-state">
         <v-icon large color="grey lighten-1">mdi-message-outline</v-icon>
         <p>No messages yet</p>
-        <v-btn color="primary" @click="browseCars">Browse Cars</v-btn>
+        <router-link to="/Home">
+  <v-btn color="primary">
+    Browse Cars
+  </v-btn>
+</router-link>
+
+
       </div>
     </v-card-text>
   </v-card>
@@ -68,7 +78,8 @@ export default {
         buyer:buyer_id (username, img),
         supplier:supplier_id (username, img)
       `)
-      .or(`buyer_id.eq.${loggedInUserId},supplier_id.eq.${loggedInUserId}`);
+      .or(`buyer_id.eq.${loggedInUserId},supplier_id.eq.${loggedInUserId}`)
+      // .neq('supplier_id', loggedInUserId);
 
     if (error) {
       console.error('Error fetching conversations:', error);
@@ -80,7 +91,8 @@ export default {
     const uniqueConversations = [];
 
     data.forEach(conversation => {
-      const latestMessage = conversation.Messages.length > 0 ? conversation.Messages[0] : null;
+      const latestMessage = conversation.Messages.length > 0 ? conversation.Messages[conversation.Messages.length - 1] : null;
+
       
       if (latestMessage) {
         const isBuyer = conversation.buyer_id === loggedInUserId;

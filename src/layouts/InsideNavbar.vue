@@ -6,10 +6,11 @@
   >
     <div class="container-fluid">
       <!-- Logo and Title Section -->
-      <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="@/assets/images/logo.jpeg" alt="logo" class="logopic" height="50" />
-        <h3 id="gidor" class="ms-2 mb-0">Auto Solutions</h3>
-      </a>
+      <router-link class="navbar-brand d-flex align-items-center" to="/Home">
+  <img src="@/assets/images/logo.jpeg" alt="logo" class="logopic" height="50" />
+  <h3 id="gidor" class="ms-2 mb-0">Auto Solutions</h3>
+</router-link>
+
 
       <!-- Hamburger Menu Button -->
       <button class="navbar-toggler" type="button" @click="toggleMenu" aria-controls="navbarNav" aria-expanded="false"
@@ -21,6 +22,9 @@
       <div class="collapse navbar-collapse" :class="{ show: isMenuVisible }" id="navbarNav">
         <div class="ms-auto d-flex align-items-center justify-content-end w-100">
           <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link to="/Home" class="nav-link btn wes" @click="closeMenu">HOME</router-link>
+            </li>
             <li class="nav-item">
               <router-link to="/Inbox" class="nav-link btn wes" @click="closeMenu">INBOX</router-link>
             </li>

@@ -77,6 +77,12 @@
             <v-radio label="False" :value="false"></v-radio>
           </v-radio-group>
 
+           <!-- For Rent Radio Buttons -->
+           <v-radio-group v-model="editedCar.is_garage" label="Insert Garage" required>
+            <v-radio label="True" :value="true"></v-radio>
+            <v-radio label="False" :value="false"></v-radio>
+          </v-radio-group>
+
           <v-textarea v-model="editedCar.description" label="Description" required></v-textarea>
           <v-text-field v-model="editedCar.mileage" label="Mileage" required></v-text-field>
           <v-text-field v-model="editedCar.engine" label="Engine" required></v-text-field>
