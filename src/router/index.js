@@ -37,7 +37,7 @@ import GarageContents from "@/components/GarageContents.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
-  { path: "/", component: Hero },
+  { path: "/", component: Hero, meta: { hideAi: true } },
   { path: "/login", component: Login },
   { path: "/Register", component: Register },
   { path: "/:pathMatch(.*)*", component: NotFound },

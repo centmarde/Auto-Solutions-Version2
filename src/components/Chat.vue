@@ -109,7 +109,7 @@ export default {
 
         if (conversationData) {
           this.chatId = conversationData.id;
-          this.isSupplier = conversationData.supplier_id === loggedInUserId;
+          this.isSupplier = conversationData.supplier_id == loggedInUserId;
 
           const { data: buyerData, error: buyerError } = await supabase
             .from('User')

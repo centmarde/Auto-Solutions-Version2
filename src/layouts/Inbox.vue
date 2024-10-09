@@ -79,7 +79,7 @@ export default {
         supplier:supplier_id (username, img)
       `)
       .or(`buyer_id.eq.${loggedInUserId},supplier_id.eq.${loggedInUserId}`)
-      .neq('buyer_id', loggedInUserId);
+      // .neq('supplier_id', loggedInUserId);
 
     if (error) {
       console.error('Error fetching conversations:', error);
