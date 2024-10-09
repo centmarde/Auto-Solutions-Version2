@@ -10,7 +10,7 @@ export async function getMarketValue(make, model) {
     messages: [
       {
         role: 'system',
-        content: `Provide a realistic market values for the make "${make}" and model "${model}" over the past imaginary 5 solds, provide a value only without dollar signs. in the following format:\nsold1: \nsold2: \nsold3: \nsold4: \nsold5: \n`
+        content: `Provide a realistic market value for the make "${make}" and model "${model}" over the past 5 solds, provide the value only eg(5,000,000) no text in it. in the following format:\nsold1: \nsold2: \nsold3: \nsold4: \nsold5: \n`
       },
       {
         role: 'user',
