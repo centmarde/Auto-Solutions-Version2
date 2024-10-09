@@ -53,6 +53,39 @@
           </v-row>
         </v-card>
       </v-col>
+
+      <v-col cols="12" md="6" class="mb-4">
+        
+     
+        <router-link :to="{ path: '/GarageContents' }" class="text-decoration-none">
+  <v-card elevation="8" class="pa-4 hover-card shine-effect">
+    <!-- Centering the v-btn and v-icon -->
+    <v-row no-gutters class="d-flex justify-center">
+      <v-col cols="auto" class="d-flex justify-center">
+        <v-btn icon class="mb-4" color="primary">
+          <v-icon large>mdi-plus-circle</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters>
+      <v-col cols="12">
+        <v-card-title>Add a Car to Your Garage</v-card-title>
+        <v-card-text>
+          Secure your investment and stay ahead of market trends! Insert your car here to effortlessly store your vehicle in your personal garage and keep track of its market value based on real-time sales data. Adding your car today ensures you're always informed about its worth, whether you're planning to sell, upgrade, or hold onto it for future gains.
+        </v-card-text>
+
+        <v-img
+          src="https://www.cars.com/images/garage-landing/garage-hero.webp"
+          alt="Add a Car"
+        ></v-img>
+      </v-col>
+    </v-row>
+  </v-card>
+</router-link>
+</v-col>
+
+
     </v-row>
   </template>
   
@@ -230,5 +263,37 @@
   .v-card-text p {
     margin: 0;
   }
+
+  .hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0) 75%);
+  transform: rotate(-15deg);
+  transition: all 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.shine-effect:hover::before {
+  top: 100%;
+  left: 100%;
+}
   </style>
   

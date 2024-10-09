@@ -2,7 +2,7 @@
   <v-container class="my-5">
     <v-card class="p-5">
       <v-card-title class="text-center">
-        <h1>Sell Your Car</h1>
+        <h1>Insert A Car into your Garage</h1>
       </v-card-title>
       <v-form @submit.prevent="submitCarDetails">
         <v-row>
@@ -13,7 +13,7 @@
               @change="onImageChange"
               required
               show-size
-             prepend-inner-icon="mdi-image"
+              prepend-inner-icon="mdi-image"
             ></v-file-input>
             <v-img
               v-if="imagePreview"
@@ -346,9 +346,9 @@ export default {
                 topSpeed: this.car.topSpeed,
                 transmission: this.car.transmission,
                 yearsowned: this.car.yearsowned,
-                forSale: true,
+                forSale: false,
                 forRent: false,
-                is_garage: false,
+                is_garage: true,
                 user_id: userId,
             };
 

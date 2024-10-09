@@ -348,6 +348,7 @@
                   yearsowned: this.car.yearsowned,
                   forSale: false,
                   forRent: true,
+                  is_garage: false,
                   user_id: userId,
               };
   
