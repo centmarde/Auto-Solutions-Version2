@@ -95,8 +95,9 @@ export default {
 
       
       if (latestMessage) {
-        const isBuyer = conversation.buyer_id === loggedInUserId;
+        const isBuyer = conversation.buyer_id == loggedInUserId;
         const otherUser = isBuyer ? conversation.supplier : conversation.buyer;
+
 
         uniqueConversations.push({
           id: conversation.id,
