@@ -29,6 +29,11 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col>
+          <Compare />
+        </v-col>
+      </v-row>
     </v-container>
     
     <v-divider></v-divider>
@@ -69,6 +74,7 @@ import Footer from '../layouts/Footer.vue';
 import SellCarInside from "@/layouts/SellCarInside.vue";
 import CarsForRent from "../layouts/CarsForRent.vue";
 import Garage from "../layouts/GarageOuter.vue";
+import Compare from "../layouts/Compare.vue";
 
 const logout = async () => {
   await doLogout();
