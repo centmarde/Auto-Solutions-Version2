@@ -33,7 +33,7 @@
         <div class="position-relative bot">
           <i class="fa-solid fa-toolbox fa-lg"></i>
           <router-link
-            to="/admin-members"
+            to="/AdminMembers"
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/admin-members').value }"
           >
@@ -45,7 +45,7 @@
         <div class="position-relative bot">
           <i class="fa-regular fa-money-bill-1 fa-lg"></i>
           <router-link
-            to="/client-members"
+            to="/Clients"
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/client-members').value }"
           >
@@ -55,14 +55,14 @@
   
         <!-- Footer Link (Logout) -->
         <div class="fixed-bottom fixed-start side">
-          <i class="fa-solid fa-right-from-bracket fa-lg"></i>
+          <i class="fa-solid fa-right-from-bracket fa-lg "></i>
           <router-link
             to="/"
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/').value }"
             @click="handleLogout"
           >
-            <p  class=" fw-bold fst">Exit</p>
+            <p  class=" fw-bold fst mt-3">Logout</p>
           </router-link>
         </div>
       </div>
@@ -74,6 +74,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useTheme } from 'vuetify';
 import { useRoute, useRouter } from 'vue-router';
+import { supabase, doLogout as supabaseLogout } from '../../lib/supaBase';
 
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);

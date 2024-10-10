@@ -1,14 +1,11 @@
-/**
- * router/index.ts
- *
- * Combined automatic routes for `./src/pages/*.vue` with role-based authentication guards
- */
+// router/index.ts
 
 // Composables
 import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
 import { routes as autoRoutes } from "vue-router/auto-routes";
 
+// Importing components
 import Hero from "../pages/index.vue";
 import CarInSale from "../pages/adminPages/CarInSale.vue";
 import Login from "@/components/Login.vue";
@@ -34,6 +31,8 @@ import RentedCars from "@/components/InquiresPage/RentedCars.vue";
 import Chat from "@/components/Chat.vue";
 import Inbox from "@/layouts/Inbox.vue";
 import GarageContents from "@/components/GarageContents.vue";
+import ClientMember from "@/pages/adminPages/ClientMember.vue";
+import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -61,9 +60,23 @@ const routes = setupLayouts([
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
-  { path: "/Chat", component: Chat, meta: { requiresAuth: true } },
+  {
+    path: "/Chat",
+    component: Chat,
+    meta: { requiresAuth: true },
+    props: (route) => ({
+      sellerId: route.query.seller_id,
+      carId: route.query.car_id,
+      buyerId: route.query.buyer_id,
+      chatId: route.query.chat_id,
+    }),
+  },
   { path: "/Inbox", component: Inbox, meta: { requiresAuth: true } },
-  { path: "/GarageContents", component: GarageContents, meta: { requiresAuth: true } },
+  {
+    path: "/GarageContents",
+    component: GarageContents,
+    meta: { requiresAuth: true },
+  },
   {
     path: "/RentContents",
     component: RentContents,
@@ -88,6 +101,16 @@ const routes = setupLayouts([
     component: ViewAsClient,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/Clients",
+    component: ClientMember,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/AdminMembers",
+    component: AdminMembers,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
@@ -95,7 +118,7 @@ const router = createRouter({
   routes,
 });
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
+// Workaround for dynamic imports
 router.onError((err, to) => {
   if (err?.message?.includes?.("Failed to fetch dynamically imported module")) {
     if (!localStorage.getItem("vuetify:dynamic-reload")) {
@@ -110,61 +133,33 @@ router.onError((err, to) => {
   }
 });
 
+// Authentication guards
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
-  const userRole = JSON.parse(localStorage.getItem("Role")); // Parse the boolean stored as a string
-  const hasVisitedDashboard =
-    JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false; // Track dashboard visit
+  const userRole = JSON.parse(localStorage.getItem("Role")); 
+  const hasVisitedDashboard = JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
-  console.log("User Role:", userRole); // Debugging role
-
-  // Pages that don't require authentication
   const publicPages = ["/", "/login", "/Register"];
+  const protectedPages = ["/Home", "/car/:id", "/SellContents", "/Admin", "/UserInfo", "/Supra", "/Nissan", "/Honda", "/Inquires", "/CarListing", "/CarSaleView", "/RentContents", "/Garage", "/RentedCars", "/Chat", "/Inbox", "/GarageContents"];
 
-  // Pages that require authentication
-  const protectedPages = [
-    "/Home",
-    "/car/:id",
-    "/SellContents",
-    "/Admin",
-    "/UserInfo",
-    "/Supra",
-    "/Nissan",
-    "/Honda",
-    "/Inquires",
-    "/CarListing",
-    "/CarSaleView",
-    "/RentContents",
-    "/Garage",
-    "/RentedCars",
-    "/Chat",
-    "/Inbox",
-    "/GarageContents",
-  ];
-
-  // Redirect to login if trying to access protected pages without being logged in
   if (protectedPages.includes(to.path) && !isLoggedIn) {
     return next("/");
   }
 
-  // Redirect admin to the dashboard on first login if they haven't visited it yet
   if (isLoggedIn && userRole === true && !hasVisitedDashboard) {
-    localStorage.setItem("hasVisitedDashboard", true); // Set flag to true after visiting dashboard
+    localStorage.setItem("hasVisitedDashboard", true);
     return next("/Admin");
   }
 
-  // Redirect to home if already logged in and trying to access public pages
   if (publicPages.includes(to.path) && isLoggedIn) {
     return next("/Home");
   }
 
-  // Restrict non-admin users from accessing the dashboard
   if (to.path.startsWith("/Admin") && userRole !== true) {
     alert("You do not have permission to access this page.");
     return next("/Home");
   }
 
-  // Default behavior: proceed to the requested route
   next();
 });
 

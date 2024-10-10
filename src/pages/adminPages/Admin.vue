@@ -8,7 +8,3 @@
   import DashNavbarVue from "../../components/Admin/DashNavbar.vue";
   
   </script>
-  
-  <style lang="scss" scoped>
-  
-  </style>
