@@ -1,17 +1,36 @@
 <template>
     <v-container>
-      <v-card class="p-5">
-        <h1 class="text-center mb-2" id="title">Compare</h1>
+      <v-card class="p-5" elevation="8">
+       
         <v-card-body>
           <v-row>
-            <v-col cols="12" md="6">
-              <v-text-field v-model="car1.brand" label="Car 1" outlined />
+            <v-col cols="12" md="5">
+              <v-text-field v-model="car1.brand" label="Car 1" @blur="fetchModels('car1')" outlined />
+              <v-autocomplete
+                v-model="car1.model"
+                :items="suggestedModels.car1"
+                label="Model 1"
+                outlined
+                hide-no-data
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field v-model="car2.brand" label="Car 2" outlined />
+            <v-col cols="12" md="2">
+                <h1 class="text-center mt-5">VS</h1>
+            </v-col>
+            <v-col cols="12" md="5">
+              <v-text-field v-model="car2.brand" label="Car 2" @blur="fetchModels('car2')" outlined />
+              <v-autocomplete
+                v-model="car2.model"
+                :items="suggestedModels.car2"
+                label="Model 2"
+                outlined
+                hide-no-data
+                hide-details
+              />
             </v-col>
           </v-row>
-          <div class="d-flex justify-center">
+          <div class="d-flex justify-center mt-3">
             <v-btn @click="compareCars" color="primary">Compare</v-btn>
           </div>
   
@@ -19,7 +38,7 @@
             <v-col cols="12">
               <canvas id="comparisonChart" width="400" height="200"></canvas>
             </v-col>
-            <v-col cols="12" class="mt-4">
+            <v-col cols="12" class="mt-5">
               <h3 class="text-center">Summary</h3>
               <p class="text-center">{{ overallComment }}</p>
             </v-col>
@@ -33,73 +52,64 @@
   import { ref, nextTick } from 'vue';
   import { getResponse } from '../seed/CompareCar';
   import Chart from 'chart.js/auto';
+  import axios from 'axios';
   
   const car1 = ref({ brand: '', model: '' });
   const car2 = ref({ brand: '', model: '' });
+  const suggestedModels = ref({ car1: [], car2: [] });
   const comparisonResults = ref([]);
   const overallComment = ref('');
   
-// Assuming you are importing getResponse from CompareCar.js
-
-async function compareCars() {
-  const userMessage = `Compare ${car1.value.brand} and ${car2.value.brand}. Please provide a score from 0 to 100 for performance, reliability, and comfort, and include an overall comment.`;
-
-  try {
-    const response = await getResponse(userMessage);
-    
-    console.log("API Response:", response);
-    
-    const results = response.split(';');
-    if (results.length < 3) {
-      throw new Error("Response format is incorrect.");
+  async function fetchModels(car) {
+    const make = car === 'car1' ? car1.value.brand : car2.value.brand;
+    if (make) {
+      try {
+        const response = await axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${make}?format=json`);
+        suggestedModels.value[car] = response.data.Results.map(model => model.Model_Name);
+      } catch (error) {
+        console.error("Error fetching car models:", error);
+        suggestedModels.value[car] = [];
+      }
+    } else {
+      suggestedModels.value[car] = [];
     }
-
-    const [car1Data, car2Data] = results.slice(0, 2).map(car => {
-  const carDetails = parseCarDetails(car);
-  console.log("Parsed Car Data:", carDetails); // Log each parsed car data
-  return carDetails;
-});
-
-// Log the results array to see its content
-console.log("Results Array:", results);
-
-// Check if results[3] is defined and log it
-if (results[3] || results[4]|| results[5]) {
-  console.log("Overall Comment String:", results[2]); // Log the overall comment string
-
-  overallComment.value = results[2] || 'No overall comment provided.';
-
-  console.log("Extracted Comment:", overallComment.value); // Log the extracted comment
-} else {
-  overallComment.value = results[2] || 'No overall comment provided.';
-  console.log("No overall comment string found. Default message assigned.");
-}
-
-
-    comparisonResults.value = [
-      {
-        brand: car1.value.brand,
-        performance: car1Data.Performance || 0,
-        reliability: car1Data.Reliability || 0,
-        comfort: car1Data.Comfort || 0,
-      },
-      {
-        brand: car2.value.brand,
-        performance: car2Data.Performance || 0,
-        reliability: car2Data.Reliability || 0,
-        comfort: car2Data.Comfort || 0,
-      },
-    ];
-
-    await updateChart();
-  } catch (error) {
-    console.error("Error comparing cars:", error);
   }
-}
-
-
-
-
+  
+  async function compareCars() {
+    const userMessage = `Compare ${car1.value.brand} ${car1.value.model} and ${car2.value.brand} ${car2.value.model}. Please provide a score from 0 to 100 for performance, reliability, and comfort, and include an overall comment.`;
+  
+    try {
+      const response = await getResponse(userMessage);
+      
+      const results = response.split(';');
+      if (results.length < 3) {
+        throw new Error("Response format is incorrect.");
+      }
+  
+      const [car1Data, car2Data] = results.slice(0, 2).map(car => parseCarDetails(car));
+  
+      overallComment.value = results[2] || 'No overall comment provided.';
+  
+      comparisonResults.value = [
+        {
+          brand: car1.value.brand,
+          performance: car1Data.Performance || 0,
+          reliability: car1Data.Reliability || 0,
+          comfort: car1Data.Comfort || 0,
+        },
+        {
+          brand: car2.value.brand,
+          performance: car2Data.Performance || 0,
+          reliability: car2Data.Reliability || 0,
+          comfort: car2Data.Comfort || 0,
+        },
+      ];
+  
+      await updateChart();
+    } catch (error) {
+      console.error("Error comparing cars:", error);
+    }
+  }
   
   function parseCarDetails(details) {
     if (!details || !details.includes(':')) {
