@@ -77,15 +77,44 @@
 </div>
 
 
-                <div v-if="modalTire" class="modal-overlay">
+                <div v-if="modalTire" class="modal-overlay modal-card-tires">
                     <div class="card"
-                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 10%; margin-left: auto; margin-right: 65%;">
-                        <div class="card-body">
-                            <h5 class="card-title">Card Title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p>
-                            <a href="#" class="btn btn-primary" @click="closeModal">Go somewhere</a>
+                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+                        <div class="card-body">                        
+                            <v-row>
+                                <v-col cols="12" md="4" class="d-flex justify-content-start">
+                                    <img src="https://static.tirerack.com/content/dam/tires/kumho/ku_majesty_9_solus_ta91_ev_bw_full.jpg" style="width: 60px;" alt="">                          
+                                <p class="ms-1"><b>lorem</b> asdadsasd</p>
+                                </v-col>
+                            </v-row>
                         </div>
+                        <button class="custom-button me-2 mb-1 align-self-end" @click="closeModal">Close</button>
+                    </div>
+
+                    <div class="card"
+                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+                        <div class="card-body">                        
+                            <v-row>
+                                <v-col cols="12" md="4" class="d-flex justify-content-start">
+                                    <img src="https://static.tirerack.com/content/dam/tires/hankook/hk_ion_evo_as_full.jpg" style="width: 60px;" alt="">                          
+                                <p class="ms-1"><b>lorem</b> asdadsasd</p>
+                                </v-col>
+                            </v-row>
+                        </div>
+                        <button class="custom-button me-2 mb-1 align-self-end" @click="closeModal">Close</button>
+                    </div>
+
+                    <div class="card"
+                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+                        <div class="card-body">                        
+                            <v-row>
+                                <v-col cols="12" md="4" class="d-flex justify-content-start">
+                                    <img src="https://images.pepboys.com/fit-in/700x700/images/productImages/43109100/Michelin-Defender-TH-Tire.jpg" style="width: 60px;" alt="">                          
+                                <p class="ms-1"><b>lorem</b> asdadsasd</p>
+                                </v-col>
+                            </v-row>
+                        </div>
+                        <button class="custom-button me-2 mb-1 align-self-end" @click="closeModal">Close</button>
                     </div>
                 </div>
 
@@ -386,6 +415,13 @@ width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 20
     .modal-card-Interior {
         position: fixed;
         top: 78%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0; /* Override the original margins */
+    }
+    .modal-card-tires {
+        position: fixed;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         margin: 0; /* Override the original margins */
