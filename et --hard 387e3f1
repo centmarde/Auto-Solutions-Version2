@@ -1,0 +1,88 @@
+[33m846681e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Remove src/api submodule and fetched clients
+[33m387e3f1[m[33m ([m[1;31morigin/development[m[33m)[m Merge pull request #41 from centmarde/Centmarde
+[33me1f1deb[m made some fix
+[33m8e340cc[m Merge pull request #40 from centmarde/Centmarde
+[33ma9c277c[m added Insert to Garage router
+[33mc2d8b68[m minor fix
+[33m466b1e8[m Merge pull request #39 from centmarde/Centmarde
+[33m64389b4[m fixing UI in the Inquires
+[33m41f7e37[m base Chart for Garage
+[33m54853da[m base AI
+[33m1f26631[m Merge pull request #38 from centmarde/Centmarde
+[33mcd0a268[m Garage Temporary template
+[33ma6929ff[m Merge pull request #36 from centmarde/Centmarde
+[33m6feb66f[m Base of RealTime Chat Functionality
+[33m1fbf2a0[m Merge pull request #35 from centmarde/Centmarde
+[33mc6d8851[m pahuway sako erp
+[33ma064c3b[m initial fix
+[33m5042152[m added chat and Inbox Functionality/Method
+[33maea4ad5[m Smtp
+[33m8a90d1b[m Merge pull request #33 from centmarde/Centmarde
+[33m400187c[m added Inbox
+[33me732f60[m Merge pull request #32 from centmarde/Centmarde
+[33m9e32ed9[m adding the parallax to the Pinia Store
+[33ma75bb06[m Merge pull request #30 from centmarde/Centmarde
+[33mf9d8fc1[m adding the API to the repository
+[33ma839a40[m Merge pull request #28 from centmarde/Centmarde
+[33meb098ef[m Added Pinia Store for CarsforSale
+[33m17b3909[m Merge pull request #27 from centmarde/Centmarde
+[33md7d01a1[m Update Login.vue
+[33m5f7b4b6[m Merge pull request #26 from centmarde/Adrian
+[33m370e7d9[m[33m ([m[1;31morigin/Adrian[m[33m)[m Admin Navbar fixed
+[33ma9c7524[m fixed table responsive
+[33ma0bc9c8[m Fixed logout position and able to view client side as admin
+[33m2f32d1a[m Admin can view car for rent and added more file structure
+[33ma6a20e9[m changed fonts
+[33m25d22a6[m fixed folder structures in Admin section for better tracking
+[33m789f9d8[m Merge pull request #25 from centmarde/Centmarde
+[33m705772a[m added multi routes in Inquires
+[33md102394[m Merge pull request #24 from centmarde/Centmarde
+[33m29f6516[m Create Garave.vue
+[33m072a413[m added posting for rent Cars and adjusting login Form
+[33m984f56a[m Merge commit '904c0ebfe52789589ab8b9456e7ee67558b085ee' into Centmarde
+[33m904c0eb[m Merge pull request #23 from centmarde/Adrian
+[33m4eb6e95[m Able to view Car in Sales
+[33mc9e5d1e[m on going fixing duplicate transaction
+[33mbf48840[m Merge pull request #20 from centmarde/Centmarde
+[33m72413e4[m minor fix
+[33m69d7a34[m Merge remote-tracking branch 'origin/development' into Centmarde
+[33m1b37f13[m fixing Inquire
+[33m04dcee6[m Merge pull request #19 from centmarde/Centmarde
+[33mbf6cd51[m added Edit feauture for CarListing.
+[33md2c23a1[m Merge pull request #17 from centmarde/Centmarde
+[33md2a1765[m added Car Listing and Car Deletion
+[33m6a34cd2[m Merge pull request #16 from centmarde/Adrian
+[33m6d81c0b[m[33m ([m[1;32mAdrian[m[33m)[m Merge remote-tracking branch 'origin/development' into Adrian
+[33m3e7569c[m Merge branch 'Centmarde' of https://github.com/centmarde/Auto-Solutions-Version2 into Centmarde
+[33m295db99[m Added feature but not interactive yet and adjusted responsiveness and navbar
+[33mbd7d4f2[m Fixed counting cars in sale and responsiveness
+[33m17b31b8[m puting some contents in insideInquire
+[33m6dcd462[m Merge pull request #14 from centmarde/Centmarde
+[33m0b119fa[m added Inquires Content
+[33ma5c1da8[m added Inquires
+[33m5544728[m Merge pull request #13 from centmarde/development
+[33m5e381da[m Merge pull request #12 from centmarde/Centmarde
+[33meaafacd[m added Inquires
+[33m8acc93c[m Merge pull request #11 from centmarde/development
+[33mf906167[m Fixed sidebar
+[33m4cb4465[m Merge commit '73ae6bf0ef6be2b5cd230a65d795911c2d8c6721'
+[33m73ae6bf[m Merge pull request #10 from centmarde/Centmarde
+[33mcfdea0a[m Update api
+[33m14b7312[m Merge pull request #9 from centmarde/deletion
+[33m867a031[m deleted some redundant files
+[33m8265f55[m Merge pull request #8 from centmarde/Adrian
+[33mb312286[m fixed theme and added home section for client
+[33m54769cf[m Added navbar but not finished
+[33m4a4c8c4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mfeature-branch[m[33m, [m[1;32mAdrianko[m[33m)[m Merge pull request #7 from centmarde/development
+[33ma8278d5[m Merge pull request #6 from centmarde/Centmarde
+[33m7f476da[m[33m ([m[1;31morigin/Centmarde[m[33m)[m added 3d model cars
+[33ma2e7031[m Merge pull request #5 from centmarde/Centmarde
+[33m4b8822b[m added AI api
+[33m66e6a60[m Merge pull request #4 from centmarde/development
+[33me887841[m Merge pull request #3 from centmarde/Centmarde
+[33mf2afe35[m added show cars
+[33m88e04a0[m Merge pull request #2 from centmarde/Centmarde
+[33me9fc66f[m 2nd commit
+[33mb34dd89[m Merge pull request #1 from centmarde/Centmarde
+[33m1c111a3[m 2nd commit
+[33m84ca4af[m first commit
