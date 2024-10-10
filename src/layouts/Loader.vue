@@ -6,10 +6,11 @@
         v-if="showLogo"
         class="logo fade"
         :class="{ 'fade-out': !showLogo }"
-        src="../assets/images/str.png"
-        width="150"
+        src="../assets/images/str2.png"
+        width="200"
         alt="Logo"
-      ></v-img>
+      >
+    </v-img>
   
       <v-container>
         <v-row>
