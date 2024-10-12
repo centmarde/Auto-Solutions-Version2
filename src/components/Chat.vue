@@ -225,7 +225,7 @@ import InsideNavbar from '@/layouts/InsideNavbar.vue';
   margin: 5px 0;
 }
 .messages-container {
-  max-height: 55vh;
+  max-height: 50vh;
   overflow-y: auto;
 }
 </style>

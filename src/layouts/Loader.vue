@@ -104,6 +104,19 @@ onMounted(() => {
   z-index: 1000;   /* Ensure it's on top of other elements */
 }
 
+@media (max-width: 768px) {
+  .loading {
+    position: fixed;    /* Fixed position for loading text */
+    bottom: 12%;        /* Distance from the bottom */
+    left: 50%;          /* Start from the center horizontally */
+    transform: translateX(-50%); /* Shift left by 50% of its width to center it */
+    color: white;
+    font-size: 18px;    /* Adjust size */
+    z-index: 1000;      /* Ensure it's on top of other elements */
+  }
+}
+
+
 .centered-text {
   font-size: 20px;
   text-align: center;
