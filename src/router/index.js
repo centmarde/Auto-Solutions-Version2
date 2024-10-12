@@ -31,6 +31,8 @@ import RentedCars from "@/components/InquiresPage/RentedCars.vue";
 import Chat from "@/components/Chat.vue";
 import Inbox from "@/layouts/Inbox.vue";
 import GarageContents from "@/components/GarageContents.vue";
+import ClientMember from "@/pages/adminPages/ClientMember.vue";
+import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -71,6 +73,7 @@ const routes = setupLayouts([
   },
   { path: "/Inbox", component: Inbox, meta: { requiresAuth: true } },
   { path: "/GarageContents", component: GarageContents, meta: { requiresAuth: true,hideAi: true } },
+
   {
     path: "/RentContents",
     component: RentContents,
@@ -93,6 +96,16 @@ const routes = setupLayouts([
   {
     path: "/ClientView",
     component: ViewAsClient,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/Clients",
+    component: ClientMember,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/AdminMembers",
+    component: AdminMembers,
     meta: { requiresAuth: true },
   },
 ]);
