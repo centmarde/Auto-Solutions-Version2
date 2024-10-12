@@ -76,47 +76,80 @@
     </div>
 </div>
 
+<div v-if="modalTire" class="modal-overlay modal-card-tires">
+    <div class="card"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+        <div class="card-body">
+            <v-row>
+                <v-col cols="12" md="12" class="d-flex justify-content-start">
+                    <img class="img-float" src="https://static.tirerack.com/content/dam/tires/kumho/ku_majesty_9_solus_ta91_ev_bw_full.jpg" alt="">
+                    <p class="title-float"><b>Kumho Majesty</b></p>
+                </v-col>
+             
+            </v-row>
+        </div>
+        <div class="d-flex justify-content-end">
+           
+            <button class="custom-button me-2 mb-1" @click="showMoreInfo('Kumho Majesty 9 Solus')">More Info</button>
+            <button class="custom-button me-2 mb-1" @click="chooseTire('Michelin Defender')">Choose</button>
+        </div>
+    </div>
 
-                <div v-if="modalTire" class="modal-overlay modal-card-tires">
-                    <div class="card"
-                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
-                        <div class="card-body">                        
-                            <v-row>
-                                <v-col cols="12" md="4" class="d-flex justify-content-start">
-                                    <img src="https://static.tirerack.com/content/dam/tires/kumho/ku_majesty_9_solus_ta91_ev_bw_full.jpg" style="width: 60px;" alt="">                          
-                                <p class="ms-1"><b>lorem</b> asdadsasd</p>
-                                </v-col>
-                            </v-row>
-                        </div>
-                        <button class="custom-button me-2 mb-1 align-self-end" @click="closeModal">Close</button>
-                    </div>
+    <div class="card"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+        <div class="card-body">
+            <v-row >
+                <v-col cols="12" md="12" class="d-flex justify-content-start" >
+                    <img class="img-float" src="https://static.tirerack.com/content/dam/tires/hankook/hk_ion_evo_as_full.jpg" alt="">
+                    <p class="title-float"><b>Hankook iON Evo</b></p>
+                </v-col>
+              
+               
+            </v-row>
+        </div>
+        <div class="d-flex justify-content-end">
 
-                    <div class="card"
-                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
-                        <div class="card-body">                        
-                            <v-row>
-                                <v-col cols="12" md="4" class="d-flex justify-content-start">
-                                    <img src="https://static.tirerack.com/content/dam/tires/hankook/hk_ion_evo_as_full.jpg" style="width: 60px;" alt="">                          
-                                <p class="ms-1"><b>lorem</b> asdadsasd</p>
-                                </v-col>
-                            </v-row>
-                        </div>
-                        <button class="custom-button me-2 mb-1 align-self-end" @click="closeModal">Close</button>
-                    </div>
+            <button class="custom-button me-2 mb-1" @click="showMoreInfo('Hankook iON Evo')">More Info</button>
+            <button class="custom-button me-2 mb-1" @click="chooseTire('Michelin Defender')">Choose</button>
+        </div>
+    </div>
 
-                    <div class="card"
-                        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
-                        <div class="card-body">                        
-                            <v-row>
-                                <v-col cols="12" md="4" class="d-flex justify-content-start">
-                                    <img src="https://images.pepboys.com/fit-in/700x700/images/productImages/43109100/Michelin-Defender-TH-Tire.jpg" style="width: 60px;" alt="">                          
-                                <p class="ms-1"><b>lorem</b> asdadsasd</p>
-                                </v-col>
-                            </v-row>
-                        </div>
-                        <button class="custom-button me-2 mb-1 align-self-end" @click="closeModal">Close</button>
-                    </div>
-                </div>
+    <div class="card"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+        <div class="card-body">
+            <v-row>
+                <v-col cols="12" md="12" class="d-flex justify-content-start">
+                    <img class="img-float2" src="https://images.pepboys.com/fit-in/700x700/images/productImages/43109100/Michelin-Defender-TH-Tire.jpg"  alt="">
+                    <p class="title-float"><b>Michelin Defender</b></p>
+                </v-col>
+               
+            </v-row>
+        </div>
+        <div class="d-flex justify-content-end">
+          
+            <button class="custom-button me-2 mb-1" @click="showMoreInfo('Michelin Defender')">More Info</button>
+            <button class="custom-button me-2 mb-1" @click="chooseTire('Michelin Defender')">Choose</button>
+        </div>
+    </div>
+</div>
+
+<!-- Separate modal for more information -->
+<v-dialog v-model="moreInfoModal" max-width="400">
+    <v-card>
+        <v-card-title>{{ selectedTire }}</v-card-title>
+        <v-card-text>
+            <p><b>Size:</b> {{ moreInfo.size }}</p>
+            <p><b>Speed Rating:</b> {{ moreInfo.speedRating }}</p>
+            <p><b>Load Index:</b> {{ moreInfo.loadIndex }}</p>
+            <p><b>Detailed Info:</b> {{ moreInfo.details }}</p>
+            <p><b>Rims:</b> {{ moreInfo.rims }}</p>
+        </v-card-text>
+        <v-card-actions>
+            <v-btn color="primary" @click="closeMoreInfo">Close</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>
+
 
                 <div v-if="modalBack" class="modal-overlay">
                     <div class="card"
@@ -161,9 +194,56 @@ export default {
             modalTire: false,
             modalBack: false,
             modalInterior: false,
+            modalTire: true,
+    moreInfoModal: false,
+    selectedTire: '',
+    moreInfo: {
+      size: '',
+      speedRating: '',
+      loadIndex: '',
+      details: '',
+      rims: ''
+    }
         };
     },
     methods: {
+        chooseTire(tireName) {
+    console.log(`You selected: ${tireName}`);
+    this.modalTire = false; // Close the tire modal after selecting
+  },
+  showMoreInfo(tireName) {
+    // Set selected tire and populate more info details
+    this.selectedTire = tireName;
+    if (tireName === 'Kumho Majesty 9 Solus') {
+      this.moreInfo = {
+        size: '205/55R16',
+        speedRating: 'V',
+        loadIndex: '91',
+        details: 'This is a high-performance tire suitable for wet and dry conditions.',
+        rims: 'wala'
+      };
+    } else if (tireName === 'Hankook iON Evo') {
+      this.moreInfo = {
+        size: '225/50R17',
+        speedRating: 'H',
+        loadIndex: '94',
+        details: 'Eco-friendly tire optimized for electric vehicles.',
+         rims: 'wala'
+      };
+    } else if (tireName === 'Michelin Defender') {
+      this.moreInfo = {
+        size: '235/60R18',
+        speedRating: 'T',
+        loadIndex: '103',
+        details: 'Tough all-season tire with long tread life.',
+         rims: 'wala'
+      };
+    }
+    this.moreInfoModal = true; // Open more info modal
+  },
+  closeMoreInfo() {
+    this.moreInfoModal = false; // Close more info modal
+  },
         updateCamera(event) {
             const modelViewer = this.$refs.modelViewer;
             if (modelViewer) {
@@ -426,5 +506,22 @@ width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 20
         transform: translate(-50%, -50%);
         margin: 0; /* Override the original margins */
     }
+}
+
+.img-float{
+    position: absolute;
+    width: 5.2rem;
+    bottom: 1px;
+}
+.img-float2{
+    position: absolute;
+    width: 5.4rem;
+    height: 6.5rem;
+    bottom: 1px;
+}
+.title-float{
+    position: relative;
+    left: 7rem;
+    font-size: 20px;
 }
 </style>

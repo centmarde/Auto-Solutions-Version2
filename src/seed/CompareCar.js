@@ -11,7 +11,7 @@ async function getResponse(userMessage) {
     messages: [
       {
         role: "system",
-        content: "You will compare the two cars and provide performance, reliability, and comfort ratings in the format: Performance: X, Reliability: Y, Comfort: Z; Performance: A, Reliability: B, Comfort: C,; 'OverallComment: <comment>'; 'Winner: <car>';"
+        content: "You will compare the two cars and provide performance, reliability, and comfort ratings in the format: Performance: W,Speed: X, Reliability: Y, Comfort: Z; Performance: A, Reliability: B, Comfort: C, Speed: D; 'OverallComment: <comment>'; 'Winner: <car>';"
       },
       {
         role: "user",
