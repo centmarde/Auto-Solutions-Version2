@@ -5,7 +5,7 @@
         <v-card-body>
           <v-row>
             <v-col cols="12" md="5">
-              <v-text-field v-model="car1.brand" label="Car 1" @blur="fetchModels('car1')" outlined />
+              <v-text-field v-model="car1.brand" label="Car Brand 1 e.g Ferrari" @blur="fetchModels('car1')" outlined />
               <v-autocomplete
                 v-model="car1.model"
                 :items="suggestedModels.car1"
@@ -19,7 +19,7 @@
                 <h1 class="text-center mt-5">VS</h1>
             </v-col>
             <v-col cols="12" md="5">
-              <v-text-field v-model="car2.brand" label="Car 2" @blur="fetchModels('car2')" outlined />
+              <v-text-field v-model="car2.brand" label="Car Brand 2 e.g Lamborghini" @blur="fetchModels('car2')" outlined />
               <v-autocomplete
                 v-model="car2.model"
                 :items="suggestedModels.car2"

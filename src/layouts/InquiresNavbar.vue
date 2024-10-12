@@ -6,10 +6,10 @@
   >
     <div class="container-fluid">
       <!-- Logo and Title Section -->
-      <a class="navbar-brand d-flex align-items-center" href="#">
+      <router-link class="navbar-brand d-flex align-items-center" to="/Home">
         <img src="@/assets/images/logo.jpeg" alt="logo" class="logopic" height="50" />
         <h3 id="gidor" class="ms-2 mb-0">Auto Solutions</h3>
-      </a>
+      </router-link>
 
       <!-- Hamburger Menu Button -->
       <button class="navbar-toggler" type="button" @click="toggleMenu" aria-controls="navbarNav" aria-expanded="false"
@@ -19,34 +19,43 @@
 
       <!-- Navbar Links -->
       <div class="collapse navbar-collapse" :class="{ show: isMenuVisible }" id="navbarNav">
-        <div class="ms-auto d-flex align-items-center justify-content-end w-100">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <router-link to="/Supra" class="nav-link btn wes" @click="closeMenu">GARAGE</router-link>
-            </li>
+        <div class="ms-auto d-flex flex-column flex-lg-row align-items-center justify-content-end w-100">
+          <ul class="navbar-nav text-center">
             <li class="nav-item">
               <router-link to="/Home" class="nav-link btn wes" @click="closeMenu">HOME</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/UserInfo" class="nav-link btn wes" @click="closeMenu" style="text-transform: uppercase;">{{ username }} </router-link>
+              <router-link to="/Inbox" class="nav-link btn wes" @click="closeMenu">INBOX</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/Inquires" class="nav-link btn wes" @click="closeMenu">INQUIRES</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/UserInfo" class="nav-link btn wes" @click="closeMenu" style="text-transform: uppercase;">
+                {{ username }}
+              </router-link>
             </li>
             <li class="nav-item">
               <router-link to="/" class="nav-link btn wes" @click="handleLogout">LOGOUT</router-link>
             </li>
           </ul>
-          <router-link to="/UserInfo" @click="closeMenu">
-            <img :src="userImage" class="rounded-circle"
-              style="width: 3rem; height: 3rem; object-fit: cover; border: 2px solid white;" />
-          </router-link>
 
-          <!-- Theme Toggle -->
-          <div class="d-flex align-items-center ms-3">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="themeSwitch" :checked="theme === 'light'"
-                @change="toggleTheme">
-              <label class="form-check-label" for="themeSwitch">
-                <i :class="theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon'"></i>
-              </label>
+          <div class="d-flex align-items-center  mt-2 mt-lg-0">
+            <!-- User Image -->
+            <router-link to="/UserInfo" @click="closeMenu">
+              <img :src="userImage" class="rounded-circle user-image"
+                style="width: 3rem; height: 3rem; object-fit: cover; border: 2px solid white;" />
+            </router-link>
+
+            <!-- Theme Toggle -->
+            <div class="d-flex align-items-center ms-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="themeSwitch" :checked="theme === 'light'"
+                  @change="toggleTheme">
+                <label class="form-check-label" for="themeSwitch">
+                  <i :class="theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon'"></i>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -138,33 +147,36 @@ onMounted(() => {
 }
 
 /* Media queries for responsive design */
-@media (max-width: 992px) { /* Large tablets and small desktops */
+@media (max-width: 992px) {
   #gidor {
     font-size: 1.25rem;
   }
 }
 
-@media (max-width: 768px) { /* Tablets */
+@media (max-width: 768px) { 
   .logopic {
-    height: 40px; /* Smaller logo for smaller screens */
+    height: 40px; 
   }
 
   #gidor {
-    font-size: 1rem; /* Smaller title for smaller screens */
+    font-size: 1rem; 
+  }
+  .user-image {
+    display: none;
   }
 }
 
-@media (max-width: 280px) { /* Mobile devices */
+@media (max-width: 280px) { 
   .logopic {
-    height: 30px; /* Even smaller logo for mobile */
+    height: 30px; 
   }
 
   #gidor {
-    font-size: 0.6rem; /* Adjust title size for mobile */
+    font-size: 0.6rem; 
   }
 }
 
-/* Button styles */
+/* Navbar link styles */
 .btn {
   text-decoration: none;
   font-size: 10px;
@@ -195,5 +207,9 @@ onMounted(() => {
 
 .drp_btn {
   margin-top: 2px;
+}
+
+.uppercase-text {
+  text-transform: uppercase;
 }
 </style>
