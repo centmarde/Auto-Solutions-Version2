@@ -6,19 +6,22 @@
     >
       <div class="d-flex justify-content-center align-content-center flex-column h-50 position-fixed">
         <!-- First Link (Dashboard) -->
-        <div class="mt-5">
-          <i class="fa-solid fa-house fa-lg"></i>
+        <div class="mt-5 position-relative bot">
+          <v-icon>mdi-view-dashboard</v-icon>
           <router-link
             to="/Admin"
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/Admin').value }"
           >
             <p  class="mt-4 fw-bold fst">Dashboard</p>
+            <v-divider></v-divider>
+
           </router-link>
         </div>
   
         <!-- Second Link (View As Client) -->
         <div class="position-relative bot">
+          
           <i class="fa-solid fa-user fa-lg"></i>
           <router-link
             to="/ClientView"
@@ -26,6 +29,8 @@
             :class="{ underline: isActiveRoute('/ClientView').value }"
           >
             <p class="mt-4 fw-bold fst">View Client Side</p>
+            <v-divider></v-divider>
+
           </router-link>
         </div>
   
@@ -37,7 +42,10 @@
             class="btn wes fw-bold mt-1 text-white"
             :class="{ underline: isActiveRoute('/admin-members').value }"
           >
+          
             <p  class="mt-4 fw-bold fst">Admin Members</p>
+            <v-divider></v-divider>
+
           </router-link>
         </div>
   
@@ -55,7 +63,7 @@
   
         <!-- Footer Link (Logout) -->
         <div class="fixed-bottom fixed-start side">
-          <i class="fa-solid fa-right-from-bracket fa-lg "></i>
+          <v-icon>mdi-logout</v-icon>
           <router-link
             to="/"
             class="btn wes fw-bold mt-1 text-white"
@@ -63,6 +71,15 @@
             @click="handleLogout"
           >
             <p  class=" fw-bold fst mt-3">Logout</p>
+          </router-link>
+
+          <v-icon>mdi-home</v-icon>
+          <router-link
+            to="/Home"
+            class="btn wes fw-bold mt-1 text-white"
+            :class="{ underline: isActiveRoute('/Home').value }"
+          >
+            <p  class=" fw-bold fst mt-3">Home</p>
           </router-link>
         </div>
       </div>
@@ -114,16 +131,19 @@ const handleLogout = async () => {
 </script>
 
 
-<style>
+<style scoped>
+.display{
+  overflow-x: hidden;
+}
 .underline {
   text-decoration: underline;
 }
 .fst {
   font-size: 18px;
-  font-weight: bold;
+ 
 }
 .side{
-  margin-left: 45px;
+  margin-left: 20px;
 }
 .mt{
   margin-top: 100px;
@@ -136,6 +156,9 @@ const handleLogout = async () => {
     .display{
         display: none;
     }
+}
+.bot{
+  left: -15px;
 }
 
 </style>
