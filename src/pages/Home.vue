@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <Ai v-if="!$route.meta.hideAi" />
     <br><br><br>
     <Nav />
     <v-spacer height="100"></v-spacer>
@@ -75,6 +76,8 @@ import SellCarInside from "@/layouts/SellCarInside.vue";
 import CarsForRent from "../layouts/CarsForRent.vue";
 import Garage from "../layouts/GarageOuter.vue";
 import Compare from "../layouts/Compare.vue";
+import Ai from '../layouts/Ai.vue';
+
 
 const logout = async () => {
   await doLogout();

@@ -28,8 +28,6 @@
         <br><br>
         <Footer />
       </v-container>
-
-      <Ai v-if="!hideAi" />
     </v-main>
 
     <!-- Loader Overlay -->
@@ -38,6 +36,7 @@
     </div>
   </v-app>
 </template>
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import Navbar from '@/components/Navbar.vue';
@@ -48,10 +47,8 @@ import Popularcars from '@/layouts/Popularcars.vue';
 import Researchcar from '@/layouts/Researchcar.vue';
 import Sellcar from '@/layouts/Sellcar.vue';
 import Yourgarage from '@/layouts/Yourgarage.vue';
-import Ai from '@/layouts/Ai.vue';
 import IntroLoader from '@/layouts/Loader.vue'; // Import the loader
 
-const hideAi = ref(true); // Set this to true to hide the AI component
 const loaded = ref(false); // Used to track when to hide the loader
 
 onMounted(() => {
@@ -61,6 +58,7 @@ onMounted(() => {
   }, 10000); // 10 seconds delay
 });
 </script>
+
 <style scoped>
 #ygar {
   background-color: #151515;

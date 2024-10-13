@@ -7,72 +7,13 @@
             <!-- Personal Details -->
             <h5 class="text-start mt-2 mb-3">SIGN-UP</h5>
             <v-row class="mb-3">
-              <!-- Name Fields -->
-              <v-col cols="12" md="3" class="mb-2">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Firstname"
-                  v-model="firstname"
-                  required
-                />
-              </v-col>
-              <v-col cols="12" md="3" class="mb-2">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Middlename"
-                  v-model="middlename"
-                  required
-                />
-              </v-col>
-              <v-col cols="12" md="3" class="mb-2">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Lastname"
-                  v-model="lastname"
-                  required
-                />
-              </v-col>
-              <v-col cols="12" md="3" class="mb-2">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Extension Name (Optional)"
-                  v-model="extensionname"
-                />
-              </v-col>
-            </v-row>
-
-            <!-- Username and Gender -->
-            <v-row class="mb-3">
+              <!-- Username Field -->
               <v-col cols="12" md="6" class="mb-2">
                 <input
                   type="text"
                   class="form-control"
                   placeholder="User Name"
                   v-model="username"
-                  required
-                />
-              </v-col>
-              <v-col cols="12" md="6" class="mb-2">
-                <select v-model="gender" class="form-select">
-                  <option value="">Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </v-col>
-            </v-row>
-
-            <!-- Birthdate -->
-            <v-row class="mb-3">
-              <v-col cols="12">
-                <p class="text-start mb-2">Birthdate</p>
-                <input
-                  type="date"
-                  class="form-control"
-                  v-model="birthdate"
                   required
                 />
               </v-col>
@@ -242,18 +183,9 @@
             <!-- Submit and Login Buttons -->
             <v-row class="mb-3">
               <v-col cols="12" class="d-flex justify-content-center">
-                <!-- Submit Button -->
-                <button
-                  type="submit"
-                  id="submitBtn"
-                  class="sski mx-3"
-                  :disabled="isSubmitting"
-                >
+                <button type="submit" id="submitBtn" class="sski mx-3" :disabled="isSubmitting">
                   <span v-if="isSubmitting">
-                    <div
-                      class="spinner-border spinner-border-sm me-2"
-                      role="status"
-                    ></div>
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
                     <span>Loading...</span>
                   </span>
                   <span v-else>Submit</span>
@@ -265,12 +197,8 @@
                     ></path>
                   </svg>
                 </button>
-
-                <!-- Login Button -->
                 <button type="button" id="loginBtn" class="sski mx-3">
-                  <router-link to="/login" class="text-decoration-none"
-                    >Login</router-link
-                  >
+                  <router-link to="/login" class="text-decoration-none">Login</router-link>
                 </button>
               </v-col>
             </v-row>
@@ -280,7 +208,6 @@
     </v-row>
   </v-container>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -373,7 +300,7 @@ export default {
       this.selectedBarangayName = barangay.name;
     },
     async submitForm() {
-      if (!this.firstname || !this.lastname || !this.username || !this.gender || !this.email || !this.password || !this.passwordConfirm || !this.birthdate || !this.selectedRegionCode || !this.selectedProvinceCode || !this.selectedCityCode || !this.selectedBarangayCode) {
+      if (!this.email || !this.password || !this.username || !this.passwordConfirm || !this.selectedRegionCode || !this.selectedProvinceCode || !this.selectedCityCode || !this.selectedBarangayCode) {
         alert('Please fill out all required fields.');
         return;
       }
@@ -402,13 +329,8 @@ export default {
         if (user_id) {
           const address = `${this.selectedBarangayName}, ${this.selectedCityName}, ${this.selectedProvinceName}, ${this.selectedRegionName}`;
           const additionalUserData = {
-            firstname: this.firstname,
-            middlename: this.middlename,
-            lastname: this.lastname,
             username: this.username,
             email: this.email,
-            gender: this.gender,
-            birthdate: this.birthdate,
             auth_id: user_id,
             address: address,
             password: this.password,
@@ -428,6 +350,7 @@ export default {
               const supa_id = data[0]?.id;
               await this.fetchUserData(supa_id, this.email, this.firstname, this.middlename, this.lastname, this.username, this.gender, this.birthdate, address, this.password);
               alert('Register Successfully');
+              window.location.href = '/login';
               console.log(data);
             }
           } catch (error) {

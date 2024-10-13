@@ -2,17 +2,18 @@
   <v-card class="p-4" elevation="10">
     <v-row>
       <v-col cols="12" >
-        <h3 id="title" class="text-center">RENT A CAR</h3>
+        <h3 id="title" class="text-center">POST CAR</h3>
+       
   
-        <v-row class="d-flex align-center">
-         
+        <v-row class="d-flex justify-content-center">
+          <span class="text-center">for rent</span>
         </v-row>
       </v-col>
 
       <v-col cols="12" >
         <v-img
           src="https://cdn-icons-png.flaticon.com/512/8566/8566110.png"
-          style="width: 10.5rem;"
+          style="width: 10rem;"
           class="position-relative"
           id="sts4"
           alt="Rent a Car"
@@ -21,7 +22,7 @@
     </v-row>
 
     <v-row>
-      <v-col class="d-flex justify-center my-2">
+      <v-col class="d-flex justify-center my-1">
         <v-btn @click="handleSubmit" color="primary" class="btnn32">
           Get Started
           <v-icon right>
@@ -70,7 +71,8 @@ export default {
 }
 
 #sts4 {
-  top: 20%;
+  position: relative;
+  top: 5%;
   left: 25%;
   margin-bottom: 2rem;
 }
