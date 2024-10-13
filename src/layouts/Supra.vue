@@ -1,8 +1,8 @@
 <template>
     <v-row class="model-viewer-container">
-        <model-viewer src="/models/toyota_supra.glb" ar ar-modes="webxr scene-viewer quick-look" tone-mapping="neutral"
+        <model-viewer id="modelViewer" src="/models/toyota_supra.glb" ar ar-modes="webxr scene-viewer quick-look" tone-mapping="neutral"
             poster="poster.webp" shadow-intensity="1.4" camera-orbit="-300deg 80deg 4m"
-            min-camera-orbit="auto auto 4.911m" max-camera-orbit="auto 100deg 9m" min-field-of-view="12deg"
+            min-camera-orbit="auto auto 4.911m" max-camera-orbit="auto 100deg 9m" min-field-of-view="12deg"  
             ref="modelViewer" >
             <button id="engine" class="hotspot" slot="hotspot-1"
                 data-position="-0.8591577229878414m 0.2675076114826115m 1.414183157525556m"
@@ -107,6 +107,7 @@
             <button class="custom-button me-2 mb-1" @click="showMoreInfoBody('Another Body Model')">More Info</button>
             <button class="custom-button me-2 mb-1" @click="chooseBody('Another Body Model')">BUY</button>
         </div>
+		
     </div>
 
     <div class="card"
@@ -125,6 +126,45 @@
             <button class="custom-button me-2 mb-1" @click="chooseBody('Premium Body Model')">BUY</button>
         </div>
     </div>
+		<h5 class="text-center">color pick</h5>
+		<div class="color-buttons d-flex justify-content-around">
+
+		
+    <!-- White -->
+    <button class="color-button" @click="changeColor([0.933, 0.933, 0.933, 1])">
+      <span class="color-circle" style="background-color: #EEEEEE;"></span>
+
+    </button>
+
+    <!-- Rose-Red -->
+    <button class="color-button" @click="changeColor([0.89, 0.2, 0.38, 1])">
+      <span class="color-circle" style="background-color: #e53461;"></span>
+     
+    </button>
+
+    <!-- Yellow -->
+    <button class="color-button" @click="changeColor([0.878, 0.537, 0, 1])">
+      <span class="color-circle" style="background-color: #ff9d00;"></span>
+    </button>
+
+    <!-- Black -->
+    <button class="color-button" @click="changeColor([0.090, 0.090, 0.090, 1])">
+      <span class="color-circle" style="background-color: #151515;"></span>
+     
+    </button>
+
+    <!-- Army Green -->
+    <button class="color-button" @click="changeColor([0.29, 0.33, 0.13, 1])">
+      <span class="color-circle" style="background-color: #4a5537;"></span>
+     
+    </button>
+
+    <!-- Royal Blue -->
+    <button class="color-button" @click="changeColor([0.25, 0.41, 0.88, 1], 'radial-gradient(circle, #4169e1, #8a99d9')">
+      <span class="color-circle" style="background-color: #4169e1;"></span>
+     
+    </button>
+  </div>
 </div>
 
 <!-- Separate modal for more information about the body -->
@@ -444,9 +484,39 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
 
 export default {
+  setup() {
+    const modelViewer = ref(null);
+    // Function to change the color of material 16
+    const changeColor = (color) => {
+      const carModel = modelViewer.value?.model;
+      const material = carModel?.materials?.[16];
+      if (material) {
+        material.pbrMetallicRoughness.setBaseColorFactor(color);
+      }
+	  
+	
+    };
+
+    // onMounted lifecycle hook to handle actions after component is mounted
+    onMounted(() => {
+      modelViewer.value.addEventListener('load', () => {
+        const carModel = modelViewer.value?.model;
+        const material = carModel?.materials?.[16];
+        if (material) {
+          // Set initial color to red (#c43a30)
+          material.pbrMetallicRoughness.setBaseColorFactor([0.878, 0.537, 0, 1]);
+        }
+      });
+    });
+
+    return {
+      modelViewer,
+      changeColor,
+    };
+  },
     name: 'ModelViewerComponent',
     data() {
         return {
@@ -795,20 +865,19 @@ export default {
 
 <style>
 .model-viewer-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100vh;
-    background: radial-gradient(circle, #ffffff, #f7b367);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  background: radial-gradient(circle, #EEEEEE, #b4b4b4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
-
 model-viewer {
     position: absolute;
     top: 0;
@@ -944,7 +1013,7 @@ model-viewer {
 }
 
 .modal-card-body {
-width: 20rem; border: none; margin-top: 5%; margin-left: 75%; margin-right: auto;
+width: 20rem; border: none; margin-top: 5%; margin-left: 72%; margin-right: auto;
 }
 .modal-card-Interior{
     width: 20rem; border: none; margin-top: 15%; margin-left: 60%; margin-right: auto;
@@ -1012,5 +1081,36 @@ width: 20rem; border: none; margin-top: 5%; margin-left: 75%; margin-right: auto
     right: 20px;
     font-size: 20px;
     top:3rem;
+}
+.color-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.color-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.color-button:hover {
+  transform: scale(1.1);
+}
+
+.color-circle {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
 }
 </style>
