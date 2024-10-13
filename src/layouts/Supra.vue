@@ -1,9 +1,11 @@
 <template>
     <v-row class="model-viewer-container">
+        
         <model-viewer id="modelViewer" src="/models/toyota_supra.glb" ar ar-modes="webxr scene-viewer quick-look" tone-mapping="neutral"
-            poster="poster.webp" shadow-intensity="1.4" camera-orbit="-300deg 80deg 4m"
+            poster="poster.webp" shadow-intensity="1.4" camera-orbit="-300deg 80deg 4m" 
             min-camera-orbit="auto auto 4.911m" max-camera-orbit="auto 100deg 9m" min-field-of-view="12deg"  
-            ref="modelViewer" >
+            ref="modelViewer" :camera-controls="isCameraControlEnabled" >
+            <h1 class="headertext">Auto-Solutions</h1>
             <button id="engine" class="hotspot" slot="hotspot-1"
                 data-position="-0.8591577229878414m 0.2675076114826115m 1.414183157525556m"
                 data-normal="-0.008226973476527363m 0.6343190777223924m -0.7730275703652684m"
@@ -57,131 +59,81 @@
                             </li>
                         </ul>
 
-                        <h1 class="headertext">Auto-Solutions</h1>
+                        
                     </div>
                     <div class=" spacer col me-10 d-flex justify-content-end flex-wrap flex-md-nowrap align-items-center">
     <button class="custom-button my-auto d-flex align-items-center"> 
         <v-icon class="me-1 my-auto">mdi-shopping</v-icon> 
         <span>PURCHASE</span>
     </button>
-    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="EngineButton">ENGINE</button>
-    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BodyButton">BODY</button>
-    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BackButton">BACK</button>
-    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="TireButton">TIRES</button>
-    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="InteriorButton">INTERIOR</button>
+  
+    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="EngineButton"><v-icon class="me-1 my-auto">mdi-engine</v-icon> ENGINE</button>
+    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BodyButton"> <v-icon class="me-1 my-auto" >mdi-car</v-icon> BODY</button>
+    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BackButton"> <v-icon class="me-1 my-auto">mdi mdi-car-back</v-icon> TRUNK</button>
+    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="TireButton"> <v-icon class="me-1 my-auto">mdi-tire</v-icon> TIRES</button>
+    <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="InteriorButton"> <v-icon class="me-1 my-auto" >mdi mdi-car-wrench</v-icon> INTERIOR</button>
     <button class="custom-button" @click="modalBody = true" style="display: none;">Open Modal</button>
+ <!-- New Free Camera Button -->
+
 </div>
 
                 </div>
 
-<div v-if="modalBody" class="modal-overlay modal-card-body">
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 2%; margin-left: auto; margin-right: 75%;">
-        <div class="card-body">
-            <v-row>
-                <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://example.com/path/to/body_image.jpg" alt="Body Image">
-                    <p class="title-float"><b>Body Model Name</b></p>
-                    <p class="price-float">Price: $5,000</p>
-                </v-col>
-            </v-row>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button class="custom-button me-2 mb-1" @click="showMoreInfoBody('Body Model Name')">More Info</button>
-            <button class="custom-button me-2 mb-1" @click="chooseBody('Body Model Name')">BUY</button>
-        </div>
+                <div v-if="modalBody" class="modal-overlay modal-card-body">
+    <div class="card" style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 2%; margin-left: auto; margin-right: 75%;">
+      <div class="card-body">
+        <v-row>
+          <v-col cols="12" md="12" class="d-flex justify-content-start">
+            <img class="img-float" src="https://cdn2.steamgriddb.com/file/sgdb-cdn/logo/5394571ecee05ab8323586a2f8971b65.png" style="width: 230px; height: 130px; left: -30px; top: 18px;" alt="Body Image">
+            <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px; left: 12px; bottom: 20px;"><b>CUSTOM BODY PAINT</b></p>
+            <p class="price-float">Price: $5,000</p>
+          </v-col>
+        </v-row>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button class="custom-button me-2 mb-1" @click="showMoreInfoBody('CUSTOM BODY PAINT')">More Info</button>
+        <button class="custom-button me-2 mb-1" @click="chooseBody('CUSTOM BODY PAINT')">BUY</button>
+      </div>
     </div>
 
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 75%;">
-        <div class="card-body">
-            <v-row>
-                <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://example.com/path/to/body_image2.jpg" alt="Body Image 2">
-                    <p class="title-float"><b>Another Body Model</b></p>
-                    <p class="price-float">Price: $4,500</p>
-                </v-col>
-            </v-row>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button class="custom-button me-2 mb-1" @click="showMoreInfoBody('Another Body Model')">More Info</button>
-            <button class="custom-button me-2 mb-1" @click="chooseBody('Another Body Model')">BUY</button>
-        </div>
-		
+    <div v-if="showColorButtons" class="color-buttons d-flex justify-content-around">
+      <button class="color-button" @click="changeColor([0.933, 0.933, 0.933, 1])">
+        <span class="color-circle" style="background-color: #EEEEEE;"></span>
+      </button>
+
+      <button class="color-button" @click="changeColor([0.89, 0.2, 0.38, 1])">
+        <span class="color-circle" style="background-color: #e53461;"></span>
+      </button>
+
+      <button class="color-button" @click="changeColor([0.878, 0.537, 0, 1])">
+        <span class="color-circle" style="background-color: #ff9d00;"></span>
+      </button>
+
+      <button class="color-button" @click="changeColor([0.090, 0.090, 0.090, 1])">
+        <span class="color-circle" style="background-color: #151515;"></span>
+      </button>
+
+      <button class="color-button" @click="changeColor([0.29, 0.33, 0.13, 1])">
+        <span class="color-circle" style="background-color: #4a5537;"></span>
+      </button>
+
+      <button class="color-button" @click="changeColor([0.25, 0.41, 0.88, 1], 'radial-gradient(circle, #4169e1, #8a99d9')">
+        <span class="color-circle" style="background-color: #4169e1;"></span>
+      </button>
     </div>
-
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 75%;">
-        <div class="card-body">
-            <v-row>
-                <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://example.com/path/to/body_image3.jpg" alt="Body Image 3">
-                    <p class="title-float"><b>Premium Body Model</b></p>
-                    <p class="price-float">Price: $6,000</p>
-                </v-col>
-            </v-row>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button class="custom-button me-2 mb-1" @click="showMoreInfoBody('Premium Body Model')">More Info</button>
-            <button class="custom-button me-2 mb-1" @click="chooseBody('Premium Body Model')">BUY</button>
-        </div>
-    </div>
-		<h5 class="text-center">color pick</h5>
-		<div class="color-buttons d-flex justify-content-around">
-
-		
-    <!-- White -->
-    <button class="color-button" @click="changeColor([0.933, 0.933, 0.933, 1])">
-      <span class="color-circle" style="background-color: #EEEEEE;"></span>
-
-    </button>
-
-    <!-- Rose-Red -->
-    <button class="color-button" @click="changeColor([0.89, 0.2, 0.38, 1])">
-      <span class="color-circle" style="background-color: #e53461;"></span>
-     
-    </button>
-
-    <!-- Yellow -->
-    <button class="color-button" @click="changeColor([0.878, 0.537, 0, 1])">
-      <span class="color-circle" style="background-color: #ff9d00;"></span>
-    </button>
-
-    <!-- Black -->
-    <button class="color-button" @click="changeColor([0.090, 0.090, 0.090, 1])">
-      <span class="color-circle" style="background-color: #151515;"></span>
-     
-    </button>
-
-    <!-- Army Green -->
-    <button class="color-button" @click="changeColor([0.29, 0.33, 0.13, 1])">
-      <span class="color-circle" style="background-color: #4a5537;"></span>
-     
-    </button>
-
-    <!-- Royal Blue -->
-    <button class="color-button" @click="changeColor([0.25, 0.41, 0.88, 1], 'radial-gradient(circle, #4169e1, #8a99d9')">
-      <span class="color-circle" style="background-color: #4169e1;"></span>
-     
-    </button>
   </div>
-</div>
 
-<!-- Separate modal for more information about the body -->
-<v-dialog v-model="moreInfoModalBody" max-width="400">
+  <v-dialog v-model="moreInfoModalBody" max-width="400">
     <v-card>
-        <v-card-title>{{ selectedBody }}</v-card-title>
-        <v-card-text>
-            <p><b>Material:</b> {{ moreInfoBody.material }}</p>
-            <p><b>Dimensions:</b> {{ moreInfoBody.dimensions }}</p>
-            <p><b>Features:</b> {{ moreInfoBody.features }}</p>
-            <p><b>Detailed Info:</b> {{ moreInfoBody.details }}</p>
-        </v-card-text>
-        <v-card-actions>
-            <v-btn color="primary" @click="closeMoreInfoBody">Close</v-btn>
-        </v-card-actions>
+      <v-card-title>{{ selectedBody }}</v-card-title>
+      <v-card-text>
+        <p><b>Detailed Info:</b> {{ moreInfoBody.details }}</p>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="closeMoreInfoBody">Close</v-btn>
+      </v-card-actions>
     </v-card>
-</v-dialog>
+  </v-dialog>
 
 
 <div v-if="modalTire" class="modal-overlay modal-card-tires">
@@ -490,31 +442,28 @@ export default {
   setup() {
     const modelViewer = ref(null);
     // Function to change the color of material 16
-    const changeColor = (color) => {
-      const carModel = modelViewer.value?.model;
-      const material = carModel?.materials?.[16];
-      if (material) {
-        material.pbrMetallicRoughness.setBaseColorFactor(color);
-      }
-	  
-	
-    };
+   
 
     // onMounted lifecycle hook to handle actions after component is mounted
     onMounted(() => {
       modelViewer.value.addEventListener('load', () => {
         const carModel = modelViewer.value?.model;
         const material = carModel?.materials?.[16];
+        const material2 = carModel?.materials?.[5];
         if (material) {
           // Set initial color to red (#c43a30)
           material.pbrMetallicRoughness.setBaseColorFactor([0.878, 0.537, 0, 1]);
+          
+        }
+        if (material2) {
+            material2.pbrMetallicRoughness.setBaseColorFactor([0.933, 0.933, 0.933, 1]);
         }
       });
     });
 
     return {
       modelViewer,
-      changeColor,
+     
     };
   },
     name: 'ModelViewerComponent',
@@ -565,45 +514,43 @@ export default {
         },
 				modalBody: false,
         moreInfoModalBody: false,
+        showColorButtons: false,
         selectedBody: '',
         moreInfoBody: {
-            material: '',
-            dimensions: '',
-            features: '',
             details: ''
         }
    
         };
     },
     methods: {
-			chooseBody(bodyName) {
-        console.log(`You selected: ${bodyName}`);
-        this.modalBody = false; // Close the body modal after selecting
+     
+        chooseBody(bodyName) {
+      console.log(`You selected: ${bodyName}`);
+      this.showColorButtons = true;
+    },
+    changeColor(colorArray) {
+      console.log('Chosen color:', colorArray);
+      const confirmation = window.confirm(`Are you sure you want to choose this color?`);
+      if (confirmation) {
+        // Set the color of the car model
+        const carModel = this.modelViewer?.model;
+        const material = carModel?.materials?.[16];
+        if (material) {
+          material.pbrMetallicRoughness.setBaseColorFactor(colorArray);
+          console.log('Color confirmed and applied:', colorArray);
+        }
+      } else {
+        console.log('Color selection canceled.');
+      }
     },
     showMoreInfoBody(bodyName) {
         this.selectedBody = bodyName;
         // Populate more info details based on the selected body model
-        if (bodyName === 'Body Model Name') {
+        if (bodyName === 'CUSTOM BODY PAINT') {
             this.moreInfoBody = {
-                material: 'Steel',
-                dimensions: 'L: 4.5m, W: 1.8m, H: 1.5m',
-                features: 'Aerodynamic design, lightweight structure',
-                details: 'A robust body designed for enhanced performance and safety.'
+                details: 'This body paint is a stunning representation of artistry and innovation designed to elevate the vehicles aesthetic appeal. Each layer of paint is expertly applied creating a rich depth of color that shimmers under various lighting conditions. The finish showcases a unique blend of high quality pigments providing not only a vibrant appearance but also exceptional durability against the elements. '
             };
-        } else if (bodyName === 'Another Body Model') {
-            this.moreInfoBody = {
-                material: 'Aluminum',
-                dimensions: 'L: 4.2m, W: 1.7m, H: 1.4m',
-                features: 'High strength-to-weight ratio, corrosion-resistant',
-                details: 'An efficient body designed for fuel economy and durability.'
-            };
-        } else if (bodyName === 'Premium Body Model') {
-            this.moreInfoBody = {
-                material: 'Carbon Fiber',
-                dimensions: 'L: 4.8m, W: 1.9m, H: 1.6m',
-                features: 'Lightweight, high performance, customizable',
-                details: 'A premium body offering exceptional performance and style.'
-            };
+      
         }
         this.moreInfoModalBody = true;
     },
@@ -911,17 +858,7 @@ model-viewer {
     border-radius: 5px;
 }
 
-.headertext {
-    color: #151515;
-    position: absolute;
-    font-size: 180px;
-    z-index: -1;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -98%);
-    white-space: nowrap;
-    pointer-events: none;
-}
+
 .stunna{
 	margin-top: 3%;
 }
@@ -945,8 +882,8 @@ model-viewer {
 
 @media only screen and (max-width: 480px) {
     .headertext {
-        font-size: 60px;
-        top: 25%;
+        margin-top: 110%;
+        z-index: -1;
         transform: translate(-50%, -80%);
     }
 
