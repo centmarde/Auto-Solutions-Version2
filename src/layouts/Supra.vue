@@ -74,7 +74,7 @@
 
                 </div>
 
-								<div v-if="modalBody" class="modal-overlay modal-card-body">
+<div v-if="modalBody" class="modal-overlay modal-card-body">
     <div class="card"
         style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 2%; margin-left: auto; margin-right: 75%;">
         <div class="card-body">
@@ -145,13 +145,14 @@
 
 
 <div v-if="modalTire" class="modal-overlay modal-card-tires">
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+    <div class="card stunna"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none;  margin-left: auto; margin-right: 65%;">
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://static.tirerack.com/content/dam/tires/kumho/ku_majesty_9_solus_ta91_ev_bw_full.jpg" alt="">
-                    <p class="title-float"><b>Kumho Majesty</b></p>
+                   
+										<img class="img-float2" src="https://static.vecteezy.com/system/resources/thumbnails/040/529/091/small_2x/ai-generated-3d-rendering-of-a-car-tire-or-rim-on-transparent-background-ai-generated-png.png" style="width: 145px; height: auto;"  alt="">
+                    <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px;"><b>Kumho Majesty</b></p>
                     <p class="price-float">price: $9,800</p>
                 </v-col>
              
@@ -164,13 +165,14 @@
         </div>
     </div>
 
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+    <div class="card stunna"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-left: auto; margin-right: 65%;">
         <div class="card-body">
             <v-row >
                 <v-col cols="12" md="12" class="d-flex justify-content-start" >
-                    <img class="img-float" src="https://static.tirerack.com/content/dam/tires/hankook/hk_ion_evo_as_full.jpg" alt="">
-                    <p class="title-float"><b>Hankook iON Evo</b></p>
+									<img class="img-float" src="https://pngimg.com/d/car_wheel_PNG1075.png" style="width: 130px;" alt="">
+                   
+                    <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px;"><b>Hankook iON</b></p>
                     <p class="price-float">price: $8,200</p>
 
                 </v-col>
@@ -185,13 +187,13 @@
         </div>
     </div>
 
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+    <div class="card stunna"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-left: auto; margin-right: 65%;">
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float2" src="https://images.pepboys.com/fit-in/700x700/images/productImages/43109100/Michelin-Defender-TH-Tire.jpg"  alt="">
-                    <p class="title-float"><b>Michelin Defender</b></p>
+									<img class="img-float" src="https://static.vecteezy.com/system/resources/thumbnails/040/529/214/small_2x/ai-generated-3d-rendering-of-a-car-tire-or-rim-on-transparent-background-ai-generated-png.png" style="width: 145px;" alt="">
+                    <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px;"><b>Michelin</b></p>
                     <p class="price-float">price: $7,999</p>
 
                 </v-col>
@@ -224,54 +226,55 @@
 </v-dialog>
 
 <div v-if="modalEngine" class="modal-overlay modal-card-engines">
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+    <div class="card stunna"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-left: auto; margin-right: 65%;">
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://example.com/path/to/engine_image.jpg" alt="Engine Image">
-                    <p class="title-float"><b>Engine Model Name</b></p>
-                    <p class="price-float">Price: $10,000</p>
+                    <img class="img-float" src="https://www.pngarts.com/files/16/Engine-PNG-HQ-Pic.png" style="width: 150px;" alt="Engine Image">
+										<p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 30px;"><b>2JZ-GTE</b></p>
+
+                    <p class="price-float" >Price: $108,000</p>
                 </v-col>
             </v-row>
         </div>
         <div class="d-flex justify-content-end">
-            <button class="custom-button me-2 mb-1" @click="showMoreInfoEngine('Engine Model Name')">More Info</button>
-            <button class="custom-button me-2 mb-1" @click="chooseEngine('Engine Model Name')">BUY</button>
+            <button class="custom-button me-2 mb-1" @click="showMoreInfoEngine('2JZ-GTE')">More Info</button>
+            <button class="custom-button me-2 mb-1" @click="chooseEngine('2JZ-GTE')">BUY</button>
         </div>
     </div>
 
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+    <div class="card stunna"
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-left: auto; margin-right: 65%;">
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://example.com/path/to/engine_image2.jpg" alt="Engine Image 2">
-                    <p class="title-float"><b>Another Engine Model</b></p>
-                    <p class="price-float">Price: $9,500</p>
+                    <img class="img-float" src="https://www.pngmart.com/files/10/Car-Engine-PNG-HD.png" style="width: 150px;" alt="Engine Image 2">
+                    <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 30px;"><b>B58B30M0</b></p>
+                    <p class="price-float ">Price: $98,500</p>
                 </v-col>
             </v-row>
         </div>
         <div class="d-flex justify-content-end">
-            <button class="custom-button me-2 mb-1" @click="showMoreInfoEngine('Another Engine Model')">More Info</button>
-            <button class="custom-button me-2 mb-1" @click="chooseEngine('Another Engine Model')">BUY</button>
+            <button class="custom-button me-2 mb-1" @click="showMoreInfoEngine('B58B30M0')">More Info</button>
+            <button class="custom-button me-2 mb-1" @click="chooseEngine('B58B30M0')">BUY</button>
         </div>
     </div>
 
-    <div class="card"
-        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-top: 1%; margin-left: auto; margin-right: 65%;">
+    <div class="card stunna" 
+        style="width: 20rem; background: rgba(255, 255, 255, 0.9); border: none; margin-left: auto; margin-right: 65%;">
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://example.com/path/to/engine_image3.jpg" alt="Engine Image 3">
-                    <p class="title-float"><b>Premium Engine Model</b></p>
-                    <p class="price-float">Price: $12,000</p>
+                    <img class="img-float" src="https://www.picng.com/thumbnail/engine/png_engine_20068_small.png" style="width: 150px;" alt="Engine Image 3">
+                    <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 30px;"><b>1JZ-GTE</b></p>
+                    <p class="price-float">Price: $130,000</p>
                 </v-col>
             </v-row>
         </div>
         <div class="d-flex justify-content-end">
-            <button class="custom-button me-2 mb-1" @click="showMoreInfoEngine('Premium Engine Model')">More Info</button>
-            <button class="custom-button me-2 mb-1" @click="chooseEngine('Premium Engine Model')">BUY</button>
+            <button class="custom-button me-2 mb-1" @click="showMoreInfoEngine('1JZ-GTE')">More Info</button>
+            <button class="custom-button me-2 mb-1" @click="chooseEngine('1JZ-GTE')">BUY</button>
         </div>
     </div>
 </div>
@@ -612,7 +615,7 @@ export default {
         showMoreInfoEngine(engineName) {
             // Set selected engine and populate more info details
             this.selectedEngine = engineName;
-            if (engineName === 'Engine Model Name') {
+            if (engineName === '2JZ-GTE') {
                 this.moreInfoEngine = {
                     horsepower: '250 HP',
                     torque: '300 Nm',
@@ -620,7 +623,7 @@ export default {
                     details: 'A powerful engine designed for high performance.',
                     compatibility: 'Compatible with various models of sedans and SUVs.',
                 };
-            } else if (engineName === 'Another Engine Model') {
+            } else if (engineName === 'B58B30M0') {
                 this.moreInfoEngine = {
                     horsepower: '200 HP',
                     torque: '250 Nm',
@@ -628,7 +631,7 @@ export default {
                     details: 'An efficient diesel engine for long-distance travel.',
                     compatibility: 'Designed for compact cars and hatchbacks.',
                 };
-            } else if (engineName === 'Premium Engine Model') {
+            } else if (engineName === '1JZ-GTE') {
                 this.moreInfoEngine = {
                     horsepower: '300 HP',
                     torque: '400 Nm',
@@ -850,7 +853,9 @@ model-viewer {
     white-space: nowrap;
     pointer-events: none;
 }
-
+.stunna{
+	margin-top: 3%;
+}
 @media only screen and (max-width: 1024px) {
     .headertext {
         font-size: 120px;
@@ -865,6 +870,8 @@ model-viewer {
         top: 30%;
         transform: translate(-50%, -85%);
     }
+
+	
 }
 
 @media only screen and (max-width: 480px) {
@@ -873,6 +880,11 @@ model-viewer {
         top: 25%;
         transform: translate(-50%, -80%);
     }
+
+		.stunna{
+		margin-top: 12%;
+	}
+	
 }
 
 .custom-button {
@@ -943,7 +955,7 @@ width: 20rem; border: none; margin-top: 5%; margin-left: 75%; margin-right: auto
 @media (max-width: 768px) {
     .modal-card-body {
         position: fixed;
-        top: 78%;
+        top: 65%;
         left: 50%;
         transform: translate(-50%, -50%);
         margin: 0; /* Override the original margins */
@@ -966,6 +978,7 @@ width: 20rem; border: none; margin-top: 5%; margin-left: 75%; margin-right: auto
         position: relative;
         margin-top: 1.5rem; /* Increased margin for small screens */
     }
+	
 }
 
 /* Large screen (above 768px) */
@@ -996,7 +1009,7 @@ width: 20rem; border: none; margin-top: 5%; margin-left: 75%; margin-right: auto
 }
 .price-float{
     position: absolute;
-    right: 60px;
+    right: 20px;
     font-size: 20px;
     top:3rem;
 }
