@@ -48,22 +48,22 @@
     <v-btn 
       icon 
       :class="{'hover-primary': true}" 
-      :href="'https://facebook.com'" 
+      :href="'https://web.facebook.com/centmarde.campado'" 
       target="_blank"
       @click="setActiveLink('facebook1')"
     >
       <v-icon :class="{ 'white--text': !isDarkMode, 'black--text': isDarkMode }">mdi-facebook</v-icon>
     </v-btn>
 
-    <!-- Instagram Icon -->
-    <v-btn 
+     <!-- LinkedIn Icon -->
+     <v-btn 
       icon 
       :class="{'hover-primary': true}" 
-      :href="'https://instagram.com'" 
+      :href="'https://www.linkedin.com/in/centmarde-campado-627a73283/'" 
       target="_blank"
-      @click="setActiveLink('instagram1')"
+      @click="setActiveLink('linkedin1')"
     >
-      <v-icon :class="{ 'white--text': !isDarkMode, 'black--text': isDarkMode }">mdi-instagram</v-icon>
+      <v-icon :class="{ 'white--text': !isDarkMode, 'black--text': isDarkMode }">mdi-linkedin</v-icon>
     </v-btn>
   </v-col>
 
