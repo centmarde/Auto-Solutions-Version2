@@ -32,7 +32,7 @@
           <td>{{ car.yearsowned }}</td>
           <td>{{ car.price }}</td>
           <td>
-            <v-btn color="error" @click="deleteCar(car.id)">Delete</v-btn> <!-- Delete Button -->
+            <v-btn color="error" @click="confirmDelete(car.id)">Delete</v-btn>
           </td>
         </tr>
       </tbody>
@@ -84,6 +84,13 @@ const deleteCar = async (carId) => {
   } else {
     // Remove the deleted car from the local array
     cars.value = cars.value.filter(car => car.id !== carId);
+  }
+};
+// Show confirmation dialog before deleting
+const confirmDelete = (carId) => {
+  const confirmed = confirm("Are you sure you want to delete this car?");
+  if (confirmed) {
+    deleteCar(carId);  
   }
 };
 

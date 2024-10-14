@@ -9,7 +9,7 @@
           <th class="text-left">Address</th>
           <th class="text-left">Birthday</th>
           <th class="text-left">Gender</th>
-          <th class="text-left">Actions</th> <!-- New Actions column -->
+          <th class="text-left">Actions</th> 
         </tr>
       </thead>
       <tbody>
@@ -20,7 +20,7 @@
           <td>{{ user.birthdate }}</td>
           <td>{{ user.gender }}</td>
           <td>
-            <v-btn color="error" @click="deleteUser(user.id)">Delete</v-btn> <!-- Delete Button -->
+            <v-btn color="error" @click="confirmDelete(user.id)">Delete</v-btn> 
           </td>
         </tr>
       </tbody>
@@ -45,6 +45,7 @@ const props = defineProps({
   },
 });
 
+// Fetch the users from the database
 const fetchUsers = async (isadmin) => {
   const query = supabase
     .from('User')
@@ -59,6 +60,15 @@ const fetchUsers = async (isadmin) => {
   }
 };
 
+// Function to confirm before deleting the user
+const confirmDelete = (userId) => {
+  const confirmed = confirm("Are you sure you want to delete this user?");
+  if (confirmed) {
+    deleteUser(userId);
+  }
+};
+
+// Function to delete the user from the database
 const deleteUser = async (userId) => {
   const { error } = await supabase.from('User').delete().eq('id', userId);
   if (error) {
@@ -68,6 +78,8 @@ const deleteUser = async (userId) => {
     users.value = users.value.filter(user => user.id !== userId);
   }
 };
+
+
 
 onMounted(() => {
   fetchUsers(props.isadmin);
