@@ -27,12 +27,10 @@
     <v-row>
       <v-col cols="12" md="4" class="text-center">
         <!-- Team Image for Column 1 -->
-        <v-img
-          src="https://via.placeholder.com/100"
-          aspect-ratio="1"
-          class="rounded-circle mx-auto mb-2"
-          width="100"
-        ></v-img>
+        <v-avatar size="100" class="mx-auto mb-2">
+          <v-img src="..//assets/profile/campado-prof.jpg"></v-img>
+        </v-avatar>
+
         <!-- Team Name for Column 1 -->
         <div class="team-name" style="margin-bottom: 10px">
           CAMPADO, CENTMARDE- Full Stack Developer
@@ -83,14 +81,11 @@
 
       <v-col cols="12" md="4" class="text-center">
         <!-- Team Image for Column 2 -->
-        <v-img
-          src="https://via.placeholder.com/100"
-          aspect-ratio="1"
-          class="rounded-circle mx-auto mb-2"
-          width="100"
-        ></v-img>
-        <!-- Team Name for Column 2 -->
+        <v-avatar size="100" class="mx-auto mb-2">
+          <v-img src="..//assets/profile/deligero-prof.jpg"></v-img>
+        </v-avatar>
 
+        <!-- Team Name for Column 2 -->
         <div class="team-name" style="margin-bottom: 10px">
           DELIGERO, ADRIAN- Backend Engineer
         </div>
@@ -99,7 +94,7 @@
         <v-btn
           icon
           :class="{ 'hover-primary': true }"
-          :href="'https://github.com/addeligero?fbclid=IwZXh0bgNhZW0CMTEAAR1f2HzFAKTO1_bcuek9Tiqe2EcyK2chORLuYFZRqcYcatFc5vozJe8Ufw4_aem_L6FO5mYY3Yub7wt5fLARaw'"
+          :href="'https://github.com/addeligero'"
           target="_blank"
           @click="setActiveLink('github2')"
         >
@@ -112,7 +107,6 @@
         <!-- Facebook Icon -->
         <v-btn
           icon
-          :color="activeLink === 'facebook2' ? 'primary' : undefined"
           :class="{ 'hover-primary': true }"
           :href="'https://web.facebook.com/profile.php?id=100009488170986'"
           target="_blank"
@@ -128,9 +122,9 @@
         <v-btn
           icon
           :class="{ 'hover-primary': true }"
-          :href="'https://www.linkedin.com/in/adrian-deligero-a494a8317/?fbclid=IwZXh0bgNhZW0CMTEAAR3E-iVa4UZ6TeMGVX4ITzZMLWfehkFp4mvRaacaPzIneq3gW7WDvw1LLjQ_aem_cZIoCpomx6O3fKU1O_CIGA'"
+          :href="'https://www.linkedin.com/in/adrian-deligero-a494a8317/'"
           target="_blank"
-          @click="setActiveLink('linkedin1')"
+          @click="setActiveLink('linkedin2')"
         >
           <v-icon
             :class="{ 'white--text': !isDarkMode, 'black--text': isDarkMode }"
@@ -141,12 +135,10 @@
 
       <v-col cols="12" md="4" class="text-center">
         <!-- Team Image for Column 3 -->
-        <v-img
-          src="https://via.placeholder.com/100"
-          aspect-ratio="1"
-          class="rounded-circle mx-auto mb-2"
-          width="100"
-        ></v-img>
+        <v-avatar size="100" class="mx-auto mb-2">
+          <v-img src="..//assets/profile/lagura-prof.jpg"></v-img>
+        </v-avatar>
+
         <!-- Team Name for Column 3 -->
         <div class="team-name" style="margin-bottom: 10px">
           LAGURA, CHRISTINE MAE- System Analyst
@@ -155,8 +147,6 @@
         <!-- GitHub Icon -->
         <v-btn
           icon
-          :color="activeLink === 'github3' ? 'primary' : undefined"
-          :class="{ 'hover-primary': true }"
           :href="'https://github.com/tinaylagura'"
           target="_blank"
           @click="setActiveLink('github3')"
@@ -170,7 +160,6 @@
         <!-- Facebook Icon -->
         <v-btn
           icon
-          :class="{ 'hover-primary': true }"
           :href="'https://www.facebook.com/christinemae.limbanganon'"
           target="_blank"
           @click="setActiveLink('facebook3')"
@@ -184,10 +173,9 @@
         <!-- LinkedIn Icon -->
         <v-btn
           icon
-          :class="{ 'hover-primary': true }"
           :href="'https://www.linkedin.com/in/christine-limbanganon-5561ab325/'"
           target="_blank"
-          @click="setActiveLink('linkedin1')"
+          @click="setActiveLink('linkedin3')"
         >
           <v-icon
             :class="{ 'white--text': !isDarkMode, 'black--text': isDarkMode }"
@@ -196,6 +184,7 @@
         </v-btn>
       </v-col>
     </v-row>
+
     <!-- Divider with top margin -->
     <v-divider class="mt-5"></v-divider>
 
@@ -234,10 +223,5 @@ export default {
 .dark-theme {
   background-color: #151515;
   color: #eeeeee;
-}
-
-/* Style for hover effect on buttons */
-.hover-primary:hover {
-  color: #6200ea; /* Primary color for hover */
 }
 </style>
