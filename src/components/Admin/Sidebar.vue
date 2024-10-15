@@ -24,9 +24,9 @@
           
           <i class="fa-solid fa-user fa-lg"></i>
           <router-link
-            to="/ClientView"
+            to="/Home"
             class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: isActiveRoute('/ClientView').value }"
+          
           >
             <p class="mt-4 fw-bold fst">View Client Side</p>
             <v-divider></v-divider>
@@ -40,7 +40,7 @@
           <router-link
             to="/AdminMembers"
             class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: isActiveRoute('/admin-members').value }"
+            :class="{ underline: isActiveRoute('/AdminMembers').value }"
           >
           
             <p  class="mt-4 fw-bold fst">Admin Members</p>
@@ -55,7 +55,7 @@
           <router-link
             to="/Clients"
             class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: isActiveRoute('/client-members').value }"
+            :class="{ underline: isActiveRoute('/Clients').value }"
           >
             <p  class="mt-4 fw-bold fst">Client Members</p>
           </router-link>
@@ -73,14 +73,7 @@
             <p  class=" fw-bold fst mt-3">Logout</p>
           </router-link>
 
-          <v-icon>mdi-home</v-icon>
-          <router-link
-            to="/Home"
-            class="btn wes fw-bold mt-1 text-white"
-            :class="{ underline: isActiveRoute('/Home').value }"
-          >
-            <p  class=" fw-bold fst mt-3">Home</p>
-          </router-link>
+          
         </div>
       </div>
     </div>
@@ -143,7 +136,7 @@ const handleLogout = async () => {
  
 }
 .side{
-  margin-left: 20px;
+  margin-left: 30px;
 }
 .mt{
   margin-top: 100px;

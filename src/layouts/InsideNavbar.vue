@@ -38,6 +38,11 @@
             <li class="nav-item">
               <router-link to="/" class="nav-link btn wes" @click="handleLogout">LOGOUT</router-link>
             </li>
+
+            <!-- Conditionally show the "Switch to Admin" link if userRole is true -->
+            <li v-if="userRole === true" class="nav-item">
+              <router-link to="/Admin" class="nav-link btn wes" @click="closeMenu">SWITCH TO ADMIN</router-link>
+            </li>
           </ul>
 
           <div class="d-flex align-items-center  mt-2 mt-lg-0">
@@ -76,6 +81,7 @@ const userImage = ref('');
 const isMenuVisible = ref(false);
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);
+const userRole = JSON.parse(localStorage.getItem('Role')) || false;
 
 // Fetch user data on component mount
 const fetchUserData = async () => {
@@ -134,6 +140,7 @@ onMounted(() => {
   fetchUserData();
 });
 </script>
+
 
 <style scoped>
 .logopic {
