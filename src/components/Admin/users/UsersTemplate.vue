@@ -48,7 +48,7 @@ const props = defineProps({
 // Fetch the users from the database
 const fetchUsers = async (isadmin) => {
   const query = supabase
-    .from('User')
+    .from('users')
     .select('id, firstname, middlename, lastname, email, address, birthdate, gender')
     .eq('isadmin', isadmin);
 
@@ -70,7 +70,7 @@ const confirmDelete = (userId) => {
 
 // Function to delete the user from the database
 const deleteUser = async (userId) => {
-  const { error } = await supabase.from('User').delete().eq('id', userId);
+  const { error } = await supabase.from('users').delete().eq('id', userId);
   if (error) {
     console.error('Error deleting user:', error);
   } else {

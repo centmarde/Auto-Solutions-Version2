@@ -1,6 +1,6 @@
 <template>
 
-    <TableView title="Cars for Rent" tableName="Car" :forRent="true" />
+    <TableView title="Cars for Rent" tableName="cars" :forRent="true" />
   </template>
   
   <script setup>
