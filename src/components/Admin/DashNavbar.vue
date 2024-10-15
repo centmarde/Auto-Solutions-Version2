@@ -25,13 +25,13 @@
                 <router-link to="/Admin" class="nav-link btn fs-6 p-2  d-md-none d-block" >Dashboard</router-link>
               </li>
               <li class="nav-item">
-                <router-link to="/ClientView" class="nav-link btn p-2 fs-6 d-md-none d-block">View As Client</router-link>
+                <router-link to="/Home" class="nav-link btn p-2 fs-6 d-md-none d-block">View As Client</router-link>
               </li>
               <li class="nav-item">
-                <router-link to="/home" class="nav-link btn fs-6 p-2 d-md-none d-block">Admin members</router-link>
+                <router-link to="/AdminMembers" class="nav-link btn fs-6 p-2 d-md-none d-block">Admin members</router-link>
               </li>
               <li class="nav-item">
-                <router-link to="/home" class="nav-link btn fs-6 p-2 d-md-none d-block">Client members</router-link>
+                <router-link to="/Clients" class="nav-link btn fs-6 p-2 d-md-none d-block">Client members</router-link>
               </li>
               <li class="nav-item">
                 <router-link to="/" class="nav-link btn wes fs-6 p-2 d-md-none d-block" @click="handleLogout">LOGOUT</router-link>
