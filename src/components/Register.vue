@@ -339,7 +339,7 @@ export default {
 
           try {
             const { data, error } = await supabase
-              .from('User')
+              .from('users')
               .insert([additionalUserData])
               .select();
 

@@ -108,15 +108,15 @@ export default {
     async fetchCarDetails(id) {
       try {
         const { data, error } = await supabase
-          .from('Car')
-          .select('*, User(*)')
+          .from('cars')
+          .select('*, users(*)')
           .eq('id', id)
           .single();
 
         if (error) throw error;
 
         this.car = data;
-        this.user = data.User;
+        this.user = data.users;
       } catch (err) {
         console.error('Error fetching car details:', err.message);
       }
@@ -128,7 +128,7 @@ export default {
       try {
         // Check if a transaction with the same car_id already exists
         const { data: existingTransaction, error: checkError } = await supabase
-          .from('Transaction')
+          .from('transactions')
           .select('*')
           .eq('car_id', this.car.id)
           .eq('buyer_id', this.buyerId)
@@ -145,7 +145,7 @@ export default {
         const seller_ids = this.user.id;
         // Proceed to insert the transaction
         const { data, error } = await supabase
-          .from('Transaction')
+          .from('transactions')
           .insert([
             {
               buyer_id: buyer_ids, // Assuming this is the logged-in user

@@ -120,7 +120,7 @@
   
         try {
           const { data, error } = await supabase
-            .from('Car')
+            .from('cars')
             .select('*')
             .eq('is_garage', true)
             .eq('user_id', loggedInUserId);
@@ -166,7 +166,7 @@
   if (confirmation) {
     try {
       const { error } = await supabase
-        .from('Car')
+        .from('cars')
         .update({ is_garage: false }) // Set is_garage to false
         .eq('id', carId); // Find the car by its ID
 

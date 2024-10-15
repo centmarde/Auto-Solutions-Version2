@@ -89,7 +89,7 @@ export default {
     if (sellerId && loggedInUserId) {
       try {
         const { data: carData, error: carError } = await supabase
-          .from('Car')
+          .from('cars')
           .select('brand, model')
           .eq('id', carId)
           .single();
@@ -99,7 +99,7 @@ export default {
         this.carModel = carData.model;
 
         const { data: conversationData, error: conversationError } = await supabase
-          .from('Conversation')
+          .from('conversations')
           .select('id, buyer_id, supplier_id')
           .eq('car_id', carId)
           .or(`supplier_id.eq.${loggedInUserId},buyer_id.eq.${loggedInUserId}`)
@@ -110,9 +110,10 @@ export default {
         if (conversationData) {
           this.chatId = conversationData.id;
           this.isSupplier = conversationData.supplier_id == loggedInUserId;
+         
 
           const { data: buyerData, error: buyerError } = await supabase
-            .from('User')
+            .from('users')
             .select('username')
             .eq('id', conversationData.buyer_id)
             .single();
@@ -121,7 +122,7 @@ export default {
           this.buyerName = buyerData.username;
 
           const { data: supplierData, error: supplierError } = await supabase
-            .from('User')
+            .from('users')
             .select('username')
             .eq('id', conversationData.supplier_id)
             .single();
@@ -144,7 +145,7 @@ export default {
     async fetchMessages() {
       try {
         const { data: messagesData, error: messagesError } = await supabase
-          .from('Messages')
+          .from('messages')
           .select('message, user_id, created_at')
           .eq('conversation_id', this.chatId)
           .order('created_at', { ascending: true });
@@ -155,7 +156,7 @@ export default {
           const senderId = message.user_id;
 
           const { data: senderData, error: senderError } = await supabase
-            .from('User')
+            .from('users')
             .select('username')
             .eq('id', senderId)
             .single();
@@ -179,7 +180,7 @@ export default {
           const loggedInUserId = localStorage.getItem('user_id');
 
           const { data, error: messageError } = await supabase
-            .from('Messages')
+            .from('messages')
             .insert([{ conversation_id: this.chatId, message: this.input, user_id: loggedInUserId }]);
 
           if (messageError) throw messageError;
@@ -195,7 +196,7 @@ export default {
     setupRealtimeSubscription() {
       const channel = supabase
         .channel('public:messages')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'Messages' }, (payload) => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, (payload) => {
           if (payload.new.conversation_id === this.chatId) {
             this.fetchMessages(); 
           }

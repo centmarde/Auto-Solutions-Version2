@@ -82,4 +82,5 @@ import Ai from '../layouts/Ai.vue';
 const logout = async () => {
   await doLogout();
 };
+
 </script>

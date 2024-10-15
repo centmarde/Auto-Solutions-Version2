@@ -104,7 +104,7 @@ const login = async () => {
 
       // Fetching user profile from 'User' table
       const { data: profiles, error: profileError } = await supabase
-        .from("User")
+        .from("users")
         .select("*")
         .eq("auth_id", user.id);
 

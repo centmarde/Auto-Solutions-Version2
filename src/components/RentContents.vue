@@ -354,7 +354,7 @@
   
               try {
                   const { data: insertData, error: insertError } = await supabase
-                      .from('Car')
+                      .from('cars')
                       .insert([carDetails])
                       .select();
   
@@ -366,7 +366,7 @@
                       const imageUrl = await this.imageUpload();
   
                       await supabase
-                          .from('Car')
+                          .from('cars')
                           .update({ img: imageUrl })
                           .match({ id: insertData[0].id });
                   }

@@ -71,91 +71,89 @@
     },
     methods: {
       async fetchCars() {
-    this.loading = true;
-    const loggedInUserId = localStorage.getItem('user_id');
-    console.log(loggedInUserId);
-  
-    try {
-      const { data, error } = await supabase
-        .from('Transaction')
-        .select(`*, Car (*), User:buyer_id (*)`)
-        .eq('Car.forRent', true)
-        .eq('buyer_id', loggedInUserId); // Fixed misplaced semicolon
-  
-      if (error) throw error;
-  
-      // Ensure data is an array and filter out null cars
-      const carsForSale = data
-        .map(transaction => transaction.Car)
-        .filter(car => car !== null);
-  
-      // Shuffle the cars for sale
-      this.cars = this.shuffleArray(carsForSale);
-  
-      // Create an array of transactions with corresponding cars
-      this.carsWithTransactions = data.map(transaction => ({
-        car: transaction.Car,
-        transaction: transaction,
-      })).filter(item => item.car !== null); // Filter out null cars from transactions
-    } catch (err) {
-      this.error = err.message;
-    } finally {
-      this.loading = false;
-    }
-  },
+        this.loading = true;
+        const loggedInUserId = localStorage.getItem('user_id');
+        console.log(loggedInUserId);
+    
+        try {
+          const { data, error } = await supabase
+            .from('transactions')
+            .select(`*, cars (*), user:buyer_id (*)`)
+            .eq('cars.forRent', true)
+            .eq('buyer_id', loggedInUserId);
+    
+          if (error) throw error;
+    
+          // Ensure data is an array and filter out null cars
+          const carsForRent = data
+            .map(transaction => transaction.cars) // Changed 'Car' to 'cars'
+            .filter(car => car !== null);
+    
+          // Shuffle the cars for rent
+          this.cars = this.shuffleArray(carsForRent);
+    
+          // Create an array of transactions with corresponding cars
+          this.carsWithTransactions = data.map(transaction => ({
+            car: transaction.cars, // Changed 'Car' to 'cars'
+            transaction: transaction,
+          })).filter(item => item.car !== null); // Filter out null cars from transactions
+        } catch (err) {
+          this.error = err.message;
+        } finally {
+          this.loading = false;
+        }
+      },
   
       async deleteCar(carId) {
         try {
-          const { error } = await supabase.from('Transaction').delete().eq('car_id', carId);
+          const { error } = await supabase
+            .from('transactions') // Corrected to 'transactions'
+            .delete()
+            .eq('car_id', carId);
           if (error) throw error;
           this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
         } catch (err) {
           this.error = err.message;
         }
       },
+
       async chatWithSupplier(sellerId, carId) {
-  try {
-    const loggedInUserId = localStorage.getItem('user_id');
-    if (!loggedInUserId) {
-      throw new Error('User is not logged in');
-    }
+        try {
+          const loggedInUserId = localStorage.getItem('user_id');
+          if (!loggedInUserId) {
+            throw new Error('User is not logged in');
+          }
+    
+          const isBuyer = loggedInUserId !== sellerId;
+    
+          const { data: conversationData, error: conversationError } = await supabase
+            .from('conversations') // Corrected to 'conversations'
+            .select('id')
+            .eq('buyer_id', isBuyer ? loggedInUserId : sellerId)
+            .eq('supplier_id', isBuyer ? sellerId : loggedInUserId)
+            .eq('car_id', carId);
+    
+          if (conversationError) throw conversationError;
+    
+          if (conversationData && conversationData.length > 0) {
+            const chatId = conversationData[0].id;
+            this.$router.push({ path: '/Chat', query: { chat_id: chatId, seller_id: sellerId, car_id: carId } });
+          } else {
+            const { data: newConversationData, error: newConversationError } = await supabase
+              .from('conversations') // Corrected to 'conversations'
+              .insert([{ buyer_id: isBuyer ? loggedInUserId : null, supplier_id: sellerId, car_id: carId }])
+              .select();
+    
+            if (newConversationError) throw newConversationError;
+    
+            const newChatId = newConversationData[0].id;
+            this.$router.push({ path: '/Chat', query: { chat_id: newChatId, seller_id: sellerId, car_id: carId } });
+          }
+        } catch (err) {
+          console.error('Error starting chat:', err);
+        }
+      },
 
-    // Check if the logged-in user is the buyer or supplier
-    const isBuyer = loggedInUserId !== sellerId;
-
-    // Fetch the existing conversation
-    const { data: conversationData, error: conversationError } = await supabase
-      .from('Conversation')
-      .select('id')
-      .eq('buyer_id', isBuyer ? loggedInUserId : sellerId)
-      .eq('supplier_id', isBuyer ? sellerId : loggedInUserId)
-      .eq('car_id', carId);
-
-    if (conversationError) throw conversationError;
-
-    if (conversationData && conversationData.length > 0) {
-      const chatId = conversationData[0].id;
-
-      // Navigate to the Chat view with existing conversation
-      this.$router.push({ path: '/Chat', query: { chat_id: chatId, seller_id: sellerId, car_id: carId } });
-    } else {
-      // Create a new conversation if none exists
-      const { data: newConversationData, error: newConversationError } = await supabase
-        .from('Conversation')
-        .insert([{ buyer_id: isBuyer ? loggedInUserId : null, supplier_id: sellerId, car_id: carId }])
-        .select();
-
-      if (newConversationError) throw newConversationError;
-
-      const newChatId = newConversationData[0].id;
-
-      // Navigate to the Chat view with the new conversation
-      this.$router.push({ path: '/Chat', query: { chat_id: newChatId, seller_id: sellerId, car_id: carId } });
-    }
-  } catch (err) {
-    console.error('Error starting chat:', err);
-  }
-},
       shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -165,7 +163,8 @@
       }
     }
   };
-  </script>
+</script>
+
   
   <style scoped>
   .fixed-card {
