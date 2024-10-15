@@ -39,10 +39,10 @@ const routes = setupLayouts([
   { path: "/", component: Hero, meta: { hideAi: true } },
   { path: "/login", component: Login, meta: { hideAi: false } },
   { path: "/Register", component: Register, meta: { hideAi: false } },
-  { path: "/:pathMatch(.*)*", component: NotFound,meta: { hideAi: false } },
-  { path: "/CarInSale", component: CarInSale },
+  { path: "/:pathMatch(.*)*", component: NotFound, meta: { hideAi: false } },
+  { path: "/CarInSale", component: CarInSale, meta: { requiresAuth: true } },
 
-  { path: "/Home", component: Home, meta: { requiresAuth: true,} },
+  { path: "/Home", component: Home, meta: { requiresAuth: true } },
   {
     path: "/SellContents",
     component: SellContents,
@@ -54,16 +54,28 @@ const routes = setupLayouts([
     name: "CarDetails",
     meta: { requiresAuth: true, hideAi: true },
   },
-  { path: "/Admin", component: Admin, meta: { requiresAuth: true, hideAi: true } },
-  { path: "/Inquires", component: Inquires, meta: { requiresAuth: true, hideAi: true } },
-  { path: "/UserInfo", component: UserInfo, meta: { requiresAuth: true, hideAi: true } },
+  {
+    path: "/Admin",
+    component: Admin,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+  {
+    path: "/Inquires",
+    component: Inquires,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+  {
+    path: "/UserInfo",
+    component: UserInfo,
+    meta: { requiresAuth: true, hideAi: true },
+  },
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
   {
     path: "/Chat",
     component: Chat,
-    meta: { requiresAuth: true  },
+    meta: { requiresAuth: true },
     props: (route) => ({
       sellerId: route.query.seller_id,
       carId: route.query.car_id,
@@ -72,22 +84,34 @@ const routes = setupLayouts([
     }),
   },
   { path: "/Inbox", component: Inbox, meta: { requiresAuth: true } },
-  { path: "/GarageContents", component: GarageContents, meta: { requiresAuth: true,hideAi: true } },
+  {
+    path: "/GarageContents",
+    component: GarageContents,
+    meta: { requiresAuth: true, hideAi: true },
+  },
 
   {
     path: "/RentContents",
     component: RentContents,
-    meta: { requiresAuth: true,hideAi: true },
+    meta: { requiresAuth: true, hideAi: true },
   },
-  { path: "/Garage", component: Garage, meta: { requiresAuth: true, hideAi: true } },
-  { path: "/RentedCars", component: RentedCars, meta: { requiresAuth: true, hideAi: true } },
-
-  { path: "/CarListing", component: CarListing, meta: { requiresAuth: true, hideAi: true } },
   {
-    path: "/CarSaleView",
-    component: CarSaleView,
-    meta: { requiresAuth: true, },
+    path: "/Garage",
+    component: Garage,
+    meta: { requiresAuth: true, hideAi: true },
   },
+  {
+    path: "/RentedCars",
+    component: RentedCars,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+
+  {
+    path: "/CarListing",
+    component: CarListing,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+
   {
     path: "/CarInRent",
     component: CarInRent,
@@ -133,11 +157,30 @@ router.onError((err, to) => {
 // Authentication guards
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
-  const userRole = JSON.parse(localStorage.getItem("Role")); 
-  const hasVisitedDashboard = JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
+  const userRole = JSON.parse(localStorage.getItem("Role"));
+  const hasVisitedDashboard =
+    JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
   const publicPages = ["/", "/login", "/Register"];
-  const protectedPages = ["/Home", "/car/:id", "/SellContents", "/Admin", "/UserInfo", "/Supra", "/Nissan", "/Honda", "/Inquires", "/CarListing", "/CarSaleView", "/RentContents", "/Garage", "/RentedCars", "/Chat", "/Inbox", "/GarageContents"];
+  const protectedPages = [
+    "/Home",
+    "/car/:id",
+    "/SellContents",
+    "/Admin",
+    "/UserInfo",
+    "/Supra",
+    "/Nissan",
+    "/Honda",
+    "/Inquires",
+    "/CarListing",
+    "/CarSaleView",
+    "/RentContents",
+    "/Garage",
+    "/RentedCars",
+    "/Chat",
+    "/Inbox",
+    "/GarageContents",
+  ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
     return next("/");
@@ -152,7 +195,14 @@ router.beforeEach((to, from, next) => {
     return next("/Home");
   }
 
-  if (to.path.startsWith("/Admin") && userRole !== true) {
+  if (
+    (to.path.startsWith("/Admin") ||
+      to.path.startsWith("/CarInRent") ||
+      to.path.startsWith("/ClientView") ||
+      to.path.startsWith("/CarInSale") ||
+      to.path.startsWith("/Clients")) &&
+    userRole !== true
+  ) {
     alert("You do not have permission to access this page.");
     return next("/Home");
   }
