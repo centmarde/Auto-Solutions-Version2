@@ -22,7 +22,7 @@ export const useUserStore = defineStore('user', () => {
     }
 
     const { data, error } = await supabase
-      .from('User')
+      .from('users')
       .select('*')
       .eq('id', userId)
       .single();

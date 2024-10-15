@@ -10,270 +10,318 @@
     "Brand": "Toyota",
     "Model": "Corolla",
     "yearModel": 2022,
-    "Description": "The Toyota Corolla is a compact car known for its practicality, excellent fuel economy, and high resale value."
+    "Description": "The Toyota Corolla is a compact car known for its practicality, excellent fuel economy, and high resale value.",
+    "ImageURL": "https://www.edmunds.com/assets/m/for-sale/33-5yfepmae6np286937/img-1-600x400.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "RAV4",
     "yearModel": 2021,
-    "Description": "The Toyota RAV4 is a versatile compact SUV offering a spacious interior, off-road capability, and hybrid options."
+    "Description": "The Toyota RAV4 is a versatile compact SUV offering a spacious interior, off-road capability, and hybrid options.",
+    "ImageURL": "https://platform.cstatic-images.com/large/in/v2/stock_photos/d322810e-4c4b-441c-afa5-3baf6de2f9e0/56f10add-fbb8-4e55-bb20-48fa0ff065d2.png"
   },
   {
     "Brand": "Toyota",
     "Model": "Highlander",
     "yearModel": 2021,
-    "Description": "The Toyota Highlander is a midsize SUV with three rows of seating, advanced safety features, and a smooth ride."
+    "Description": "The Toyota Highlander is a midsize SUV with three rows of seating, advanced safety features, and a smooth ride.",
+    "ImageURL": "https://hightechtexan.com/wp-content/uploads/2021/06/2021-Toyota-Highlander-Hybrid-Review.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "Tacoma",
     "yearModel": 2020,
-    "Description": "The Toyota Tacoma is a durable midsize pickup truck known for its off-road prowess and strong resale value."
+    "Description": "The Toyota Tacoma is a durable midsize pickup truck known for its off-road prowess and strong resale value.",
+    "ImageURL": "https://www.motortrend.com/uploads/sites/11/2019/07/2020-Toyota-Tacoma-TRD-Off-Road-31.jpg"
+    
   },
   {
     "Brand": "Toyota",
     "Model": "Tundra",
     "yearModel": 2020,
-    "Description": "The Toyota Tundra is a full-size pickup truck with a robust build, powerful engines, and a spacious interior."
+    "Description": "The Toyota Tundra is a full-size pickup truck with a robust build, powerful engines, and a spacious interior.",
+    "ImageURL": "https://cars.usnews.com/static/images/Auto/izmo/i155494661/2020_toyota_tundra_angularfront.jpg"
+
   },
   {
     "Brand": "Toyota",
     "Model": "Sienna",
     "yearModel": 2023,
-    "Description": "The Toyota Sienna is a minivan with a hybrid powertrain, offering a roomy interior, and advanced family-friendly features."
+    "Description": "The Toyota Sienna is a minivan with a hybrid powertrain, offering a roomy interior, and advanced family-friendly features.",
+    "ImageURL": "https://media.ed.edmunds-media.com/toyota/sienna/2023/oem/2023_toyota_sienna_passenger-minivan_25th-anniversary-special-edition_fq_oem_1_1600.jpg"
+
   },
   {
     "Brand": "Toyota",
     "Model": "4Runner",
     "yearModel": 2022,
-    "Description": "The Toyota 4Runner is a rugged midsize SUV with strong off-road capability and a durable, spacious design."
+    "Description": "The Toyota 4Runner is a rugged midsize SUV with strong off-road capability and a durable, spacious design.",
+    "ImageURL": "https://www.prioritytoyotachesapeake.com/static/brand-toyota/vehicle/2022/Toyota/4Runner/MRP/05.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "Land Cruiser",
     "yearModel": 2021,
-    "Description": "The Toyota Land Cruiser is a full-size SUV with legendary off-road capability and a luxurious, comfortable interior."
+    "Description": "The Toyota Land Cruiser is a full-size SUV with legendary off-road capability and a luxurious, comfortable interior.",
+    "ImageURL": "https://images.topgear.com.ph/topgear/images/2021/07/12/lc300-1626055534.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "Avalon",
     "yearModel": 2020,
-    "Description": "The Toyota Avalon is a full-size sedan known for its smooth ride, high-quality interior, and advanced technology."
+    "Description": "The Toyota Avalon is a full-size sedan known for its smooth ride, high-quality interior, and advanced technology.",
+    "ImageURL": "https://www.bpmcdn.com/f/files/sylvanlake/import/2020-02/20596988_web1_200218-BPD-Toyota-Avalon-car_2.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "Civic",
     "yearModel": 2022,
-    "Description": "The Honda Civic is a compact car with a reputation for sporty handling, a comfortable interior, and impressive fuel efficiency."
+    "Description": "The Honda Civic is a compact car with a reputation for sporty handling, a comfortable interior, and impressive fuel efficiency.",
+    "ImageURL": "https://di-sitebuilder-assets.s3.amazonaws.com/Honda/ModelLandingPage/Civic-Sedan/2022/trim-Touring.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "Accord",
     "yearModel": 2021,
-    "Description": "The Honda Accord is a midsize sedan offering a spacious interior, refined driving experience, and advanced technology."
+    "Description": "The Honda Accord is a midsize sedan offering a spacious interior, refined driving experience, and advanced technology.",
+    "ImageURL": "https://di-honda-enrollment.s3.amazonaws.com/2021/model-pages/accord/trims/honda_accord_sport_special_edition.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "CR-V",
     "yearModel": 2022,
-    "Description": "The Honda CR-V is a compact SUV with a spacious interior, smooth ride, and advanced safety features."
+    "Description": "The Honda CR-V is a compact SUV with a spacious interior, smooth ride, and advanced safety features.",
+    "ImageURL": "https://mystrongad.com/ASH_AscensionHonda/Interactive/CR-V/2022/22-Honda-CR-V-2WD-EX-Black-cropped-LG.png"
   },
   {
     "Brand": "Honda",
     "Model": "Pilot",
     "yearModel": 2021,
-    "Description": "The Honda Pilot is a midsize SUV with three rows of seating, ample cargo space, and a comfortable ride."
+    "Description": "The Honda Pilot is a midsize SUV with three rows of seating, ample cargo space, and a comfortable ride.",
+    "ImageURL": "https://hips.hearstapps.com/hmg-prod/images/2021-honda-pilot-mmp-1-1592862850.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "Odyssey",
     "yearModel": 2023,
-    "Description": "The Honda Odyssey is a minivan with a family-friendly design, including versatile seating arrangements and advanced safety features."
+    "Description": "The Honda Odyssey is a minivan with a family-friendly design, including versatile seating arrangements and advanced safety features.",
+    "ImageURL": "https://images.jazelc.com/uploads/edvoyleshonda-2-m2en/2023-Honda-Odyssey-Exterior.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "Fit",
     "yearModel": 2020,
-    "Description": "The Honda Fit is a subcompact car known for its nimble handling, high fuel efficiency, and practical interior space."
+    "Description": "The Honda Fit is a subcompact car known for its nimble handling, high fuel efficiency, and practical interior space.",
+    "ImageURL": "https://platform.cstatic-images.com/large/in/v2/stock_photos/4f7a628e-4f6c-4ea4-b32f-3bdb82cbd18b/dd77a9fa-afc6-4dc4-baa2-bdddb8383dac.png"
   },
   {
     "Brand": "Honda",
     "Model": "HR-V",
     "yearModel": 2021,
-    "Description": "The Honda HR-V is a subcompact SUV with a flexible interior, excellent fuel economy, and a smooth driving experience."
+    "Description": "The Honda HR-V is a subcompact SUV with a flexible interior, excellent fuel economy, and a smooth driving experience.",
+    "ImageURL": "https://file.kelleybluebookimages.com/kbb/base/evox/CP/12998/2021-Honda-HR-V-front_12998_032_2400x1800_WX.png"
   },
   {
     "Brand": "Honda",
     "Model": "Ridgeline",
     "yearModel": 2022,
-    "Description": "The Honda Ridgeline is a unique midsize pickup truck with a car-like ride, a versatile cargo bed, and innovative features."
+    "Description": "The Honda Ridgeline is a unique midsize pickup truck with a car-like ride, a versatile cargo bed, and innovative features.",
+    "ImageURL": "https://di-uploads-pod23.dealerinspire.com/rairdonshondaofmarysville/uploads/2021/11/2022-Honda-Ridgeline-leader.png"
   },
   {
     "Brand": "Honda",
     "Model": "Passport",
     "yearModel": 2023,
-    "Description": "The Honda Passport is a midsize SUV with off-road capabilities, a roomy interior, and a powerful engine."
+    "Description": "The Honda Passport is a midsize SUV with off-road capabilities, a roomy interior, and a powerful engine.",
+    "ImageURL": "https://images.dealer.com/ddc/vehicles/2023/Honda/Passport/SUV/trim_EXL_d52f3f/perspective/front-left/2023_24.png"
   },
   {
     "Brand": "Honda",
     "Model": "Clarity",
     "yearModel": 2020,
-    "Description": "The Honda Clarity is a plug-in hybrid vehicle that combines electric and gasoline power for an efficient and smooth drive."
+    "Description": "The Honda Clarity is a plug-in hybrid vehicle that combines electric and gasoline power for an efficient and smooth drive.",
+    "ImageURL": "https://di-honda-enrollment.s3.amazonaws.com/2020-clarity-plug-in-hybrid/model-image-2020-clarity-plug-in-hybrid-front.png"
   },
   {
     "Brand": "Nissan",
     "Model": "Altima",
     "yearModel": 2021,
-    "Description": "The Nissan Altima is a midsize sedan known for its smooth ride, advanced safety features, and optional all-wheel drive."
+    "Description": "The Nissan Altima is a midsize sedan known for its smooth ride, advanced safety features, and optional all-wheel drive.",
+    "ImageURL": "https://di-sitebuilder-assets.s3.amazonaws.com/Nissan/MLP/Altima/2021/colors/Brilliant+Silver+Metallic.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Sentra",
     "yearModel": 2020,
-    "Description": "The Nissan Sentra is a compact sedan that combines practicality, a comfortable ride, and modern technology at an affordable price."
+    "Description": "The Nissan Sentra is a compact sedan that combines practicality, a comfortable ride, and modern technology at an affordable price.",
+    "ImageURL": "https://inv.assets.ansira.net/ChromeColorMatch/us/TRANSPARENT_cc_2023NIC060006_01_1280_QM1.png"
   },
   {
     "Brand": "Nissan",
     "Model": "Rogue",
     "yearModel": 2023,
-    "Description": "The Nissan Rogue is a compact SUV with a stylish design, advanced technology, and a comfortable, quiet cabin."
+    "Description": "The Nissan Rogue is a compact SUV with a stylish design, advanced technology, and a comfortable, quiet cabin.",
+    "ImageURL": "https://media.ed.edmunds-media.com/nissan/rogue/2023/oem/2023_nissan_rogue_4dr-suv_platinum_fq_oem_1_1600.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Murano",
     "yearModel": 2022,
-    "Description": "The Nissan Murano is a midsize SUV with a premium interior, smooth ride, and advanced safety features."
+    "Description": "The Nissan Murano is a midsize SUV with a premium interior, smooth ride, and advanced safety features.",
+    "ImageURL": "https://images.dealer.com/autodata/us/color/2024/USD40NIS022C0/QAB.jpg?impolicy=downsize_bkpt&imdensity=1&w=520"
   },
   {
     "Brand": "Nissan",
     "Model": "Pathfinder",
     "yearModel": 2021,
-    "Description": "The Nissan Pathfinder is a three-row SUV offering robust off-road capability, a spacious interior, and family-friendly features."
+    "Description": "The Nissan Pathfinder is a three-row SUV offering robust off-road capability, a spacious interior, and family-friendly features.",
+     "ImageURL": "https://s1.cdn.autoevolution.com/images/news/2022-nissan-pathfinder-looks-is-practical-high-tech-suv-in-realistic-rendering-150864_1.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Titan",
     "yearModel": 2020,
-    "Description": "The Nissan Titan is a full-size pickup truck with a powerful engine, durable construction, and a well-equipped interior."
+    "Description": "The Nissan Titan is a full-size pickup truck with a powerful engine, durable construction, and a well-equipped interior.",
+     "ImageURL": "https://cdn.jdpower.com/JDPA_2020%20Nissan%20Titan%20PRO%204X%20Crew%20Cab%20Gray%20Front%20View.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Frontier",
     "yearModel": 2022,
-    "Description": "The Nissan Frontier is a midsize pickup truck known for its rugged build, modern technology, and off-road capabilities."
+    "Description": "The Nissan Frontier is a midsize pickup truck known for its rugged build, modern technology, and off-road capabilities.",
+     "ImageURL": "https://di-sitebuilder-assets.s3.amazonaws.com/Nissan/MLP/Frontier/2022/gun+metallic.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "370Z",
     "yearModel": 2021,
-    "Description": "The Nissan 370Z is a sports car with a powerful engine, agile handling, and a distinctive design."
+    "Description": "The Nissan 370Z is a sports car with a powerful engine, agile handling, and a distinctive design.",
+     "ImageURL": "https://carsguide-res.cloudinary.com/image/upload/f_auto,fl_lossy,q_auto,t_default/v1/editorial/Nissan_370Z_2018_silver_5_0.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Juke",
     "yearModel": 2023,
-    "Description": "The Nissan Juke is a subcompact SUV with a sporty design, nimble handling, and a fun-to-drive character."
+    "Description": "The Nissan Juke is a subcompact SUV with a sporty design, nimble handling, and a fun-to-drive character.",
+     "ImageURL": "https://images.carexpert.com.au/resize/3000/-/app/uploads/2022/10/2023-Nissan-Juke-HERO.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "LEAF",
     "yearModel": 2022,
-    "Description": "The Nissan LEAF is an electric vehicle offering an efficient and eco-friendly drive with a spacious interior and modern features."
+    "Description": "The Nissan LEAF is an electric vehicle offering an efficient and eco-friendly drive with a spacious interior and modern features.",
+     "ImageURL": "https://wieck-nissanao-production.s3.amazonaws.com/photos/08c393d3ecda38a61f63800bc2e7aa3d8543c89c/preview-928x522.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "Sequoia",
     "yearModel": 2023,
-    "Description": "The Toyota Sequoia is a full-size SUV with ample space, advanced safety features, and strong towing capability."
+    "Description": "The Toyota Sequoia is a full-size SUV with ample space, advanced safety features, and strong towing capability.",
+     "ImageURL": "https://media.ed.edmunds-media.com/toyota/sequoia/2023/oem/2023_toyota_sequoia_4dr-suv_capstone_fq_oem_1_1600.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "GR86",
     "yearModel": 2022,
-    "Description": "The Toyota GR86 is a sporty coupe with a lightweight design, precise handling, and an engaging driving experience."
+    "Description": "The Toyota GR86 is a sporty coupe with a lightweight design, precise handling, and an engaging driving experience.",
+     "ImageURL": "https://cdn.motor1.com/images/mgl/x7GYG/s1/2022-toyota-gr-86.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "Venza",
     "yearModel": 2021,
-    "Description": "The Toyota Venza is a midsize crossover with a sleek design, hybrid powertrain, and a refined interior."
+    "Description": "The Toyota Venza is a midsize crossover with a sleek design, hybrid powertrain, and a refined interior.",
+     "ImageURL": "https://img.sm360.ca/images/article/groupelongueuiltoyota/80101//longueuil-toyota-venza-hybride-2021-prix-fiche1602899648564.jpg"
   },
   {
     "Brand": "Toyota",
     "Model": "C-HR",
     "yearModel": 2020,
-    "Description": "The Toyota C-HR is a subcompact SUV with a bold design, agile handling, and a comfortable ride."
+    "Description": "The Toyota C-HR is a subcompact SUV with a bold design, agile handling, and a comfortable ride.",
+     "ImageURL": "https://cdn.jdpower.com/JDPA_2020%20Toyota%20C-HR%20Limited%20Blue%20Front%20View.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "Insight",
     "yearModel": 2021,
-    "Description": "The Honda Insight is a hybrid sedan combining fuel efficiency, a refined interior, and advanced safety features."
+    "Description": "The Honda Insight is a hybrid sedan combining fuel efficiency, a refined interior, and advanced safety features.",
+     "ImageURL": "https://www.motortrend.com/uploads/sites/5/2020/06/2021-honda-insight.png"
   },
   {
     "Brand": "Honda",
     "Model": "Pilot",
     "yearModel": 2022,
-    "Description": "The Honda Pilot is a midsize SUV with a spacious three-row seating arrangement, ample cargo space, and modern technology."
+    "Description": "The Honda Pilot is a midsize SUV with a spacious three-row seating arrangement, ample cargo space, and modern technology.",
+     "ImageURL": "https://di-sitebuilder-assets.s3.amazonaws.com/Honda/ModelLandingPage/Pilot/2022/trim-Elite.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "Accord Hybrid",
     "yearModel": 2021,
-    "Description": "The Honda Accord Hybrid combines the Accord's well-rounded attributes with excellent fuel efficiency and eco-friendly features."
+    "Description": "The Honda Accord Hybrid combines the Accord's well-rounded attributes with excellent fuel efficiency and eco-friendly features.",
+     "ImageURL": "https://www.motortrend.com/uploads/sites/5/2020/10/2021-Honda-Accord-Hybrid-1-1.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "NV3500",
     "yearModel": 2022,
-    "Description": "The Nissan NV3500 is a full-size van with a powerful engine, spacious cargo area, and versatile seating configurations."
+    "Description": "The Nissan NV3500 is a full-size van with a powerful engine, spacious cargo area, and versatile seating configurations.",
+     "ImageURL": "https://i.ytimg.com/vi/QtULgbjxIK8/sddefault.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Rogue Sport",
     "yearModel": 2021,
-    "Description": "The Nissan Rogue Sport is a compact SUV offering a stylish design, agile handling, and a comfortable interior."
+    "Description": "The Nissan Rogue Sport is a compact SUV offering a stylish design, agile handling, and a comfortable interior.",
+     "ImageURL": "https://www.motortrend.com/uploads/sites/10/2021/06/2021-nissan-rogue-sport-s-suv-angular-front.png"
   },
   {
     "Brand": "Toyota",
     "Model": "Land Cruiser Prado",
     "yearModel": 2022,
-    "Description": "The Toyota Land Cruiser Prado is a rugged and luxurious SUV with impressive off-road capabilities and a refined interior."
+    "Description": "The Toyota Land Cruiser Prado is a rugged and luxurious SUV with impressive off-road capabilities and a refined interior.",
+     "ImageURL": "https://images.topgear.com.ph/topgear/images/2019/01/10/2019-toyota-lc-prado-main-1547126137.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "Element",
     "yearModel": 2020,
-    "Description": "The Honda Element is a versatile crossover with a unique design, durable interior, and practical features for active lifestyles."
+    "Description": "The Honda Element is a versatile crossover with a unique design, durable interior, and practical features for active lifestyles.",
+     "ImageURL": "https://i.pinimg.com/originals/72/9b/53/729b5320bf386c5ea2b9aa5943f8a1bb.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Armada",
     "yearModel": 2021,
-    "Description": "The Nissan Armada is a full-size SUV with a powerful engine, luxurious interior, and advanced technology for a premium driving experience."
+    "Description": "The Nissan Armada is a full-size SUV with a powerful engine, luxurious interior, and advanced technology for a premium driving experience.",
+     "ImageURL": "https://cdn.jdpower.com/JDPA_2021%20Nissan%20Armada%20SL%20Midnight%20Edition%20White%20Front%20Quarter%20View.JPG"
   },
   {
     "Brand": "Toyota",
     "Model": "Sienna",
     "yearModel": 2021,
-    "Description": "The Toyota Sienna is a family-friendly minivan with a hybrid powertrain, spacious interior, and advanced safety features."
+    "Description": "The Toyota Sienna is a family-friendly minivan with a hybrid powertrain, spacious interior, and advanced safety features.",
+     "ImageURL": "https://imgcdnblog.carmudi.com.ph/wp-content/uploads/2020/05/20144149/2021_Toyota_Sienna_Limited_02-1500x1000.jpg"
   },
   {
     "Brand": "Honda",
     "Model": "CR-Z",
     "yearModel": 2020,
-    "Description": "The Honda CR-Z is a hybrid sports car with a sporty design, efficient powertrain, and engaging driving dynamics."
+    "Description": "The Honda CR-Z is a hybrid sports car with a sporty design, efficient powertrain, and engaging driving dynamics.",
+    "ImageURL": "https://i.ytimg.com/vi/KtYGD4qndrU/sddefault.jpg"
   },
   {
     "Brand": "Nissan",
     "Model": "Qashqai",
     "yearModel": 2022,
-    "Description": "The Nissan Qashqai is a compact crossover with a sleek design, comfortable interior, and advanced technology."
+    "Description": "The Nissan Qashqai is a compact crossover with a sleek design, comfortable interior, and advanced technology.",
+     "ImageURL": "https://carsguide-res.cloudinary.com/image/upload/f_auto,fl_lossy,q_auto,t_cg_hero_low/v1/editorial/nissan-qashqai-my22-index-1.png"
   },
   {
     "Brand": "Toyota",
     "Model": "C-HR",
     "yearModel": 2021,
-    "Description": "The Toyota C-HR is a stylish subcompact SUV with agile handling, a comfortable interior, and advanced safety features."
+    "Description": "The Toyota C-HR is a stylish subcompact SUV with agile handling, a comfortable interior, and advanced safety features.",
+     "ImageURL": "https://www.carpro.com/hubfs/car-review-blog/review_337332_1.jpg"
   }
 ]

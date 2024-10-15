@@ -103,7 +103,7 @@ export default {
             const userId = localStorage.getItem('user_id');
 
             const { data, error } = await supabase
-                .from('User')
+                .from('users')
                 .select('*')
                 .eq('id', userId)
                 .single(); // Fetch only one user record
@@ -175,7 +175,7 @@ export default {
             try {
                 // Update Supabase
                 const { data: supabaseData, error: supabaseError } = await supabase
-                    .from('User')
+                    .from('users')
                     .update(updatedData)
                     .eq('id', this.supa_id);
 

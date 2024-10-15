@@ -128,7 +128,7 @@ export default {
 
       try {
         const { data, error } = await supabase
-          .from('Car')
+          .from('cars')
           .select('*')
           .eq('user_id', loggedInUserId); 
 
@@ -156,7 +156,7 @@ export default {
       const { id, ...updatedData } = this.editedCar; 
 
       try {
-        const { error } = await supabase.from('Car').update(updatedData).eq('id', id); 
+        const { error } = await supabase.from('cars').update(updatedData).eq('id', id); 
         if (error) throw error;
 
        
@@ -176,7 +176,7 @@ export default {
       if (!confirmDelete) return; 
 
       try {
-        const { error } = await supabase.from('Car').delete().eq('id', carId); 
+        const { error } = await supabase.from('cars').delete().eq('id', carId); 
         if (error) throw error;
 
         this.userCars = this.userCars.filter(car => car.id !== carId);

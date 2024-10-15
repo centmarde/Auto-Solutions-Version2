@@ -1,6 +1,6 @@
 <template>
-    <v-container >
-    <h1 class="text-center fw-bolder">{{title}}</h1>
+  <v-container>
+    <h1 class="text-center fw-bolder">{{ title }}</h1>
     <v-table height="300px" fixed-header>
       <thead>
         <tr>
@@ -9,6 +9,7 @@
           <th class="text-left">Address</th>
           <th class="text-left">Birthday</th>
           <th class="text-left">Gender</th>
+          <th class="text-left">Actions</th> 
         </tr>
       </thead>
       <tbody>
@@ -18,20 +19,22 @@
           <td>{{ user.address }}</td>
           <td>{{ user.birthdate }}</td>
           <td>{{ user.gender }}</td>
+          <td>
+            <v-btn color="error" @click="confirmDelete(user.id)">Delete</v-btn> 
+          </td>
         </tr>
       </tbody>
     </v-table>
-</v-container>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import { supabase } from '../../../lib/supaBase';
-  
-  const users = ref([]);
+  </v-container>
+</template>
 
-  
-  const props = defineProps({
+<script setup>
+import { ref, onMounted } from 'vue';
+import { supabase } from '../../../lib/supaBase';
+
+const users = ref([]);
+
+const props = defineProps({
   title: {
     type: String,
     default: 'Title',
@@ -39,14 +42,15 @@
   isadmin: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
+// Fetch the users from the database
 const fetchUsers = async (isadmin) => {
   const query = supabase
     .from('User')
     .select('id, firstname, middlename, lastname, email, address, birthdate, gender')
-    .eq('isadmin', isadmin); 
+    .eq('isadmin', isadmin);
 
   const { data, error } = await query;
   if (error) {
@@ -56,11 +60,32 @@ const fetchUsers = async (isadmin) => {
   }
 };
 
-onMounted(() => {
-  fetchUsers(props.isadmin); 
-});
+// Function to confirm before deleting the user
+const confirmDelete = (userId) => {
+  const confirmed = confirm("Are you sure you want to delete this user?");
+  if (confirmed) {
+    deleteUser(userId);
+  }
+};
 
-  </script>
+// Function to delete the user from the database
+const deleteUser = async (userId) => {
+  const { error } = await supabase.from('User').delete().eq('id', userId);
+  if (error) {
+    console.error('Error deleting user:', error);
+  } else {
+    // Remove the deleted user from the local array
+    users.value = users.value.filter(user => user.id !== userId);
+  }
+};
+
+
+
+onMounted(() => {
+  fetchUsers(props.isadmin);
+});
+</script>
+
   
   <style>
   .mts {
