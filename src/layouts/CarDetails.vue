@@ -72,8 +72,8 @@ export default {
     return {
       car: {},
       user: {},
-      isSubmitting: false, // Add isSubmitting state
-      buyerId: localStorage.getItem("user_id"), // Assume the logged-in user's ID is stored here
+      isSubmitting: false, 
+      buyerId: localStorage.getItem("user_id"), 
     };
   },
   computed: {
