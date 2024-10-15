@@ -14,10 +14,10 @@ export const useCarStore = defineStore('carStore', {
 
       try {
         const { data, error } = await supabase
-          .from('Car')
+          .from('cars')
           .select(`
             *,
-            User (
+            users (
               *
             )
           `)

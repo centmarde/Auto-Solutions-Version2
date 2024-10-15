@@ -35,7 +35,7 @@ const totalCarsForRent = ref(0);
 const fetchCarCount = async () => {
   try {
     const { data, error } = await supabase
-      .from('Car')
+      .from('cars')
       .select('id') 
       .eq('forSale', true); 
 
@@ -50,7 +50,7 @@ const fetchCarCount = async () => {
 const fetchtotalCarsForRent = async () => {
   try {
     const { data, error } = await supabase
-      .from('Car')
+      .from('cars')
       .select('id') 
       .eq('forSale', false); 
 

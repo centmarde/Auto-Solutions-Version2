@@ -89,7 +89,7 @@ const fetchUserData = async () => {
   if (!userId) return; // Exit if no user ID
 
   const { data, error } = await supabase
-    .from('User')
+    .from('users')
     .select('*')
     .eq('id', userId)
     .single();
