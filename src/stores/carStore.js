@@ -20,6 +20,7 @@ export const useCarStore = defineStore('carStore', {
             users (
               *
             )
+            
           `)
           .eq('forSale', true) // Fetch only cars for sale
           .neq('user_id', loggedInUserId);

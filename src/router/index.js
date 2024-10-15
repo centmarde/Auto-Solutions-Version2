@@ -33,6 +33,7 @@ import Inbox from "@/layouts/Inbox.vue";
 import GarageContents from "@/components/GarageContents.vue";
 import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
+import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -128,6 +129,12 @@ const routes = setupLayouts([
     component: AdminMembers,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/CarBeenPurchased",
+    component: CarBeenPurchased,
+    meta: { requiresAuth: true },
+  }
+
 ]);
 
 const router = createRouter({
@@ -195,6 +202,7 @@ router.beforeEach((to, from, next) => {
     (to.path.startsWith("/Admin") ||
       to.path.startsWith("/CarInRent") ||
       to.path.startsWith("/ClientView") ||
+      to.path.startsWith("/CarBeenPurchased") ||
       to.path.startsWith("/CarInSale") ||
       to.path.startsWith("/Clients")) &&
     userRole !== true

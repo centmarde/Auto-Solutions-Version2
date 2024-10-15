@@ -8,7 +8,7 @@
       <v-alert type="error">{{ error }}</v-alert>
     </v-col>
 
-    <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
+    <v-col v-if="!loading && !error && cars.length === 0" class="no-cars">
       <v-alert type="warning">No cars available for sale.</v-alert>
     </v-col>
   </v-row>
@@ -31,19 +31,17 @@
           <v-col cols="8">
             <v-card-title>{{ item.car.brand }} {{ item.car.model }}</v-card-title>
             <v-card-text>
-              <p class="truncate-text">
-                {{ item.car.description }}
-              </p>
-              <p><small class="text-body-secondary">added at: {{ item.transaction.created_at }}</small></p>
+              <p class="truncate-text">{{ item.car.description }}</p>
+              <p><small class="text-body-secondary">Added at: {{ item.transaction.created_at }}</small></p>
             </v-card-text>
             <v-card-actions class="d-flex justify-content-end">
-              <v-btn color="red" @click="deleteCar(item.car.id)">
-                <v-icon left>mdi-delete</v-icon>
-                Delete
+              <v-btn color="red" @click="openConfirmationDialog(item.car.id)">
+                <v-icon left>mdi-cancel</v-icon>
+                Cancel
               </v-btn>
-              <v-btn color="blue" @click="chatWithSupplier(item.transaction.seller_id, item.car.id)">
-                <v-icon left>mdi-chat</v-icon>
-                Chat
+              <v-btn color="green" @click="finalizePurchase(item.transaction.id, item.transaction.price)">
+                <v-icon left>mdi-check</v-icon>
+                Purchase
               </v-btn>
             </v-card-actions>
           </v-col>
@@ -51,6 +49,54 @@
       </v-card>
     </v-col>
   </v-row>
+
+  <v-dialog v-model="isDialogVisible" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Are You Sure You Want to Cancel?</v-card-title>
+      <v-card-text>
+        <p>You are about to cancel this order. Please note the following consequences:</p>
+        <ul>
+          <li>You may lose any deposits associated with this order.</li>
+          <li>This cancellation will be recorded in your rental history.</li>
+          <li>You might not be eligible for future discounts or promotions.</li>
+          <li>Any false information may lead to disqualification.</li>
+        </ul>
+        <p>If you wish to proceed, please contact the supplier of the mentioned car.</p>
+        <router-link to="/Chat">
+          <v-btn color="blue">
+            <v-icon left>mdi-message</v-icon>
+            Chat with Supplier
+          </v-btn>
+        </router-link>
+        <p>Do you want to proceed with the cancellation?</p>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="isDialogVisible = false">Cancel</v-btn>
+        <v-btn color="red" text @click="confirmDelete">Yes, Cancel Order</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog v-model="isConfirmationDialogVisible" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Confirmation Required</v-card-title>
+      <v-card-text>
+        <p>Please confirm your purchase of this vehicle. Here are the terms and conditions:</p>
+        <ul>
+          <li>You are responsible for the full payment of the price agreed upon.</li>
+          <li>Any warranty information will be provided post-purchase.</li>
+          <li>Refund policies and procedures will be shared through email.</li>
+          <li>By proceeding, you accept all terms and conditions.</li>
+        </ul>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue" text @click="isConfirmationDialogVisible = false">Cancel</v-btn>
+        <v-btn color="green" text @click="confirmFinalizePurchase">Confirm Purchase</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -64,6 +110,11 @@ export default {
       carsWithTransactions: [],
       loading: true,
       error: null,
+      isDialogVisible: false,
+      isConfirmationDialogVisible: false,
+      carIdToDelete: null,
+      transactionIdToFinalize: null,
+      priceToFinalize: null,
     };
   },
   async created() {
@@ -71,91 +122,143 @@ export default {
   },
   methods: {
     async fetchCars() {
-      this.loading = true;
-      const loggedInUserId = localStorage.getItem('user_id');
-      console.log(loggedInUserId);
+  this.loading = true;
+  const loggedInUserId = localStorage.getItem('user_id');
 
+  try {
+    // Fetch purchased cars for the logged-in user
+    const { data: purchasedCars, error: purchaseError } = await supabase
+      .from('purchased_cars')
+      .select('transaction_id');
+
+    if (purchaseError) throw purchaseError;
+
+    const purchasedTransactionIds = purchasedCars.map(car => car.transaction_id);
+
+    // Fetch cars that are available for sale and not purchased
+    const { data, error } = await supabase
+      .from('transactions')
+      .select(`*, cars (*), user:buyer_id (*)`)
+      .eq('cars.forSale', true)
+      .eq('buyer_id', loggedInUserId)
+      // .not('id', 'in', `(${purchasedTransactionIds.join(',')})`);
+
+    if (error) throw error;
+
+    const carsForSale = data
+      .map(transaction => transaction.cars)
+      .filter(car => car !== null);
+
+    this.cars = this.shuffleArray(carsForSale);
+
+    this.carsWithTransactions = data
+      .map(transaction => ({
+        car: transaction.cars,
+        transaction: transaction,
+      }))
+      .filter(item => item.car !== null);
+  } catch (err) {
+    this.error = err.message;
+  } finally {
+    this.loading = false;
+  }
+},
+
+    openConfirmationDialog(carId) {
+      this.isDialogVisible = true;
+      this.carIdToDelete = carId;
+    },
+
+    async confirmDelete() {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('transactions')
-          .select(`*, cars (*), user:buyer_id (*)`)
-          .eq('cars.forSale', true)
-          .eq('buyer_id', loggedInUserId);
+          .delete()
+          .eq('car_id', this.carIdToDelete);
 
         if (error) throw error;
 
-        const carsForSale = data
-          .map(transaction => transaction.cars) // Update 'Car' to 'cars'
-          .filter(car => car !== null);
-
-        this.cars = this.shuffleArray(carsForSale);
-
-        this.carsWithTransactions = data
-          .map(transaction => ({
-            car: transaction.cars, // Update 'Car' to 'cars'
-            transaction: transaction,
-          }))
-          .filter(item => item.car !== null);
+        this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== this.carIdToDelete);
+        this.isDialogVisible = false;
       } catch (err) {
         this.error = err.message;
-      } finally {
-        this.loading = false;
       }
     },
 
-    async deleteCar(carId) {
-      const confirmation = window.confirm("Are you sure you want to delete this Listing?");
-  
-      if (confirmation) {
-        try {
-          const { error } = await supabase
-            .from('transactions')
-            .delete()
-            .eq('car_id', carId);
-          
-          if (error) throw error;
-          
-          this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
-        } catch (err) {
-          this.error = err.message;
-        }
-      }
-    },
+    async finalizePurchase(transactionId) {
+  const transaction = this.carsWithTransactions.find(item => item.transaction.id === transactionId);
+  const price = transaction ? transaction.car.price : null; // Accessing price from the car object
+  this.transactionIdToFinalize = transactionId;
+  this.priceToFinalize = price;
+  this.isConfirmationDialogVisible = true;
+},
 
-    async chatWithSupplier(sellerId, carId) {
+async confirmFinalizePurchase() {
+  const { transactionIdToFinalize: transactionId, priceToFinalize: price } = this;
+
+  try {
+    const { data: existingCars, error: checkError } = await supabase
+      .from('purchased_cars')
+      .select('*')
+      .eq('transaction_id', transactionId);
+
+    if (checkError) throw checkError;
+
+    if (existingCars.length > 0) {
+      this.error = 'This car has already been purchased.';
+      this.isConfirmationDialogVisible = false;
+      return;
+    }
+
+    const warrantyDate = new Date();
+    warrantyDate.setFullYear(warrantyDate.getFullYear() + 1);
+    
+    const { error } = await supabase
+      .from('purchased_cars')
+      .insert([{ price, transaction_id: transactionId, warranty: warrantyDate.toISOString() }]);
+
+    if (error) throw error;
+
+    this.isConfirmationDialogVisible = false;
+    location.reload();
+  } catch (err) {
+    this.error = err.message;
+    this.isConfirmationDialogVisible = false;
+  }
+},
+
+
+    async confirmFinalizePurchase() {
+      const { transactionIdToFinalize: transactionId, priceToFinalize: price } = this;
+
       try {
-        const loggedInUserId = localStorage.getItem('user_id');
-        if (!loggedInUserId) {
-          throw new Error('User is not logged in');
+        const { data: existingCars, error: checkError } = await supabase
+          .from('purchased_cars')
+          .select('*')
+          .eq('transaction_id', transactionId);
+
+        if (checkError) throw checkError;
+
+        if (existingCars.length > 0) {
+          this.error = 'This car has already been purchased.';
+          this.isConfirmationDialogVisible = false;
+          return;
         }
 
-        const isBuyer = loggedInUserId !== sellerId;
+        const warrantyDate = new Date();
+        warrantyDate.setFullYear(warrantyDate.getFullYear() + 1);
+        
+        const { error } = await supabase
+          .from('purchased_cars')
+          .insert([{ price, transaction_id: transactionId, warranty: warrantyDate.toISOString() }]);
 
-        const { data: conversationData, error: conversationError } = await supabase
-          .from('conversations')
-          .select('id')
-          .eq('buyer_id', isBuyer ? loggedInUserId : sellerId)
-          .eq('supplier_id', isBuyer ? sellerId : loggedInUserId)
-          .eq('car_id', carId);
+        if (error) throw error;
 
-        if (conversationError) throw conversationError;
-
-        if (conversationData && conversationData.length > 0) {
-          const chatId = conversationData[0].id;
-          this.$router.push({ path: '/Chat', query: { chat_id: chatId, seller_id: sellerId, car_id: carId } });
-        } else {
-          const { data: newConversationData, error: newConversationError } = await supabase
-            .from('conversations')
-            .insert([{ buyer_id: isBuyer ? loggedInUserId : null, supplier_id: sellerId, car_id: carId }])
-            .select();
-
-          if (newConversationError) throw newConversationError;
-
-          const newChatId = newConversationData[0].id;
-          this.$router.push({ path: '/Chat', query: { chat_id: newChatId, seller_id: sellerId, car_id: carId } });
-        }
+        this.isConfirmationDialogVisible = false;
+        location.reload();
       } catch (err) {
-        console.error('Error starting chat:', err);
+        this.error = err.message;
+        this.isConfirmationDialogVisible = false;
       }
     },
 
@@ -169,7 +272,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .fixed-card {

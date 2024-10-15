@@ -7,7 +7,7 @@
        <div class="row gap-5 justify-content-center mt">
         <Card class="col-6" title="Total Cars for Sale" link="/CarInSale" :num="carCount" />
         <Card class="col-6"  title="Total Cars for Rent" link="/CarInRent" :num="totalCarsForRent" />
-        <Card class="col-6"  title="Car purchased" />
+        <Card class="col-6"  title="Car purchased"  link="/CarBeenPurchased" :num="purchasedCount"/>
         <Card class="col-6"  title="Car Rented" /> 
        </div>
  
@@ -30,6 +30,8 @@ const isDark = ref(theme.global.current.value.dark);
 // Reactive variables to store car count and other data
 const carCount = ref(0);
 const totalCarsForRent = ref(0); 
+const purchasedCount = ref(0);
+
 
 // Function to fetch the number of cars for sale
 const fetchCarCount = async () => {
@@ -62,10 +64,26 @@ const fetchtotalCarsForRent = async () => {
   }
 };
 
+const fetchtotalCarsPurchased = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('purchased_cars')
+      .select('*') 
+      
+
+    if (error) throw error;
+
+    purchasedCount.value = data.length;  
+  } catch (err) {
+    console.error("Error fetching car count:", err.message);
+  }
+};
+
 
 onMounted(() => {
   fetchCarCount();  
   fetchtotalCarsForRent();
+  fetchtotalCarsPurchased();
 });
 
 const toggleTheme = () => {
