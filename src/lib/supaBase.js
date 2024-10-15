@@ -5,6 +5,7 @@ async function doLogout() {
   const confirmed = window.confirm("are you you want to logout?");
 
   let { error } = await supabase.auth.signOut();
+  localStorage.clear();
 
   if(!confirmed){
     return;

@@ -16,7 +16,7 @@
         <v-row>
           <v-col>
             <div v-if="showText" class="centered-text fade" :class="{ 'fade-out': !showText }">
-              <b>AUTO-SOLUTIONS</b> AN ITE-110 PROJECT
+              <b>AUTO-SOLUTIONS</b> A 3 BIRDS WITH 1 STONE PROJECT
             </div>
           </v-col>
         </v-row>
