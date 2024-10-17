@@ -38,19 +38,23 @@
               hide-details
             />
           </v-col>
+          
         </v-row>
-        <div class="d-flex justify-center mt-3">
-          <v-btn @click="compareCars" color="primary">Compare</v-btn>
-        </div>
+        
 
         <v-row v-if="comparisonResults.length">
           <v-col cols="12">
+            <div class="d-flex justify-center mt-3">
+          <v-btn @click="compareCars" color="primary">Compare</v-btn>
+        </div>
             <canvas id="comparisonChart" width="400" height="200"></canvas>
           </v-col>
           <v-col cols="12" class="mt-5">
             <h3 class="text-center">Summary</h3>
             <p class="text-center">{{ overallComment }}</p>
+            <p class="text-center">{{ overallWinner }}</p>
           </v-col>
+         
         </v-row>
       </v-card-body>
     </v-card>
@@ -68,6 +72,7 @@ const car2 = ref({ brand: '', model: '' });
 const suggestedModels = ref({ car1: [], car2: [] });
 const comparisonResults = ref([]);
 const overallComment = ref('');
+const overallWinner = ref('');
 
 async function fetchModels(car) {
   const make = car === 'car1' ? car1.value.brand : car2.value.brand;
@@ -85,7 +90,7 @@ async function fetchModels(car) {
 }
 
 async function compareCars() {
-  const userMessage = `Compare ${car1.value.brand} ${car1.value.model} and ${car2.value.brand} ${car2.value.model}. Please provide a score from 0 to 100 for performance, speed, reliability, and comfort, and include an overall comment.`;
+  const userMessage = `Compare ${car1.value.brand} ${car1.value.model} and ${car2.value.brand} ${car2.value.model}. Please provide a score from 0 to 100 for Topspeed, Torque, Technology, Design, Comfort, and include Price, FuelEfficiency, SafetyFeatures, ResaleValue, and an overall comment.`;
 
   try {
     const response = await getResponse(userMessage);
@@ -97,21 +102,28 @@ async function compareCars() {
 
     const [car1Data, car2Data] = results.slice(0, 2).map(car => parseCarDetails(car));
     overallComment.value = results[2] || 'No overall comment provided.';
+    overallWinner.value = results[3] || 'No overall winner provided.';
 
     comparisonResults.value = [
       {
         brand: car1.value.brand,
-        performance: car1Data.Performance || 0,
-        reliability: car1Data.Reliability || 0,
-        comfort: car1Data.Comfort || 0,
-        speed: car1Data.Speed || 0,
+        Topspeed: car1Data.Topspeed || 0,
+        Torque: car1Data.Torque || 0,
+        Technology: car1Data.Technology || 0,
+        Comfort: car1Data.Comfort || 0,
+        Design: car1Data.Design,
+        FuelEfficiency: car1Data.FuelEfficiency || 0,
+        ResaleValue: car1Data.ResaleValue || 0,
       },
       {
         brand: car2.value.brand,
-        performance: car2Data.Performance || 0,
-        reliability: car2Data.Reliability || 0,
-        comfort: car2Data.Comfort || 0,
-        speed: car2Data.Speed || 0,
+        Topspeed: car2Data.Topspeed || 0,
+        Torque: car2Data.Torque || 0,
+        Technology: car2Data.Technology || 0,
+        Comfort: car2Data.Comfort || 0,
+        Design: car2Data.Design,
+        FuelEfficiency: car2Data.FuelEfficiency || 0,
+        ResaleValue: car2Data.ResaleValue || 0,
       },
     ];
 
@@ -124,13 +136,13 @@ async function compareCars() {
 function parseCarDetails(details) {
   if (!details || !details.includes(':')) {
     console.error("Invalid car details format:", details);
-    return { Performance: 0, Reliability: 0, Comfort: 0, Speed: 0 };
+    return { Topspeed: 0, Torque: 0, Technology: 0, Comfort: 0, Design: 0 };
   }
 
   const metrics = details.split(', ').reduce((acc, metric) => {
     const [key, value] = metric.split(': ');
     if (key && value) {
-      acc[key.trim()] = parseInt(value.trim(), 10) || 0;
+      acc[key.trim()] = isNaN(value.trim()) ? value.trim() : parseInt(value.trim(), 10) || 0;
     } else {
       console.warn("Unexpected metric format:", metric);
     }
@@ -138,10 +150,13 @@ function parseCarDetails(details) {
   }, {});
 
   return {
-    Performance: metrics.Performance || 0,
-    Reliability: metrics.Reliability || 0,
+    Topspeed: metrics.Topspeed || 0,
+    Torque: metrics.Torque || 0,
+    Technology: metrics.Technology || 0,
     Comfort: metrics.Comfort || 0,
-    Speed: metrics.Speed || 0,
+    Design: metrics.Design,
+    FuelEfficiency: metrics.FuelEfficiency || 0,
+    ResaleValue: metrics.ResaleValue || 0,
   };
 }
 
@@ -164,24 +179,39 @@ async function updateChart() {
       labels: [car1.value.brand, car2.value.brand],
       datasets: [
         {
-          label: 'Performance',
-          data: [comparisonResults.value[0].performance, comparisonResults.value[1].performance],
+          label: 'TopSpeed',
+          data: [comparisonResults.value[0].Topspeed, comparisonResults.value[1].Topspeed],
           backgroundColor: 'rgba(75, 192, 192, 0.5)',
         },
         {
-          label: 'Reliability',
-          data: [comparisonResults.value[0].reliability, comparisonResults.value[1].reliability],
+          label: 'Torque',
+          data: [comparisonResults.value[0].Torque, comparisonResults.value[1].Torque],
           backgroundColor: 'rgba(153, 102, 255, 0.5)',
         },
         {
-          label: 'Comfort',
-          data: [comparisonResults.value[0].comfort, comparisonResults.value[1].comfort],
+          label: 'Technology',
+          data: [comparisonResults.value[0].Technology, comparisonResults.value[1].Technology],
           backgroundColor: 'rgba(255, 159, 64, 0.5)',
         },
         {
-          label: 'Speed',
-          data: [comparisonResults.value[0].speed, comparisonResults.value[1].speed],
-          backgroundColor: 'rgba(255, 159, 80, 0.5)',
+          label: 'Comfort',
+          data: [comparisonResults.value[0].Comfort, comparisonResults.value[1].Comfort],
+          backgroundColor: 'rgba(255, 255, 0, 0.5)',
+        },
+        {
+          label: 'Fuel Efficiency',
+          data: [comparisonResults.value[0].FuelEfficiency, comparisonResults.value[1].FuelEfficiency],
+          backgroundColor: 'rgba(0, 0, 255, 0.5)',
+        },
+        {
+          label: 'Resale Value',
+          data: [comparisonResults.value[0].ResaleValue, comparisonResults.value[1].ResaleValue],
+          backgroundColor: 'rgba(255, 165, 0, 0.5)',
+        },
+        {
+          label: 'Design',
+          data: [comparisonResults.value[0].Design, comparisonResults.value[1].Design],
+          backgroundColor: 'rgba(255, 0, 0, 0.5)',
         },
       ],
     },
