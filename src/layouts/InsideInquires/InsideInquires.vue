@@ -139,7 +139,7 @@ export default {
     const { data, error } = await supabase
       .from('transactions')
       .select(`*, cars (*), user:buyer_id (*)`)
-      .eq('cars.forSale', true)
+      .eq('cars.for_sale', true)
       .eq('buyer_id', loggedInUserId)
       // .not('id', 'in', `(${purchasedTransactionIds.join(',')})`);
 

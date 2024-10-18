@@ -86,11 +86,11 @@
           <v-textarea v-model="editedCar.description" label="Description" required></v-textarea>
           <v-text-field v-model="editedCar.mileage" label="Mileage" required></v-text-field>
           <v-text-field v-model="editedCar.engine" label="Engine" required></v-text-field>
-          <v-text-field v-model="editedCar.horsepower" label="Horsepower" required></v-text-field>
+          <v-text-field v-model="editedCar.horse_power" label="Horsepower" required></v-text-field>
           <v-text-field v-model="editedCar.torque" label="Torque" required></v-text-field>
-          <v-text-field v-model="editedCar.topSpeed" label="Top Speed" required></v-text-field>
+          <v-text-field v-model="editedCar.top_speed" label="Top Speed" required></v-text-field>
           <v-text-field v-model="editedCar.transmission" label="Transmission" required></v-text-field>
-          <v-text-field v-model="editedCar.yearsowned" label="Years Owned" required></v-text-field>
+          <v-text-field v-model="editedCar.years_owned" label="Years Owned" required></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>

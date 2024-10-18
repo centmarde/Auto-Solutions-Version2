@@ -98,7 +98,7 @@ export default {
         const { data, error } = await supabase
           .from('transactions')
           .select(`*, cars (*), user:buyer_id (*)`)
-          .eq('cars.forRent', true)
+          .eq('cars.for_rent', true)
           .eq('buyer_id', loggedInUserId);
 
         if (error) throw error;

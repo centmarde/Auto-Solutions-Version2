@@ -22,7 +22,7 @@ export const useCarStore = defineStore('carStore', {
             )
             
           `)
-          .eq('forSale', true) // Fetch only cars for sale
+          .eq('for_sale', true) // Fetch only cars for sale
           .neq('user_id', loggedInUserId);
 
         if (error) throw error;
