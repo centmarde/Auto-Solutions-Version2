@@ -41,22 +41,22 @@
           
         </v-row>
         
-
+        <div class="d-flex justify-center mt-3">
+              <v-btn @click="compareCars" color="primary">Compare</v-btn>
+        </div>
         <v-row v-if="comparisonResults.length">
           <v-col cols="12">
-            <div class="d-flex justify-center mt-3">
-          <v-btn @click="compareCars" color="primary">Compare</v-btn>
-        </div>
             <canvas id="comparisonChart" width="400" height="200"></canvas>
           </v-col>
           <v-col cols="12" class="mt-5">
             <h3 class="text-center">Summary</h3>
             <p class="text-center">{{ overallComment }}</p>
-            <p class="text-center">{{ overallWinner }}</p>
           </v-col>
          
         </v-row>
+        
       </v-card-body>
+      
     </v-card>
   </v-container>
 </template>
@@ -102,7 +102,6 @@ async function compareCars() {
 
     const [car1Data, car2Data] = results.slice(0, 2).map(car => parseCarDetails(car));
     overallComment.value = results[2] || 'No overall comment provided.';
-    overallWinner.value = results[3] || 'No overall winner provided.';
 
     comparisonResults.value = [
       {
