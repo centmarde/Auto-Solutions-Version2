@@ -112,7 +112,7 @@
           <v-col cols="12" md="6" class="mb-3">
             <v-text-field
               label="Horsepower"
-              v-model="car.horsepower"
+              v-model="car.horse_power"
               placeholder="Enter horsepower"
             ></v-text-field>
           </v-col>
@@ -128,7 +128,7 @@
           <v-col cols="12" md="6" class="mb-3">
             <v-text-field
               label="Top Speed"
-              v-model="car.topSpeed"
+              v-model="car.top_speed"
               placeholder="Enter top speed"
             ></v-text-field>
           </v-col>
@@ -153,7 +153,7 @@
           <v-col cols="12" md="6" class="mb-3">
             <v-text-field
               label="Years Owned"
-              v-model="car.yearsowned"
+              v-model="car.years_owned"
               placeholder="Years Owned"
               required
             ></v-text-field>
@@ -231,11 +231,11 @@ export default {
                 price: null,
                 description: '',
                 engine: '',
-                horsepower: '',
+                horse_power: '',
                 torque: '',
-                topSpeed: '',
+                top_speed: '',
                 transmission: '',
-                yearsowned: '',
+                years_owned: '',
             },
             
             carData: [],
@@ -256,7 +256,7 @@ export default {
     if (!this.car.brand) requiredFields.push('Brand');
     if (!this.car.model) requiredFields.push('Model');
     if (!this.car.price) requiredFields.push('Price');
-    if (!this.car.yearsowned) requiredFields.push('Years Owned');
+    if (!this.car.years_owned) requiredFields.push('Years Owned');
 
     if (requiredFields.length > 0) {
         alert(`Please fill in the following required fields: ${requiredFields.join(', ')}`);
@@ -268,9 +268,9 @@ export default {
     if (!this.car.mileage) fieldsToFill.push('Mileage');
     if (!this.car.engine) fieldsToFill.push('Engine');
     if (!this.car.description) fieldsToFill.push('Description');
-    if (!this.car.horsepower) fieldsToFill.push('Horsepower');
+    if (!this.car.horse_power) fieldsToFill.push('Horsepower');
     if (!this.car.torque) fieldsToFill.push('Torque');
-    if (!this.car.topSpeed) fieldsToFill.push('TopSpeed');
+    if (!this.car.top_speed) fieldsToFill.push('TopSpeed');
     if (!this.car.year) fieldsToFill.push('YearModel');
     if (!this.car.transmission) fieldsToFill.push('Transmission');
 
@@ -295,13 +295,13 @@ export default {
                         this.car.description = value;
                         break;
                     case 'Horsepower':
-                        this.car.horsepower = value;
+                        this.car.horse_power = value;
                         break;
                     case 'Torque':
                         this.car.torque = value;
                         break;
                     case 'TopSpeed':
-                        this.car.topSpeed = value;
+                        this.car.top_speed = value;
                         break;
                     case 'YearModel':
                         this.car.year = value;
@@ -325,7 +325,7 @@ export default {
 
 
         async submitCarDetails() {
-            if (!this.car.model || !this.car.brand || !this.car.price || !this.car.yearsowned) {
+            if (!this.car.model || !this.car.brand || !this.car.price || !this.car.years_owned) {
                 alert('Please fill in all required fields!');
                 return;
             }
@@ -341,13 +341,13 @@ export default {
                 price: this.car.price,
                 description: this.car.description,
                 engine: this.car.engine,
-                horsepower: this.car.horsepower,
+                horse_power: this.car.horse_power,
                 torque: this.car.torque,
-                topSpeed: this.car.topSpeed,
+                top_speed: this.car.top_speed,
                 transmission: this.car.transmission,
-                yearsowned: this.car.yearsowned,
-                forSale: true,
-                forRent: false,
+                years_owned: this.car.years_owned,
+                for_sale: true,
+                for_rent: false,
                 is_garage: false,
                 user_id: userId,
             };

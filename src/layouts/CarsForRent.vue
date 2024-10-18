@@ -89,7 +89,7 @@
                 *
               )
             `)
-            .eq('forRent', true)
+            .eq('for_rent', true)
             .neq('user_id', loggedInUserId);
   
           if (error) throw error;
