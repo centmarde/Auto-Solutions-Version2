@@ -73,7 +73,7 @@ onMounted(() => {
         }, 1500); // Delay before loader shows
       }, 1500); // Delay before second text shows
     }, 2500); 
-  }, 500); // Initial delay before starting (500ms)
+  }, 100); // Initial delay before starting (500ms)
 });
 </script>
 

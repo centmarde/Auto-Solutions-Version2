@@ -39,7 +39,8 @@ const fetchCarCount = async () => {
     const { data, error } = await supabase
       .from('cars')
       .select('id') 
-      .eq('forSale', true); 
+      .eq('for_sale', true)
+      .eq('is_pending', false); 
 
     if (error) throw error;
 
@@ -54,7 +55,8 @@ const fetchtotalCarsForRent = async () => {
     const { data, error } = await supabase
       .from('cars')
       .select('id') 
-      .eq('forSale', false); 
+      .eq('for_sale', false)
+      .eq('is_pending', false);
 
     if (error) throw error;
 
