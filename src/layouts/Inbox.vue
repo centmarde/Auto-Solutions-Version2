@@ -18,7 +18,7 @@
               <v-list-item-avatar />
              
 
-              <v-list-item-title>{{ conversation.username }}</v-list-item-title>
+              <v-list-item-title>{{ conversation.user_name }}</v-list-item-title>
               <v-list-item-subtitle>
   <v-icon>mdi-car</v-icon>
   Car: {{ conversation.car_brand }} - {{ conversation.car_model }}
@@ -75,8 +75,8 @@ export default {
         id, car_id, supplier_id, buyer_id,
         cars (brand, model),
         messages (message, created_at, user_id),
-        buyer:buyer_id (username, img),
-        supplier:supplier_id (username, img)
+        buyer:buyer_id (user_name, img),
+        supplier:supplier_id (user_name, img)
       `)
       .or(`buyer_id.eq.${loggedInUserId},supplier_id.eq.${loggedInUserId}`)
       // .neq('supplier_id', loggedInUserId);
@@ -103,7 +103,7 @@ export default {
           id: conversations.id,
           car_model: conversations.cars?.model || 'Unknown Model',
           car_brand: conversations.cars?.brand || 'Unknown Brand',
-          username: otherUser?.username || 'Unknown User',
+          user_name: otherUser?.user_name || 'Unknown User',
           user_picture: otherUser?.img || '/default-avatar.png',
           latestMessage: {
             message: latestMessage.message || 'No messages',

@@ -106,7 +106,7 @@ const login = async () => {
       const { data: profiles, error: profileError } = await supabase
         .from("users")
         .select("*")
-        .eq("auth_id", user.id);
+        .eq("user_id", user.id);
 
       if (profileError || profiles.length === 0) {
         throw new Error("Profile fetch error.");

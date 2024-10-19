@@ -13,7 +13,7 @@
                   type="text"
                   class="form-control"
                   placeholder="User Name"
-                  v-model="username"
+                  v-model="user_name"
                   required
                 />
               </v-col>
@@ -222,14 +222,9 @@ import {
 export default {
   data() {
     return {
-      firstname: '',
-      middlename: '',
-      lastname: '',
-      extensionname: '',
-      username: '',
-      gender: '',
+      user_name: '',
       email: '',
-      birthdate: '',
+   
       password: '',
       passwordConfirm: '',
       regions: [],
@@ -300,7 +295,7 @@ export default {
       this.selectedBarangayName = barangay.name;
     },
     async submitForm() {
-      if (!this.email || !this.password || !this.username || !this.passwordConfirm || !this.selectedRegionCode || !this.selectedProvinceCode || !this.selectedCityCode || !this.selectedBarangayCode) {
+      if (!this.email || !this.password || !this.user_name || !this.passwordConfirm || !this.selectedRegionCode || !this.selectedProvinceCode || !this.selectedCityCode || !this.selectedBarangayCode) {
         alert('Please fill out all required fields.');
         return;
       }
@@ -329,11 +324,9 @@ export default {
         if (user_id) {
           const address = `${this.selectedBarangayName}, ${this.selectedCityName}, ${this.selectedProvinceName}, ${this.selectedRegionName}`;
           const additionalUserData = {
-            username: this.username,
-            email: this.email,
-            auth_id: user_id,
+            user_name: this.user_name,
+            user_id: user_id,
             address: address,
-            password: this.password,
             isadmin: false
           };
 
@@ -348,7 +341,7 @@ export default {
               alert(`Error: ${error.message}`);
             } else {
               const supa_id = data[0]?.id;
-              await this.fetchUserData(supa_id, this.email, this.firstname, this.middlename, this.lastname, this.username, this.gender, this.birthdate, address, this.password);
+              await this.fetchUserData(supa_id, this.user_name, address);
               alert('Register Successfully');
               window.location.href = '/login';
               console.log(data);
@@ -371,9 +364,9 @@ export default {
         this.isSubmitting = false;
       }
     },
-    async fetchUserData(supa_id, email, firstname, middlename, lastname, username, gender, birthdate, address, password) {
+    async fetchUserData(supa_id, user_name, address) {
       try {
-        const response = await axios.post('http://localhost:3001/User', {supa_id, email, firstname, middlename, lastname, username, gender, birthdate, address, password });
+        const response = await axios.post('http://localhost:3001/User', {supa_id, user_name, address});
         console.log('User data fetched:', response.data);
       } catch (error) {
         console.error('Error fetching user data:', error.message);
