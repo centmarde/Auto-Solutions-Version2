@@ -1,18 +1,4 @@
 <template>
-  <v-row v-if="loading || error || userCars.length === 0">
-    <v-col v-if="loading" class="loading">
-      <v-alert type="info">Loading...</v-alert>
-    </v-col>
-
-    <v-col v-if="error" class="error">
-      <v-alert type="error">{{ error }}</v-alert>
-    </v-col>
-
-    <v-col v-if="userCars.length === 0 && !loading && !error" class="no-cars">
-      <v-alert type="warning">No cars posted by you.</v-alert>
-    </v-col>
-  </v-row>
-
   <v-row v-if="userCars.length > 0">
     <v-col v-for="car in userCars" :key="car.id" cols="12" md="6" class="mb-4">
       <v-card elevation="8" class="fixed-card" @click="handleCardClick(car.id)">
@@ -29,7 +15,9 @@
           </v-col>
 
           <v-col cols="8">
-            <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
+            <v-card-title>
+              {{ car.brand }} {{ car.model }}
+            </v-card-title>
             <v-card-text>
               <p class="truncate-text single-line">
                 {{ car.description }}
@@ -37,6 +25,16 @@
               <p class="car-status">
                 {{ car.forSale && car.forRent ? 'For Sale and Open for Rent' : car.forSale ? 'For Sale' : car.forRent ? 'Open for Rent' : '' }}
               </p>
+
+              <!-- Pending or Approved Indicator -->
+              <v-chip
+                :color="car.is_pending ? 'orange' : 'green'"
+                dark
+                small
+                class="status-chip"
+              >
+                {{ car.is_pending ? 'Pending' : 'Approved' }}
+              </v-chip>
             </v-card-text>
             <v-card-actions class="d-flex justify-content-end">
               <v-btn color="red" @click.stop="deleteCar(car.id)">
@@ -53,53 +51,6 @@
       </v-card>
     </v-col>
   </v-row>
-
-  <!-- Edit Car Modal -->
-  <v-dialog v-model="editModal" max-width="600px">
-    <v-card>
-      <v-card-title>
-        <span class="headline">Edit Car Details</span>
-      </v-card-title>
-      <v-card-text>
-        <v-form ref="editForm" v-model="valid">
-          <v-text-field v-model="editedCar.year" label="Year" required></v-text-field>
-          <v-text-field v-model="editedCar.price" label="Price" required></v-text-field>
-
-          <!-- For Sale Radio Buttons -->
-          <v-radio-group v-model="editedCar.forSale" label="For Sale" required>
-            <v-radio label="True" :value="true"></v-radio>
-            <v-radio label="False" :value="false"></v-radio>
-          </v-radio-group>
-
-          <!-- For Rent Radio Buttons -->
-          <v-radio-group v-model="editedCar.forRent" label="For Rent" required>
-            <v-radio label="True" :value="true"></v-radio>
-            <v-radio label="False" :value="false"></v-radio>
-          </v-radio-group>
-
-           <!-- For Rent Radio Buttons -->
-           <v-radio-group v-model="editedCar.is_garage" label="Insert Garage" required>
-            <v-radio label="True" :value="true"></v-radio>
-            <v-radio label="False" :value="false"></v-radio>
-          </v-radio-group>
-
-          <v-textarea v-model="editedCar.description" label="Description" required></v-textarea>
-          <v-text-field v-model="editedCar.mileage" label="Mileage" required></v-text-field>
-          <v-text-field v-model="editedCar.engine" label="Engine" required></v-text-field>
-          <v-text-field v-model="editedCar.horse_power" label="Horsepower" required></v-text-field>
-          <v-text-field v-model="editedCar.torque" label="Torque" required></v-text-field>
-          <v-text-field v-model="editedCar.top_speed" label="Top Speed" required></v-text-field>
-          <v-text-field v-model="editedCar.transmission" label="Transmission" required></v-text-field>
-          <v-text-field v-model="editedCar.years_owned" label="Years Owned" required></v-text-field>
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" @click="updateCar" :disabled="!valid">Save</v-btn>
-        <v-btn @click="editModal = false">Cancel</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 
 <script>
@@ -210,7 +161,10 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.status-chip {
+  margin-top: 8px;
+  font-weight: bold;
+}
 .v-card-text p {
   margin: 0;
 }

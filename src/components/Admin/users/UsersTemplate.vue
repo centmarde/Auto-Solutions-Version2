@@ -5,7 +5,6 @@
       <thead>
         <tr>
           <th class="text-left">Name</th>
-          <th class="text-left">Email</th>
           <th class="text-left">Address</th>
           <th class="text-left">Birthday</th>
           <th class="text-left">Gender</th>
@@ -14,10 +13,10 @@
       </thead>
       <tbody>
         <tr v-for="user in users" :key="user.id">
-          <td>{{ user.firstname }} {{ user.middlename }} {{ user.lastname }}</td>
-          <td>{{ user.email }}</td>
+          <td>{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}</td>
+         
           <td>{{ user.address }}</td>
-          <td>{{ user.birthdate }}</td>
+          <td>{{ user.birth_date }}</td>
           <td>{{ user.gender }}</td>
           <td>
             <v-btn color="error" @click="confirmDelete(user.id)">Delete</v-btn> 
@@ -49,8 +48,8 @@ const props = defineProps({
 const fetchUsers = async (isadmin) => {
   const query = supabase
     .from('users')
-    .select('id, firstname, middlename, lastname, email, address, birthdate, gender')
-    .eq('isadmin', isadmin);
+    .select('id, first_name, middle_name, last_name, address, birth_date, gender')
+    .eq('is_admin', isadmin);
 
   const { data, error } = await query;
   if (error) {
