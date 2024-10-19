@@ -33,6 +33,19 @@
 
           </router-link>
         </div>
+        <div class="position-relative bot">
+          
+         <v-icon>mdi mdi-car-clock </v-icon>
+          <router-link
+            to="/AdminReview"
+            class="btn wes fw-bold mt-1 text-white"
+          
+          >
+            <p class="mt-4 fw-bold fst">Cars to Review</p>
+            <v-divider></v-divider>
+
+          </router-link>
+        </div>
   
         <!-- Third Link (Admin members) -->
         <div class="position-relative bot">

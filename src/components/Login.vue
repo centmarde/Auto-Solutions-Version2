@@ -113,7 +113,7 @@ const login = async () => {
       }
 
       localStorage.setItem("user_id", profiles[0].id);
-      localStorage.setItem("Role", profiles[0].isadmin ? "true" : "false");
+      localStorage.setItem("Role", profiles[0].is_admin ? "true" : "false");
 
       router.push("/Home");
     } else {

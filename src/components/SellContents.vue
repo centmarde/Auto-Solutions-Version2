@@ -212,6 +212,22 @@
         </v-row>
       </v-form>
     </v-card>
+
+    <v-dialog v-model="dialog" max-width="400px">
+  <v-card>
+    <v-card-title>Your car is under review</v-card-title>
+    <v-card-text>
+      Your car has been successfully submitted and is now pending review by our team. Check the Inquires page for updates.
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" text @click="dialog = false">Close</v-btn>
+<v-btn color="primary" to="/Carlisting">Listings</v-btn>
+
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
   </v-container>
 </template>
 
@@ -223,6 +239,7 @@ import { getChatCompletion } from '../seed/generate-car-details';
 export default {
     data() {
         return {
+          dialog: false,
             car: {
                 brand: '',
                 model: '',
@@ -250,6 +267,9 @@ export default {
     },
     
     methods: {
+      showDialog() {
+      this.dialog = true;
+    },
       async generateAISuggestions() {
     // Check if required fields are filled
     const requiredFields = [];
@@ -349,6 +369,7 @@ export default {
                 for_sale: true,
                 for_rent: false,
                 is_garage: false,
+                is_pending: true,
                 user_id: userId,
             };
 
@@ -371,7 +392,8 @@ export default {
                         .match({ id: insertData[0].id });
                 }
 
-                alert('Car details submitted successfully!');
+                this.showDialog();
+               
             } catch (error) {
                 console.error('Error submitting car details:', error);
                 alert('Failed to submit car details.');

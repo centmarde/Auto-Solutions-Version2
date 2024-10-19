@@ -23,6 +23,7 @@ export const useCarStore = defineStore('carStore', {
             
           `)
           .eq('for_sale', true) // Fetch only cars for sale
+          .eq('is_pending', false)
           .neq('user_id', loggedInUserId);
 
         if (error) throw error;

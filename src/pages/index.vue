@@ -3,6 +3,7 @@
     <!-- Main page content -->
     <v-main v-if="loaded">
       <Navbar />
+      <Scroller />
       <Topcontents />
 
       <v-container fluid id="ygar">
@@ -28,6 +29,9 @@
         <br><br>
         <Footer />
       </v-container>
+
+      <!-- Scroll Down Awareness Indicator -->
+      <ScrollAwareness />
     </v-main>
 
     <!-- Loader Overlay -->
@@ -49,7 +53,9 @@ import Popularcars from '@/layouts/Popularcars.vue';
 import Researchcar from '@/layouts/Researchcar.vue';
 import Sellcar from '@/layouts/Sellcar.vue';
 import Yourgarage from '@/layouts/Yourgarage.vue';
-import IntroLoader from '@/layouts/Loader.vue'; 
+import IntroLoader from '@/layouts/Loader.vue';
+import Scroller from '@/layouts/ScrollAwareness.vue';
+import ScrollAwareness from '@/layouts/ScrollAwareness.vue'; // Import your new component
 
 const loaded = ref(false); 
 
@@ -58,7 +64,6 @@ const skipLoader = () => {
 };
 
 onMounted(() => {
- 
   setTimeout(() => {
     loaded.value = true;
   }, 10000); 
@@ -97,5 +102,16 @@ onMounted(() => {
   right: 20px;
   background-color: #151515; /* Adjust color as needed */
   color: white;
+}
+
+.scroll-awareness {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: opacity 0.5s ease;
+  opacity: 1;
 }
 </style>
