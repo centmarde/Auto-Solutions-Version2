@@ -1,8 +1,10 @@
 <template>
+   <br><br><br>
   <v-app>
     <Ai v-if="!$route.meta.hideAi" />
-    <br><br><br>
+   
     <Nav />
+   
     <v-spacer height="100"></v-spacer>
     
     <v-container>
