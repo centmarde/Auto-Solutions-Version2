@@ -114,21 +114,21 @@ export default {
 
           const { data: buyerData, error: buyerError } = await supabase
             .from('users')
-            .select('username')
+            .select('user_name')
             .eq('id', conversationData.buyer_id)
             .single();
 
           if (buyerError) throw buyerError;
-          this.buyerName = buyerData.username;
+          this.buyerName = buyerData.user_name;
 
           const { data: supplierData, error: supplierError } = await supabase
             .from('users')
-            .select('username')
+            .select('user_name')
             .eq('id', conversationData.supplier_id)
             .single();
 
           if (supplierError) throw supplierError;
-          this.supplierName = supplierData.username;
+          this.supplierName = supplierData.user_name;
 
           await this.fetchMessages();
           this.setupRealtimeSubscription();
@@ -157,14 +157,14 @@ export default {
 
           const { data: senderData, error: senderError } = await supabase
             .from('users')
-            .select('username')
+            .select('user_name')
             .eq('id', senderId)
             .single();
 
           if (senderError) throw senderError;
 
           return {
-            senderName: senderData.username,
+            senderName: senderData.user_name,
             text: message.message,
             created_at: message.created_at,
           };
