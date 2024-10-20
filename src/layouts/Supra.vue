@@ -113,8 +113,8 @@
         <span class="color-circle" style="background-color: #151515;"></span>
       </button>
 
-      <button class="color-button" @click="changeColor([0.29, 0.33, 0.13, 1])">
-        <span class="color-circle" style="background-color: #4a5537;"></span>
+      <button class="color-button" @click="changeColor([0.199, 0.01, 0.01, 0])">
+        <span class="color-circle" style="background-color: #730000;"></span>
       </button>
 
       <button class="color-button" @click="changeColor([0.25, 0.41, 0.88, 1], 'radial-gradient(circle, #4169e1, #8a99d9')">
@@ -452,7 +452,8 @@ export default {
         const material2 = carModel?.materials?.[5];
         if (material) {
           // Set initial color to red (#c43a30)
-          material.pbrMetallicRoughness.setBaseColorFactor([0.878, 0.537, 0, 1]);
+          material.pbrMetallicRoughness.setBaseColorFactor(([0.199, 0.01, 0.01, 0])
+          );
           
         }
         if (material2) {

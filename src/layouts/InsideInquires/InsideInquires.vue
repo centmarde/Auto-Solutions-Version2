@@ -141,7 +141,7 @@ export default {
       .select(`*, cars (*), user:buyer_id (*)`)
       .eq('cars.for_sale', true)
       .eq('buyer_id', loggedInUserId)
-      // .not('id', 'in', `(${purchasedTransactionIds.join(',')})`);
+      .not('id', 'in', `(${purchasedTransactionIds.join(',')})`);
 
     if (error) throw error;
 
@@ -187,14 +187,16 @@ export default {
 
     async finalizePurchase(transactionId) {
   const transaction = this.carsWithTransactions.find(item => item.transaction.id === transactionId);
+  const carId = transaction ? transaction.car.id : null; // Accessing car_id from the car object
   const price = transaction ? transaction.car.price : null; // Accessing price from the car object
   this.transactionIdToFinalize = transactionId;
+  this.carIdToFinalize = carId; // Save carId for later use
   this.priceToFinalize = price;
   this.isConfirmationDialogVisible = true;
 },
 
 async confirmFinalizePurchase() {
-  const { transactionIdToFinalize: transactionId, priceToFinalize: price } = this;
+  const { transactionIdToFinalize: transactionId, priceToFinalize: price, carIdToFinalize: carId } = this;
 
   try {
     const { data: existingCars, error: checkError } = await supabase
@@ -212,10 +214,11 @@ async confirmFinalizePurchase() {
 
     const warrantyDate = new Date();
     warrantyDate.setFullYear(warrantyDate.getFullYear() + 1);
-    
+
+    // Insert car_id into purchased_cars
     const { error } = await supabase
       .from('purchased_cars')
-      .insert([{ price, transaction_id: transactionId, warranty: warrantyDate.toISOString() }]);
+      .insert([{ price, transaction_id: transactionId, warranty: warrantyDate.toISOString(), car_id: carId }]);
 
     if (error) throw error;
 
@@ -227,40 +230,6 @@ async confirmFinalizePurchase() {
   }
 },
 
-
-    async confirmFinalizePurchase() {
-      const { transactionIdToFinalize: transactionId, priceToFinalize: price } = this;
-
-      try {
-        const { data: existingCars, error: checkError } = await supabase
-          .from('purchased_cars')
-          .select('*')
-          .eq('transaction_id', transactionId);
-
-        if (checkError) throw checkError;
-
-        if (existingCars.length > 0) {
-          this.error = 'This car has already been purchased.';
-          this.isConfirmationDialogVisible = false;
-          return;
-        }
-
-        const warrantyDate = new Date();
-        warrantyDate.setFullYear(warrantyDate.getFullYear() + 1);
-        
-        const { error } = await supabase
-          .from('purchased_cars')
-          .insert([{ price, transaction_id: transactionId, warranty: warrantyDate.toISOString() }]);
-
-        if (error) throw error;
-
-        this.isConfirmationDialogVisible = false;
-        location.reload();
-      } catch (err) {
-        this.error = err.message;
-        this.isConfirmationDialogVisible = false;
-      }
-    },
 
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
