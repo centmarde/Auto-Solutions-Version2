@@ -7,6 +7,11 @@
    
     <v-spacer height="100"></v-spacer>
     
+  
+    <FeaturedCar />
+    
+    <v-divider></v-divider>
+   
     <v-container>
       <v-row>
         <v-col cols="12" md="4">
@@ -40,12 +45,7 @@
     </v-container>
     
     <v-divider></v-divider>
-    
-    <v-container>
-      <FeaturedCar />
-    </v-container>
-    
-    <v-divider></v-divider>
+
     
     <v-container>
       <v-row>
@@ -54,6 +54,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-divider></v-divider>
 
     <v-container>
       <v-row>

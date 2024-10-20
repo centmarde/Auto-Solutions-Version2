@@ -60,7 +60,8 @@ const fetchCars = async () => {
   const { data: existingCars, error: fetchError } = await supabase
     .from('purchased_cars')
     .select(`
-     *
+      cars(*),
+      transactions(*)
     `);
 
   if (fetchError) {
@@ -68,8 +69,9 @@ const fetchCars = async () => {
     return;
   }
 
-  cars.value = existingCars;
+  cars.value = existingCars.map(purchasedCar => purchasedCar.cars);
 };
+
 
 const deleteCar = async (carId) => {
   const { error } = await supabase
