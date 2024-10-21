@@ -46,17 +46,23 @@
         </div>
         <v-row v-if="comparisonResults.length">
           <v-col cols="12">
+           
             <canvas id="comparisonChart" width="400" height="200"></canvas>
           </v-col>
+          
           <v-col cols="12" class="mt-5">
+            
             <h3 class="text-center">Summary</h3>
             <p class="text-center">{{ overallComment }}</p>
+           
           </v-col>
          
         </v-row>
         
       </v-card-body>
-      
+      <div class="d-flex justify-center mt-3">
+          <v-btn @click="compareCars" color="primary">Compare</v-btn>
+        </div>
     </v-card>
   </v-container>
 </template>
@@ -72,7 +78,6 @@ const car2 = ref({ brand: '', model: '' });
 const suggestedModels = ref({ car1: [], car2: [] });
 const comparisonResults = ref([]);
 const overallComment = ref('');
-const overallWinner = ref('');
 
 async function fetchModels(car) {
   const make = car === 'car1' ? car1.value.brand : car2.value.brand;

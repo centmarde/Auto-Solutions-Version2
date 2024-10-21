@@ -3,6 +3,7 @@
     <!-- Main page content -->
     <v-main v-if="loaded">
       <Navbar />
+      <Scroller />
       <Topcontents />
 
       <v-container fluid id="ygar">
@@ -28,11 +29,16 @@
         <br><br>
         <Footer />
       </v-container>
+
+      <!-- Scroll Down Awareness Indicator -->
+      <ScrollAwareness />
     </v-main>
 
     <!-- Loader Overlay -->
-    <div class="loader-overlay" v-if="!loaded">
+    <div class="loader-overlay" :class="{ 'fade-out': loaded }">
       <IntroLoader />
+      <!-- Optional skip button -->
+      <v-btn class="skip-btn" @click="skipLoader">Skip</v-btn>
     </div>
   </v-app>
 </template>
@@ -47,15 +53,20 @@ import Popularcars from '@/layouts/Popularcars.vue';
 import Researchcar from '@/layouts/Researchcar.vue';
 import Sellcar from '@/layouts/Sellcar.vue';
 import Yourgarage from '@/layouts/Yourgarage.vue';
-import IntroLoader from '@/layouts/Loader.vue'; // Import the loader
+import IntroLoader from '@/layouts/Loader.vue';
+import Scroller from '@/layouts/ScrollAwareness.vue';
+import ScrollAwareness from '@/layouts/ScrollAwareness.vue'; // Import your new component
 
-const loaded = ref(false); // Used to track when to hide the loader
+const loaded = ref(false); 
+
+const skipLoader = () => {
+  loaded.value = true; 
+};
 
 onMounted(() => {
-  // Simulate a loader delay before showing the main app content
   setTimeout(() => {
     loaded.value = true;
-  }, 10000); // 10 seconds delay
+  }, 10000); 
 });
 </script>
 
@@ -82,5 +93,25 @@ onMounted(() => {
 .loader-overlay.fade-out {
   opacity: 0;
   visibility: hidden;
+  transition: opacity 0.5s ease-in-out, visibility 0s 0.5s; /* Visibility hidden after fade-out */
+}
+
+.skip-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #151515; /* Adjust color as needed */
+  color: white;
+}
+
+.scroll-awareness {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: opacity 0.5s ease;
+  opacity: 1;
 }
 </style>

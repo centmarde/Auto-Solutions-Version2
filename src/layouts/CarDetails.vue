@@ -31,11 +31,11 @@
                 </v-list>
                 <v-divider></v-divider>
                 <!-- Chat with supplier -->
-                <v-row v-if="user.username" class="car-detail-item d-flex justify-end">
+                <v-row v-if="user.user_name" class="car-detail-item d-flex justify-end">
                   <div class="chat-container" @click="chatWithSupplier(user.id, car.id)">
                     <v-icon left>mdi-chat</v-icon>
                     <span class="chat-text">
-                      Chat with {{ user.username }}
+                      Chat with {{ user.user_name }}
                     </span>
                     <v-avatar size="40" class="ml-2">
                       <v-img :src="user.img" alt="User Image"></v-img>

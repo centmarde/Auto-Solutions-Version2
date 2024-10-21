@@ -34,6 +34,7 @@ import GarageContents from "@/components/GarageContents.vue";
 import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
+import AdminReview from "@/pages/adminPages/AdminReview.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -133,6 +134,11 @@ const routes = setupLayouts([
     path: "/CarBeenPurchased",
     component: CarBeenPurchased,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/AdminReview",
+    component: AdminReview,
+    meta: { requiresAuth: true },
   }
 
 ]);
@@ -164,6 +170,8 @@ router.beforeEach((to, from, next) => {
   const hasVisitedDashboard =
     JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
+
+    console.log(userRole);
   const publicPages = ["/", "/login", "/Register"];
   const protectedPages = [
     "/Home",

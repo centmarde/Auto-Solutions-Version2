@@ -32,7 +32,7 @@
             </li>
             <li class="nav-item">
               <router-link to="/UserInfo" class="nav-link btn wes" @click="closeMenu" style="text-transform: uppercase;">
-                {{ username }}
+                {{ user_name }}
               </router-link>
             </li>
             <li class="nav-item">
@@ -76,7 +76,7 @@ import { useRouter } from 'vue-router';
 import { supabase, doLogout as supabaseLogout } from '../lib/supaBase';
 
 const router = useRouter();
-const username = ref('Guest');
+const user_name = ref('Guest');
 const userImage = ref('');
 const isMenuVisible = ref(false);
 const theme = useTheme();
@@ -99,7 +99,7 @@ const fetchUserData = async () => {
     return; // Exit on error
   }
 
-  username.value = data.username || 'Guest';
+  user_name.value = data.user_name || 'Guest';
   userImage.value = data.img || ''; // Set user image URL
 };
 

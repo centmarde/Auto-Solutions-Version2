@@ -21,6 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
     "lottie-web": "^5.12.2",
+    "paymongo": "^1.3.2",
     "roboto-fontface": "*",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
