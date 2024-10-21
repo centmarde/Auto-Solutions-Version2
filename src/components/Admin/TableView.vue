@@ -33,6 +33,7 @@
           <td>{{ car.price }}</td>
           <td>
             <v-btn color="error" @click="confirmDelete(car.id)">Delete</v-btn>
+            <v-btn color="warning" @click="confirmDisapprove(car.id)">Disapprove</v-btn>
           </td>
         </tr>
       </tbody>
@@ -65,10 +66,15 @@ const cars = ref([]);
 const isDark = ref(false);
 
 const fetchCars = async (table, forRent = false) => {
-  const query = supabase.from(table).select('*');
+  const query = supabase
+    .from(table)
+    .select('*')
+    .eq('is_pending', false); // Fetch only cars that are not pending
+
   if (forRent) {
     query.eq('forRent', true); 
   }
+
   const { data, error } = await query;
   if (error) {
     console.error('Error fetching cars:', error);
@@ -86,11 +92,33 @@ const deleteCar = async (carId) => {
     cars.value = cars.value.filter(car => car.id !== carId);
   }
 };
+
+const disapproveCar = async (carId) => {
+  const { error } = await supabase
+    .from(props.tableName)
+    .update({ is_pending: true })
+    .eq('id', carId);
+  if (error) {
+    console.error('Error disapproving car:', error);
+  } else {
+    alert('Car has been disapproved successfully.');
+    fetchCars(props.tableName, props.forRent);
+  }
+};
+
 // Show confirmation dialog before deleting
 const confirmDelete = (carId) => {
   const confirmed = confirm("Are you sure you want to delete this car?");
   if (confirmed) {
     deleteCar(carId);  
+  }
+};
+
+// Show confirmation dialog before disapproving
+const confirmDisapprove = (carId) => {
+  const confirmed = confirm("Are you sure you want to disapprove this car?");
+  if (confirmed) {
+    disapproveCar(carId);
   }
 };
 
