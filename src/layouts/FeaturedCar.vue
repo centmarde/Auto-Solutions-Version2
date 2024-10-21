@@ -10,12 +10,13 @@
              
                 <div class="video-container">
                   <video
-                    ref="supraVideo"
-                    src="../assets/videos/Supra.mp4"
-                    class="video-fit"
-                    loop
-                  
-                  ></video>
+    ref="supraVideo"
+    src="../assets/videos/Supra.mp4"
+    class="video-fit"
+    loop
+    autoplay
+    muted
+  ></video>
                 </div>
               
             </v-col>
@@ -88,31 +89,15 @@
 
 <script>
 import { onMounted, ref } from 'vue';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+
 
 export default {
   setup() {
-    const supraVideo = ref(null);
-
-    onMounted(() => {
-      // GSAP ScrollTrigger for autoplay and pause on scroll
-      ScrollTrigger.create({
-        trigger: supraVideo.value,
-        start: "top center",
-        end: "bottom center",
-        onEnter: () => supraVideo.value.play(),
-        onLeave: () => supraVideo.value.pause(),
-        onEnterBack: () => supraVideo.value.play(),
-        onLeaveBack: () => supraVideo.value.pause(),
-        markers: false, // Set to true to see markers for debugging
-      });
-    });
+    
 
     return {
-      supraVideo
+     
     };
   },
  
@@ -229,5 +214,30 @@ export default {
   width: 6%;
   z-index: 888;
 }
+@media (max-width: 480px) {
+  .title_S {
+    position: relative;
+    font-size: 10px; /* Further reduced font size for very small screens */
+  }
 
+  .title_span {
+    position: absolute;
+    bottom: 140px;
+    font-size: 5px; /* Further reduced font size for very small screens */
+  }
+
+  .toyota_logo {
+    position: absolute;
+   top:135px ;
+    width: 10%; /* Increased size for better visibility */
+  }
+  .video-container {
+  position: relative;
+  padding-bottom: 80.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  background-color: black;
+}
+
+}
 </style>

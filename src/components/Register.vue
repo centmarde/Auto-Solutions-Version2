@@ -8,7 +8,7 @@
             <h5 class="text-start mt-2 mb-3">SIGN-UP</h5>
             <v-row class="mb-3">
               <!-- Username Field -->
-              <v-col cols="12" md="6" class="mb-2">
+              <v-col cols="12" md="12" class="mb-2">
                 <input
                   type="text"
                   class="form-control"
@@ -21,7 +21,7 @@
 
             <!-- Password -->
             <v-row class="mb-3">
-              <v-col cols="12" md="4" class="mb-2">
+              <v-col cols="12" md="12" class="mb-2">
                 <input
                   type="email"
                   class="form-control"
@@ -30,7 +30,7 @@
                   required
                 />
               </v-col>
-              <v-col cols="12" md="4" class="mb-2">
+              <v-col cols="12" md="6" class="mb-2">
                 <input
                   type="password"
                   class="form-control"
@@ -40,7 +40,7 @@
                   required
                 />
               </v-col>
-              <v-col cols="12" md="4" class="mb-2">
+              <v-col cols="12" md="6" class="mb-2">
                 <input
                   type="password"
                   class="form-control"
@@ -182,7 +182,8 @@
 
             <!-- Submit and Login Buttons -->
             <v-row class="mb-3">
-              <v-col cols="12" class="d-flex justify-content-center">
+              <v-col cols="12" class="d-flex justify-content-center ">
+              
                 <button type="submit" id="submitBtn" class="sski mx-3" :disabled="isSubmitting">
                   <span v-if="isSubmitting">
                     <div class="spinner-border spinner-border-sm me-2" role="status"></div>
@@ -196,10 +197,12 @@
                       clip-rule="evenodd"
                     ></path>
                   </svg>
-                </button>
+                </button> 
+                 <router-link to="/login" class="text-decoration-none">
                 <button type="button" id="loginBtn" class="sski mx-3">
-                  <router-link to="/login" class="text-decoration-none">Login</router-link>
+               Login
                 </button>
+                </router-link>
               </v-col>
             </v-row>
           </v-form>
@@ -327,7 +330,7 @@ export default {
             user_name: this.user_name,
             user_id: user_id,
             address: address,
-            isadmin: false
+            is_admin: false
           };
 
           try {
