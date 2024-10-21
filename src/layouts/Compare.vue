@@ -41,7 +41,7 @@
           
         </v-row>
         
-
+     
         <v-row v-if="comparisonResults.length">
           <v-col cols="12">
            
@@ -56,6 +56,7 @@
           </v-col>
          
         </v-row>
+        
       </v-card-body>
       <div class="d-flex justify-center mt-3">
           <v-btn @click="compareCars" color="primary">Compare</v-btn>

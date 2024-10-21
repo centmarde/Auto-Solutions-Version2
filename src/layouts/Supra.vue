@@ -84,7 +84,7 @@
       <div class="card-body">
         <v-row>
           <v-col cols="12" md="12" class="d-flex justify-content-start">
-            <img class="img-float" src="https://cdn2.steamgriddb.com/file/sgdb-cdn/logo/5394571ecee05ab8323586a2f8971b65.png" style="width: 230px; height: 130px; left: -30px; top: 18px;" alt="Body Image">
+            <img class="img-float" src="../assets/supra_imgs/mostwanted1.png" style="width: 230px; height: 130px; left: -30px; top: 18px;" alt="Body Image">
             <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px; left: 12px; bottom: 20px;"><b>CUSTOM BODY PAINT</b></p>
             <p class="price-float">Price: $5,000</p>
           </v-col>
@@ -143,7 +143,7 @@
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
                    
-										<img class="img-float2" src="https://static.vecteezy.com/system/resources/thumbnails/040/529/091/small_2x/ai-generated-3d-rendering-of-a-car-tire-or-rim-on-transparent-background-ai-generated-png.png" style="width: 145px; height: auto;"  alt="">
+										<img class="img-float2" src="../assets/supra_imgs/tire3.png" style="width: 145px; height: auto;"  alt="">
                     <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px;"><b>Kumho Majesty</b></p>
                     <p class="price-float">price: $9,800</p>
                 </v-col>
@@ -162,7 +162,7 @@
         <div class="card-body">
             <v-row >
                 <v-col cols="12" md="12" class="d-flex justify-content-start" >
-									<img class="img-float" src="https://pngimg.com/d/car_wheel_PNG1075.png" style="width: 130px;" alt="">
+									<img class="img-float" src="../assets/supra_imgs/tire2.png" style="width: 130px;" alt="">
                    
                     <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px;"><b>Hankook iON</b></p>
                     <p class="price-float">price: $8,200</p>
@@ -184,7 +184,7 @@
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-									<img class="img-float" src="https://static.vecteezy.com/system/resources/thumbnails/040/529/214/small_2x/ai-generated-3d-rendering-of-a-car-tire-or-rim-on-transparent-background-ai-generated-png.png" style="width: 145px;" alt="">
+									<img class="img-float" src="../assets/supra_imgs/tire1.png" style="width: 145px;" alt="">
                     <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px;"><b>Michelin</b></p>
                     <p class="price-float">price: $7,999</p>
 
@@ -223,7 +223,7 @@
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://www.pngarts.com/files/16/Engine-PNG-HQ-Pic.png" style="width: 150px;" alt="Engine Image">
+                    <img class="img-float" src="../assets/supra_imgs/engine1.png" style="width: 150px;" alt="Engine Image">
 										<p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 30px;"><b>2JZ-GTE</b></p>
 
                     <p class="price-float" >Price: $108,000</p>
@@ -241,7 +241,7 @@
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://www.pngmart.com/files/10/Car-Engine-PNG-HD.png" style="width: 150px;" alt="Engine Image 2">
+                    <img class="img-float" src="../assets/supra_imgs/engine2.png" style="width: 150px;" alt="Engine Image 2">
                     <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 30px;"><b>B58B30M0</b></p>
                     <p class="price-float ">Price: $98,500</p>
                 </v-col>
@@ -258,7 +258,7 @@
         <div class="card-body">
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
-                    <img class="img-float" src="https://www.picng.com/thumbnail/engine/png_engine_20068_small.png" style="width: 150px;" alt="Engine Image 3">
+                    <img class="img-float" src="../assets/supra_imgs/engine3.png" style="width: 150px;" alt="Engine Image 3">
                     <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 30px;"><b>1JZ-GTE</b></p>
                     <p class="price-float">Price: $130,000</p>
                 </v-col>
