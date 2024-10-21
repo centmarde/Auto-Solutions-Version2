@@ -2,13 +2,13 @@
   <v-card class="p-4" elevation="10">
     <v-row>
       <v-col cols="12">
-        <h3 id="title" class="text-center">GARAGE</h3>
+        <h3 id="title" class="text-center">LOAN A CAR</h3>
       </v-col>
 
       <v-col cols="12">
         <v-img
           class="sts4"
-          src="https://www.cars.com/images/garage-landing/garage-hero.webp"
+          src="https://pngpix.com/images/hd/stylized-money-icon-vector-b7kfg9iwozjig9ie.jpg"
           alt="ssed"
           width="70%"
           style="left: 15%"
@@ -38,15 +38,14 @@ export default {
   },
   methods: {
     handleSubmit() {
-      // Check if user is logged in
       const isLoggedIn = localStorage.getItem("access_token") !== null;
 
       if (isLoggedIn) {
-        // If logged in, redirect to sell contents page (e.g., Home)
-        this.$router.push("/RentContents");
+       
+        // this.$router.push("/RentContents");
       } else {
-        // If not logged in, redirect to Register page
-        this.$router.push("/login");
+       
+        // this.$router.push("/login");
       }
     },
   },
@@ -61,6 +60,7 @@ export default {
 #title {
   font-family: "Merriweather", serif;
 }
+
 
 @media (max-width: 800px) and (min-width: 350px) {
   .sts4 {

@@ -13,7 +13,7 @@
       <v-col cols="12" >
         <v-img
           src="https://cdn-icons-png.flaticon.com/512/8566/8566110.png"
-          style="width: 10rem;"
+          style="width: 8rem;"
           class="position-relative"
           id="sts4"
           alt="Rent a Car"
@@ -71,19 +71,14 @@ export default {
 }
 
 #sts4 {
-  position: relative;
-  top: 5%;
-  left: 25%;
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
   margin-bottom: 2rem;
 }
 
-@media (max-width: 800px) and (min-width: 350px) {
-  #sts4 {
-    top: 20%;
-    left: 26%;
-    margin-bottom: 2rem;
-  }
-}
+
+
 
 .erd3 {
   width: 4.5rem;
