@@ -4,7 +4,7 @@
     <v-table height="300px" fixed-header>
       <thead>
         <tr>
-          <th class="text-left">#</th>
+          <th class="text-left">ID</th>
           <th class="text-left">Model</th>
           <th class="text-left">Year</th>
           <th class="text-left">Brand</th>
@@ -15,11 +15,11 @@
           <th class="text-left">Top Speed</th>
           <th class="text-left">Years Owned</th>
           <th class="text-left">Price</th>
-          <th class="text-left">Actions</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(car, index) in cars" :key="car.id">
+        <tr v-for="(car, index) in paginatedCars" :key="car.id">
           <td>{{ index + 1 }}</td>
           <td>{{ car.model }}</td>
           <td>{{ car.year }}</td>
@@ -31,20 +31,27 @@
           <td>{{ car.topSpeed }}</td>
           <td>{{ car.yearsowned }}</td>
           <td>{{ car.price }}</td>
-          <td>
-            <v-btn color="error" @click="confirmDelete(car.id)">Delete</v-btn>
-            <v-btn color="warning" @click="confirmDisapprove(car.id)">Disapprove</v-btn>
+          <td class="text-center">
+            <v-btn class="mx-2" color="error" @click="confirmDelete(car.id)">Delete</v-btn>
+            <v-btn class="mx-2" color="warning" @click="confirmDisapprove(car.id)">Disapprove</v-btn>
           </td>
         </tr>
       </tbody>
     </v-table>
+
+    <!-- Pagination -->
+    <v-pagination
+      v-model="currentPage"
+      :length="pageCount"
+      :total-visible="4"
+      @input="fetchCars"
+      class="mt-4"
+    ></v-pagination>
   </v-container>
 </template>
 
-
-  
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { supabase } from '../../lib/supaBase';
 
 const props = defineProps({
@@ -63,7 +70,8 @@ const props = defineProps({
 });
 
 const cars = ref([]);
-const isDark = ref(false);
+const currentPage = ref(1);
+const itemsPerPage = 5; 
 
 const fetchCars = async (table, forRent = false) => {
   const query = supabase
@@ -72,7 +80,7 @@ const fetchCars = async (table, forRent = false) => {
     .eq('is_pending', false); // Fetch only cars that are not pending
 
   if (forRent) {
-    query.eq('forRent', true); 
+    query.eq('for_rent', true); 
   }
 
   const { data, error } = await query;
@@ -82,6 +90,17 @@ const fetchCars = async (table, forRent = false) => {
     cars.value = data;
   }
 };
+
+// Paginated cars based on current page
+const paginatedCars = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return cars.value.slice(start, start + itemsPerPage);
+});
+
+// Calculate total number of pages
+const pageCount = computed(() => {
+  return Math.ceil(cars.value.length / itemsPerPage);
+});
 
 const deleteCar = async (carId) => {
   const { error } = await supabase.from(props.tableName).delete().eq('id', carId);
@@ -124,8 +143,6 @@ const confirmDisapprove = (carId) => {
 
 onMounted(() => {
   fetchCars(props.tableName, props.forRent);
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  isDark.value = savedTheme === 'dark';
 });
 
 watch(() => [props.tableName, props.forRent], ([newTable, newForRent]) => {
@@ -133,15 +150,12 @@ watch(() => [props.tableName, props.forRent], ([newTable, newForRent]) => {
 });
 </script>
 
+<style>
+.max {
+  max-width: 1100px;
+}
 
-  
-  <style>
-  .max {
-    max-width: 1100px;
-  }
-  
-  .mts {
-    margin-top: 40px;
-  }
-  </style>
-  
+.mts {
+  margin-top: 40px;
+}
+</style>
