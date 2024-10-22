@@ -1,6 +1,8 @@
 <template>
   <v-container class="p-5 mts">
+
     <h1 class="text-center fw-bolder">{{ title }}</h1>
+
     <v-table height="300px" fixed-header>
       <thead>
         <tr>
@@ -50,9 +52,11 @@
   </v-container>
 </template>
 
+
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 import { supabase } from '../../lib/supaBase';
+import { Chart } from 'chart.js';
 
 const props = defineProps({
   title: {
@@ -72,12 +76,14 @@ const props = defineProps({
 const cars = ref([]);
 const currentPage = ref(1);
 const itemsPerPage = 5; 
+const totalCarsForSale = ref(0);
+const totalCarsForRent = ref(0);
 
 const fetchCars = async (table, forRent = false) => {
   const query = supabase
     .from(table)
     .select('*')
-    .eq('is_pending', false); // Fetch only cars that are not pending
+    .eq('is_pending', false);
 
   if (forRent) {
     query.eq('for_rent', true); 
@@ -88,7 +94,14 @@ const fetchCars = async (table, forRent = false) => {
     console.error('Error fetching cars:', error);
   } else {
     cars.value = data;
+    calculateTotals(); // Calculate totals after fetching the data
   }
+};
+
+const calculateTotals = () => {
+  // Calculate the number of cars for sale and rent
+  totalCarsForSale.value = cars.value.filter(car => car.for_sale).length;
+  totalCarsForRent.value = cars.value.filter(car => car.for_rent).length;
 };
 
 // Paginated cars based on current page
@@ -107,8 +120,8 @@ const deleteCar = async (carId) => {
   if (error) {
     console.error('Error deleting car:', error);
   } else {
-    // Remove the deleted car from the local array
     cars.value = cars.value.filter(car => car.id !== carId);
+    calculateTotals(); // Recalculate totals after deletion
   }
 };
 
@@ -125,7 +138,6 @@ const disapproveCar = async (carId) => {
   }
 };
 
-// Show confirmation dialog before deleting
 const confirmDelete = (carId) => {
   const confirmed = confirm("Are you sure you want to delete this car?");
   if (confirmed) {
@@ -133,7 +145,6 @@ const confirmDelete = (carId) => {
   }
 };
 
-// Show confirmation dialog before disapproving
 const confirmDisapprove = (carId) => {
   const confirmed = confirm("Are you sure you want to disapprove this car?");
   if (confirmed) {
@@ -141,14 +152,17 @@ const confirmDisapprove = (carId) => {
   }
 };
 
-onMounted(() => {
-  fetchCars(props.tableName, props.forRent);
+
+onMounted(async () => {
+  await fetchCars(props.tableName, props.forRent);
 });
 
-watch(() => [props.tableName, props.forRent], ([newTable, newForRent]) => {
-  fetchCars(newTable, newForRent); 
+watch(() => [props.tableName, props.forRent], async ([newTable, newForRent]) => {
+  await fetchCars(newTable, newForRent);
 });
 </script>
+
+
 
 <style>
 .max {
