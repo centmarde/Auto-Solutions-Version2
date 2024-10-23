@@ -122,12 +122,18 @@
       </v-row>
 
       <div class="table-content mt-4 position-relative">
-    <img class="content-img" src="../../assets/supra_imgs/handling.jpg" alt="content1">
-    <!-- Centered clickable text overlay linking to HandlingPage -->
+  <!-- Background image of the car -->
+  <img class="content-img" src="../../assets/supra_imgs/handling.jpg" alt="content1">
+
+  <!-- Overlay container for text and link -->
+  <div class="overlay-content">
+    <p class="next-up-text">Next Up</p>
+    <h1 class="main-title">Handling</h1>
     <router-link to="/HandlingPage" class="explore-feature">
       Explore Next Feature
     </router-link>
   </div>
+</div>
 
     </v-container>
   </template>
@@ -192,20 +198,33 @@
 }
 
 .explore-feature {
-  position: absolute;           /* Position absolutely within the parent */
-  top: 50%;                    /* Center vertically */
-  left: 50%;                   /* Center horizontally */
-  transform: translate(-50%, -50%); /* Adjust position to truly center */
-  background-color: white;     /* White background */
-  padding: 10px 20px;          /* Padding for the text */
-  text-align: center;          /* Center the text */
-  border-radius: 5px;          /* Optional: rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a slight shadow */
-  cursor: pointer;             /* Change cursor to pointer for clickable */
-  text-decoration: none;       /* Remove underline */
-  color: black;                /* Text color */
-  z-index: 10;                 /* Ensure it appears above the image */
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+.overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+.next-up-text {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
+.main-title {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 10px 0;
+}
   </style>
   

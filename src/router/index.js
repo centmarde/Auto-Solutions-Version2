@@ -36,6 +36,8 @@ import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
 import HandlingPage from '@/components/NavigationBar/HandlingPage.vue';
+import AnniversaryPage from '@/components/NavigationBar/AnniversaryPage.vue';
+
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -146,7 +148,11 @@ const routes = setupLayouts([
     component: HandlingPage,
     meta: { requiresAuth: true }, 
   },
-
+  {
+    path: "/AnniversaryPage",
+    component: AnniversaryPage,
+    meta: { requiresAuth: true }, 
+  },
 ]);
 
 const router = createRouter({
@@ -198,6 +204,7 @@ router.beforeEach((to, from, next) => {
     "/Inbox",
     "/GarageContents",
     "/HandlingPage",
+    "/AnniversaryPage",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {

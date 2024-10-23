@@ -1,16 +1,16 @@
 <template>
   <div class="tab-content">
-    <img class="content-img" src="../../assets/supra_imgs/supra1.png" alt="content1">
+    <img class="content-img" src="../../assets/supra_imgs/adaptivevariable.jpg" alt="content1">
   </div>
 
   <v-container fluid>
     <v-row>
       <v-col cols="12" lg="10" md="12" sm="12">
         <div class="ms-5">
-          <h5>6-Speed Manual Transmission</h5>
+          <h5>Adaptive Variable Suspension</h5>
 
           <p>
-            Intensify the connection between you and your GR Supra. Available with a 6-speed intelligent Manual Transmission (iMT) that optimizes your revs as you shift, the 3.0L 6-cylinder engine puts 382 horsepower * and 368 lb.-ft. of torque at your fingertips. Take the reins as you go through every corner while the g-forces make you feel like you're sinking into your seat. It’s time to personalize the power delivered to the rear wheels and find the sweet spot where your revs match up to your heartbeat.
+            GR Supra’s available Adaptive Variable Suspension (AVS) allows this sports car to transform from comfortable cruiser to track bruiser and back again—almost instantaneously.
           </p>
         </div>
         <v-tab
@@ -28,12 +28,11 @@
       <!-- First image in the first column -->
       <v-col cols="6">
         <div class="car-info">
-          <img class="extra-img" src="../../assets/supra_imgs/Turbochanged.jpg" alt="content2">
+          <img class="extra-img" src="../../assets/supra_imgs/brembo.jpg" alt="content2">
           <!-- Car title -->
-          <h5 class="car-title mt-2 ms-5">3.0-Liter Turbocharged Inline-Six</h5>
+          <h5 class="car-title mt-2 ms-5">Brembo® Brakes</h5>
           <!-- Car description -->
-          <p class="car-description mt-3 ms-5">The fire-breathing heart of GR Supra is its signature, turbocharged 3.0-liter inline 6-cylinder engine. Producing 382 horsepower * with an impressive 368 lb.-ft. of torque, this engine 
-            uses smart technologies like a twin-scroll turbocharger, Variable Valve Timing and an electric wastegate, giving you plenty of power and instant response.</p>
+          <p class="car-description mt-3 ms-5">Ready to take the heat, GR Supra’s available Brembo® * brakes are designed to give you firm, consistent braking force, on or off the track.</p>
         </div>
         <v-tab
           class="view-specs-tab"
@@ -47,12 +46,11 @@
       <!-- Second image in the last column -->
       <v-col cols="6">
         <div class="car-info">
-          <img class="extra-img" src="../../assets/supra_imgs/cat-back.jpg" alt="content3">
+          <img class="extra-img" src="../../assets/supra_imgs/builttohandle.jpg" alt="content3">
           <!-- Car title -->
-          <h5 class="car-title mt-2 ms-5">Cat-Back Exhaust</h5>
+          <h5 class="car-title mt-2 ms-5">Built to Handle</h5>
           <!-- Car description -->
-          <p class="car-description mt-3 ms-5">GR Supra's 2.0-liter and 3.0-liter engines feature unique cat-back exhausts that are tuned to match their specific performance characteristics. 
-            Not only does this help unleash each engine's potential, but it also gives them both a unique and glorious exhaust note.</p>
+          <p class="car-description mt-3 ms-5">GR Supra's wide stance helps it provide high-speed comfort and confidence-inspiring agility.</p>
         </div>
         <v-tab
           class="view-specs-tab"
@@ -66,19 +64,21 @@
 
    <!-- New picture below the last content -->
 <div class="table-content mt-4">
-<img class="content-img" src="../../assets/supra_imgs/toyotagazooracing.jpg" alt="content1">
+<img class="content-img" src="../../assets/supra_imgs/electronic.jpg" alt="content1">
 <!-- Car title -->
-<h5 class="car-title mt-2 ms-5">Toyota Gazoo Racing</h5>
+<h5 class="car-title mt-2 ms-5">Electronically Controlled Rear Differential</h5>
 <!-- Car description -->
-<p class="car-description mt-3 ms-5">Gazoo Racing is Toyota’s global racing division,
-  in which we indulge our passion for motorsport. Every vehicle with the Gazoo Racing (GR) 
-  badge has been thoroughly tested, honed, and perfected through extensive testing at racetracks across the globe.</p>
+<p class="car-description mt-3 ms-5">GR Supra features an electronically controlled rear differential for 
+  maximum stability and performance. Sensors detect wheel speed, engine rpm, yaw rate, brake pressure, throttle opening
+   angle and steering angle information and send this data to a main processor. In an instant, this processor can take this data
+    and activate a multi-plate clutch, which can control the locking ratio between both wheels from 0 to 100 percent. For you, 
+    this means you can control your driving line with precision.</p>
 <v-tab
   class="view-specs-tab"
   :class="{ active: isActive }"
   @click="toggleUnderline"
 >
-  Learn more
+  View specs
 </v-tab>
 </div>
 
@@ -87,11 +87,14 @@
       <!-- First image in the first column -->
       <v-col cols="6">
         <div class="car-info mt-5">
-          <img class="extra-img" src="../../assets/supra_imgs/turbochange4.jpg" alt="content2">
+          <img class="extra-img" src="../../assets/supra_imgs/underbody.jpg" alt="content2">
           <!-- Car title -->
-          <h5 class="car-title mt-2 ms-5">2.0-Liter Turbocharged Inline-Four</h5>
+          <h5 class="car-title mt-2 ms-5">Underbody Aerodynamics</h5>
           <!-- Car description -->
-          <p class="car-description mt-3 ms-5">GR Supra 2.0 features a powerful, turbocharged inline-four, rated at 255 horsepower * and 295 lb.-ft. of torque. Compact and lightweight, the dimensions of this powerplant allow it to sit far back in the engine bay, helping GR Supra 2.0 achieve a near-perfect weight balance.</p>
+          <p class="car-description mt-3 ms-5">A flat surface designed to help with flat-out performance. 
+            All GR Supras feature a specially crafted flat undercover that has been engineered to help reduce aerodynamic lift.
+             Air that finds its way underneath GR Supra is redirected via carefully crafted channels and spats, helping this sports car 
+             feel stable and planted at speed.</p>
         </div>
         <v-tab
           class="view-specs-tab"
@@ -105,11 +108,14 @@
       <!-- Second image in the last column -->
       <v-col cols="6">
         <div class="car-info mt-5">
-          <img class="extra-img" src="../../assets/supra_imgs/normalandsport.jpg" alt="content3">
+          <img class="extra-img" src="../../assets/supra_imgs/balancedesign.jpg" alt="content3">
           <!-- Car title -->
-          <h5 class="car-title mt-2 ms-5">Normal and Sport Driving Modes</h5>
+          <h5 class="car-title mt-2 ms-5">A Balanced Design</h5>
           <!-- Car description -->
-          <p class="car-description mt-3 ms-5">Because daily driving isn’t an exercise in maximum attack, GR Supra offers Normal and Sport driving modes. Normal Mode is perfect for your commute, offering a smooth ride, easy handling and effortless shifting. Pressing the button to activate Sport Mode transforms GR Supra into a true track-dominating beast, punctuated with a deeper, meaner exhaust rumble. All of GR Supra's senses heighten, giving you instant response and a whole lot more adrenaline.</p>
+          <p class="car-description mt-3 ms-5">We took extraordinary measures to ensure that GR Supra 2.0 not 
+            only has a near-perfect weight balance, but also that its weight is placed in the right areas.
+             Its powerplant was strategically placed to sit as low and as far back as possible, helping keep the car’s center 
+             of mass, well, in the center of the car, for optimum handling performance.</p>
         </div>
         <v-tab
           class="view-specs-tab"
@@ -122,19 +128,26 @@
     </v-row>
 
     <div class="table-content mt-4 position-relative">
-  <img class="content-img" src="../../assets/supra_imgs/handling.jpg" alt="content1">
-  <!-- Centered clickable text overlay linking to HandlingPage -->
-  <router-link to="/HandlingPage" class="explore-feature">
-    Explore Next Feature
-  </router-link>
+  <!-- Background image of the car -->
+  <img class="content-img" src="../../assets/supra_imgs/45anniversarry.jpg" alt="content1">
+
+  <!-- Overlay container for text and link -->
+  <div class="overlay-content">
+    <p class="next-up-text">Next Up</p>
+    <h1 class="main-title">45th Anniversary Edition</h1>
+    <router-link to="/AnniversaryPage" class="explore-feature">
+      Explore Next Feature
+    </router-link>
+  </div>
 </div>
+
 
   </v-container>
 </template>
 
 <script>
 export default {
-  name: "PerformancePage",
+  name: "AnniiversaryPage",
   data() {
     return {
       isActive: false, // Tracks whether "View specs" is clicked
@@ -192,19 +205,34 @@ position: relative; /* Allow positioning of child elements */
 }
 
 .explore-feature {
-position: absolute;           /* Position absolutely within the parent */
-top: 50%;                    /* Center vertically */
-left: 50%;                   /* Center horizontally */
-transform: translate(-50%, -50%); /* Adjust position to truly center */
-background-color: white;     /* White background */
-padding: 10px 20px;          /* Padding for the text */
-text-align: center;          /* Center the text */
-border-radius: 5px;          /* Optional: rounded corners */
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a slight shadow */
-cursor: pointer;             /* Change cursor to pointer for clickable */
-text-decoration: none;       /* Remove underline */
-color: black;                /* Text color */
-z-index: 10;                 /* Ensure it appears above the image */
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
 }
+.overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+.next-up-text {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.main-title {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
 
 </style>
