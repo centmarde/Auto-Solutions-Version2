@@ -20,7 +20,7 @@
         <v-avatar
           size="100"
           class="mx-auto mb-2"
-          style="border: 3px solid #007bff; border-radius: 50%"
+          style="border: 3px solid #B71C1C; border-radius: 50%"
         >
           <v-img src="..//assets/profile/campado-prof.jpg"></v-img>
         </v-avatar>
