@@ -35,6 +35,7 @@ import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
+import HandlingPage from '@/components/NavigationBar/HandlingPage.vue';
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -139,7 +140,12 @@ const routes = setupLayouts([
     path: "/AdminReview",
     component: AdminReview,
     meta: { requiresAuth: true },
-  }
+  },
+  {
+    path: "/HandlingPage",
+    component: HandlingPage,
+    meta: { requiresAuth: true }, 
+  },
 
 ]);
 
@@ -191,6 +197,7 @@ router.beforeEach((to, from, next) => {
     "/Chat",
     "/Inbox",
     "/GarageContents",
+    "/HandlingPage",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
