@@ -9,27 +9,35 @@
 
     <FeaturedCar />
 
+    
+    <v-row>
+      <v-col>
+        <MainComponent/>
+      </v-col>
+    </v-row>
+   
+
     <v-divider></v-divider>
 
     <v-container>
       <v-row>
-        <v-col cols="12" md="3" lg="3">
+        <v-col cols="12" md="6" lg="3">
           <v-card elevation="8">
             <SellCarInside />
           </v-card>
         </v-col>
-        <v-col cols="12" md="3" lg="3">
+        <v-col cols="12" md="6" lg="3">
           <v-card elevation="8">
             <CarRental />
           </v-card>
         </v-col>
 
-        <v-col cols="12" md="3" lg="3">
+        <v-col cols="12" md="6" lg="3">
           <v-card elevation="8">
             <Garage />
           </v-card>
         </v-col>
-        <v-col cols="12" md="3" lg="3">
+        <v-col cols="12" md="6" lg="3">
           <v-card elevation="8">
             <LoanCarOuter />
           </v-card>
@@ -78,6 +86,7 @@ import Garage from "../layouts/GarageOuter.vue";
 import Compare from "../layouts/Compare.vue";
 import Ai from "../layouts/Ai.vue";
 import LoanCarOuter from "@/layouts/LoanCarOuter.vue";
+import MainComponent from "../components/NavigationBar/MainComponent.vue";
 
 const logout = async () => {
   await doLogout();
