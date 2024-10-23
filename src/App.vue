@@ -10,3 +10,9 @@
 <script setup>
 import Ai from './layouts/Ai.vue';
 </script>
+
+<style>
+p{
+  font-size: 13px;
+}
+</style>

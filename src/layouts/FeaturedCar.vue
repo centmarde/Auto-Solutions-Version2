@@ -28,7 +28,7 @@
                   <p>45th Anniversary Edition shown in Mikan Blast. Prototype shown. Professional driver on closed course. <br> Do not attempt.</p></div>
                 
               
-              <v-card-actions>
+              <v-card-actions class="d-flex justify-content-end">
                 <router-link to="/Supra" class="tr" exact>
                   <v-btn color="light">
                     Build
