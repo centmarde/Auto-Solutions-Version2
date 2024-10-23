@@ -35,6 +35,7 @@ import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
+import LoanCarBase from "@/components/LoanCar/LoanCarBase.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -43,6 +44,11 @@ const routes = setupLayouts([
   { path: "/Register", component: Register, meta: { hideAi: false } },
   { path: "/:pathMatch(.*)*", component: NotFound, meta: { hideAi: false } },
   { path: "/CarInSale", component: CarInSale, meta: { requiresAuth: true } },
+  {
+    path: "/LoanCarBase",
+    component: LoanCarBase,
+    meta: { requiresAuth: true },
+  },
 
   { path: "/Home", component: Home, meta: { requiresAuth: true } },
   {
@@ -139,8 +145,7 @@ const routes = setupLayouts([
     path: "/AdminReview",
     component: AdminReview,
     meta: { requiresAuth: true },
-  }
-
+  },
 ]);
 
 const router = createRouter({
@@ -170,8 +175,7 @@ router.beforeEach((to, from, next) => {
   const hasVisitedDashboard =
     JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
-
-    console.log(userRole);
+  console.log(userRole);
   const publicPages = ["/", "/login", "/Register"];
   const protectedPages = [
     "/Home",
@@ -191,6 +195,7 @@ router.beforeEach((to, from, next) => {
     "/Chat",
     "/Inbox",
     "/GarageContents",
+    "/LoanCarBase",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {

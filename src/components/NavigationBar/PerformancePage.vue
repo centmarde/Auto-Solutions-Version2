@@ -35,8 +35,17 @@ export default {
 }
 
 .content-img {
-    width: 100%;
-    height: 100vh;
-    max-height: 100vh;
+  width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  object-fit: cover; 
 }
+
+@media (max-width: 600px) {
+  .content-img {
+    height: 50vh; 
+    max-height: 50vh;
+  }
+}
+
 </style>
