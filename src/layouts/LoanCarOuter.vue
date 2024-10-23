@@ -18,7 +18,7 @@
 
     <v-row>
       <v-col class="d-flex justify-center my-2">
-        <router-link to="/Garage" style="text-decoration: none;">
+        <router-link to="/LoanCarBase" style="text-decoration: none;">
           <v-btn @click="handleSubmit" color="primary" class="btnn32">
             Get Started
             <v-icon right> mdi-arrow-right </v-icon>

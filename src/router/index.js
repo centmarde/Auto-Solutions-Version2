@@ -35,9 +35,9 @@ import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
-import HandlingPage from '@/components/NavigationBar/HandlingPage.vue';
-import AnniversaryPage from '@/components/NavigationBar/AnniversaryPage.vue';
-
+import HandlingPage from "@/components/NavigationBar/HandlingPage.vue";
+import AnniversaryPage from "@/components/NavigationBar/AnniversaryPage.vue";
+import LoanCarBase from "@/components/LoanCar/LoanCarBase.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -46,6 +46,11 @@ const routes = setupLayouts([
   { path: "/Register", component: Register, meta: { hideAi: false } },
   { path: "/:pathMatch(.*)*", component: NotFound, meta: { hideAi: false } },
   { path: "/CarInSale", component: CarInSale, meta: { requiresAuth: true } },
+  {
+    path: "/LoanCarBase",
+    component: LoanCarBase,
+    meta: { requiresAuth: true },
+  },
 
   { path: "/Home", component: Home, meta: { requiresAuth: true } },
   {
@@ -146,12 +151,12 @@ const routes = setupLayouts([
   {
     path: "/HandlingPage",
     component: HandlingPage,
-    meta: { requiresAuth: true }, 
+    meta: { requiresAuth: true },
   },
   {
     path: "/AnniversaryPage",
     component: AnniversaryPage,
-    meta: { requiresAuth: true }, 
+    meta: { requiresAuth: true },
   },
 ]);
 
@@ -182,8 +187,7 @@ router.beforeEach((to, from, next) => {
   const hasVisitedDashboard =
     JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
-
-    console.log(userRole);
+  console.log(userRole);
   const publicPages = ["/", "/login", "/Register"];
   const protectedPages = [
     "/Home",
@@ -205,6 +209,7 @@ router.beforeEach((to, from, next) => {
     "/GarageContents",
     "/HandlingPage",
     "/AnniversaryPage",
+    "/LoanCarBase",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {

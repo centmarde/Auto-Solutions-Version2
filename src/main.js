@@ -12,7 +12,7 @@ import App from "./App.vue";
 
 // Composables
 import { createApp } from "vue";
-import { createPinia } from 'pinia'; // Import Pinia
+import { createPinia } from "pinia"; // Import Pinia
 
 const app = createApp(App);
 
