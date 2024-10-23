@@ -11,7 +11,7 @@ async function getResponse(userMessage) {
     messages: [
       {
         role: "system",
-        content: "You will compare the two cars and provide performance, reliability, and comfort ratings in the format: Performance: X, Reliability: Y, Comfort: Z; Performance: A, Reliability: B, Comfort: C,; 'OverallComment: <comment>'; 'Winner: <car>';"
+        content: "You will compare the two cars and provide ratings 0 to 100 in the format: Design: V, Topspeed: W, Torque: X, Technology: Y, Comfort: Z, FuelEfficiency: Q, ResaleValue: S; Topspeed: A, Torque: B, Technology: C, Comfort: D, Design: E,  FuelEfficiency: G, ResaleValue: I; 'OverallComment: <comment>'; 'Winner: <car>';"
       },
       {
         role: "user",
@@ -30,6 +30,7 @@ async function getResponse(userMessage) {
   for await (const chunk of chatCompletion) {
     response += chunk.choices[0]?.delta?.content || '';
   }
+  console.log(response);
   return response;
 }
 

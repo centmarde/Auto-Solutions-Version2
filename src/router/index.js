@@ -14,7 +14,7 @@ import Register from "@/components/Register.vue";
 
 import Home from "@/pages/Home.vue";
 import CarInRent from "@/pages/adminPages/CarInRent.vue";
-import ViewAsClient from "@/pages/adminPages/ViewAsClient.vue";
+
 import CarDetails from "@/layouts/CarDetails.vue";
 import SellContents from "@/components/SellContents.vue";
 import Admin from "@/pages/adminPages/Admin.vue";
@@ -31,30 +31,46 @@ import RentedCars from "@/components/InquiresPage/RentedCars.vue";
 import Chat from "@/components/Chat.vue";
 import Inbox from "@/layouts/Inbox.vue";
 import GarageContents from "@/components/GarageContents.vue";
+import ClientMember from "@/pages/adminPages/ClientMember.vue";
+import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
+import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
+import AdminReview from "@/pages/adminPages/AdminReview.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
   { path: "/", component: Hero, meta: { hideAi: true } },
-  { path: "/login", component: Login },
-  { path: "/Register", component: Register },
-  { path: "/:pathMatch(.*)*", component: NotFound },
-  { path: "/CarInSale", component: CarInSale },
+  { path: "/login", component: Login, meta: { hideAi: false } },
+  { path: "/Register", component: Register, meta: { hideAi: false } },
+  { path: "/:pathMatch(.*)*", component: NotFound, meta: { hideAi: false } },
+  { path: "/CarInSale", component: CarInSale, meta: { requiresAuth: true } },
 
   { path: "/Home", component: Home, meta: { requiresAuth: true } },
   {
     path: "/SellContents",
     component: SellContents,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideAi: true },
   },
   {
     path: "/car/:id",
     component: CarDetails,
     name: "CarDetails",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideAi: true },
   },
-  { path: "/Admin", component: Admin, meta: { requiresAuth: true } },
-  { path: "/Inquires", component: Inquires, meta: { requiresAuth: true } },
-  { path: "/UserInfo", component: UserInfo, meta: { requiresAuth: true } },
+  {
+    path: "/Admin",
+    component: Admin,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+  {
+    path: "/Inquires",
+    component: Inquires,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+  {
+    path: "/UserInfo",
+    component: UserInfo,
+    meta: { requiresAuth: true, hideAi: true },
+  },
   { path: "/Supra", component: Supra, meta: { requiresAuth: true } },
   { path: "/Nissan", component: Nissan, meta: { requiresAuth: true } },
   { path: "/Honda", component: Honda, meta: { requiresAuth: true } },
@@ -70,31 +86,61 @@ const routes = setupLayouts([
     }),
   },
   { path: "/Inbox", component: Inbox, meta: { requiresAuth: true } },
-  { path: "/GarageContents", component: GarageContents, meta: { requiresAuth: true } },
+  {
+    path: "/GarageContents",
+    component: GarageContents,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+
   {
     path: "/RentContents",
     component: RentContents,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideAi: true },
   },
-  { path: "/Garage", component: Garage, meta: { requiresAuth: true } },
-  { path: "/RentedCars", component: RentedCars, meta: { requiresAuth: true } },
-
-  { path: "/CarListing", component: CarListing, meta: { requiresAuth: true } },
   {
-    path: "/CarSaleView",
-    component: CarSaleView,
-    meta: { requiresAuth: true },
+    path: "/Garage",
+    component: Garage,
+    meta: { requiresAuth: true, hideAi: true },
   },
+  {
+    path: "/RentedCars",
+    component: RentedCars,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+
+  {
+    path: "/CarListing",
+    component: CarListing,
+    meta: { requiresAuth: true, hideAi: true },
+  },
+
   {
     path: "/CarInRent",
     component: CarInRent,
     meta: { requiresAuth: true },
   },
+
   {
-    path: "/ClientView",
-    component: ViewAsClient,
+    path: "/Clients",
+    component: ClientMember,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/AdminMembers",
+    component: AdminMembers,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/CarBeenPurchased",
+    component: CarBeenPurchased,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/AdminReview",
+    component: AdminReview,
+    meta: { requiresAuth: true },
+  }
+
 ]);
 
 const router = createRouter({
@@ -120,11 +166,32 @@ router.onError((err, to) => {
 // Authentication guards
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
-  const userRole = JSON.parse(localStorage.getItem("Role")); 
-  const hasVisitedDashboard = JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
+  const userRole = JSON.parse(localStorage.getItem("Role"));
+  const hasVisitedDashboard =
+    JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
+
+    console.log(userRole);
   const publicPages = ["/", "/login", "/Register"];
-  const protectedPages = ["/Home", "/car/:id", "/SellContents", "/Admin", "/UserInfo", "/Supra", "/Nissan", "/Honda", "/Inquires", "/CarListing", "/CarSaleView", "/RentContents", "/Garage", "/RentedCars", "/Chat", "/Inbox", "/GarageContents"];
+  const protectedPages = [
+    "/Home",
+    "/car/:id",
+    "/SellContents",
+    "/Admin",
+    "/UserInfo",
+    "/Supra",
+    "/Nissan",
+    "/Honda",
+    "/Inquires",
+    "/CarListing",
+    "/CarSaleView",
+    "/RentContents",
+    "/Garage",
+    "/RentedCars",
+    "/Chat",
+    "/Inbox",
+    "/GarageContents",
+  ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
     return next("/");
@@ -139,7 +206,15 @@ router.beforeEach((to, from, next) => {
     return next("/Home");
   }
 
-  if (to.path.startsWith("/Admin") && userRole !== true) {
+  if (
+    (to.path.startsWith("/Admin") ||
+      to.path.startsWith("/CarInRent") ||
+      to.path.startsWith("/ClientView") ||
+      to.path.startsWith("/CarBeenPurchased") ||
+      to.path.startsWith("/CarInSale") ||
+      to.path.startsWith("/Clients")) &&
+    userRole !== true
+  ) {
     alert("You do not have permission to access this page.");
     return next("/Home");
   }

@@ -83,13 +83,14 @@
   
         try {
           const { data, error } = await supabase
-            .from('Car')
+            .from('cars')
             .select(`*
-              User (
+              users (
                 *
               )
             `)
-            .eq('forRent', true)
+            .eq('for_rent', true)
+            .eq('is_pending', false)
             .neq('user_id', loggedInUserId);
   
           if (error) throw error;

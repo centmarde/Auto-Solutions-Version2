@@ -1,7 +1,7 @@
 <template>
     <AdminSlots> 
         <template #admin>
-            <DashNavbar class="index" />
+            <Admins class="index" />
             <Home />    
         </template>
         
@@ -11,15 +11,12 @@
 </template>
 
 <script setup>
-import DashNavbar from '@/components/Admin/DashNavbar.vue';
 import AdminSlots from '@/components/Admin/AdminSlots.vue';
-import Home from '../Home.vue';
+import Admins from '@/components/Admin/cars/Ispending.vue';
 </script>
 
 <style>
-.sukod{
-    min-width: 300px;
-}
+
 .index{
     z-index: 9999;
 }

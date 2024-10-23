@@ -18,7 +18,7 @@
               <v-list-item-avatar />
              
 
-              <v-list-item-title>{{ conversation.username }}</v-list-item-title>
+              <v-list-item-title>{{ conversation.user_name }}</v-list-item-title>
               <v-list-item-subtitle>
   <v-icon>mdi-car</v-icon>
   Car: {{ conversation.car_brand }} - {{ conversation.car_model }}
@@ -70,13 +70,13 @@ export default {
     async fetchConversations(loggedInUserId) {
   try {
     const { data, error } = await supabase
-      .from('Conversation')
+      .from('conversations')
       .select(`
         id, car_id, supplier_id, buyer_id,
-        Car (brand, model),
-        Messages (message, created_at, user_id),
-        buyer:buyer_id (username, img),
-        supplier:supplier_id (username, img)
+        cars (brand, model),
+        messages (message, created_at, user_id),
+        buyer:buyer_id (user_name, img),
+        supplier:supplier_id (user_name, img)
       `)
       .or(`buyer_id.eq.${loggedInUserId},supplier_id.eq.${loggedInUserId}`)
       // .neq('supplier_id', loggedInUserId);
@@ -90,27 +90,28 @@ export default {
 
     const uniqueConversations = [];
 
-    data.forEach(conversation => {
-      const latestMessage = conversation.Messages.length > 0 ? conversation.Messages[conversation.Messages.length - 1] : null;
+    data.forEach(conversations => {
+      const latestMessage = conversations.messages.length > 0 ? conversations.messages[conversations.messages.length - 1] : null;
 
       
       if (latestMessage) {
-        const isBuyer = conversation.buyer_id === loggedInUserId;
-        const otherUser = isBuyer ? conversation.supplier : conversation.buyer;
+        const isBuyer = conversations.buyer_id == loggedInUserId;
+        const otherUser = isBuyer ? conversations.supplier : conversations.buyer;
+
 
         uniqueConversations.push({
-          id: conversation.id,
-          car_model: conversation.Car?.model || 'Unknown Model',
-          car_brand: conversation.Car?.brand || 'Unknown Brand',
-          username: otherUser?.username || 'Unknown User',
+          id: conversations.id,
+          car_model: conversations.cars?.model || 'Unknown Model',
+          car_brand: conversations.cars?.brand || 'Unknown Brand',
+          user_name: otherUser?.user_name || 'Unknown User',
           user_picture: otherUser?.img || '/default-avatar.png',
           latestMessage: {
             message: latestMessage.message || 'No messages',
             created_at: latestMessage.created_at || ''
           },
-          supplier_id: conversation.supplier_id,
-          car_id: conversation.car_id,
-          buyer_id: conversation.buyer_id // Include buyer_id for reference
+          supplier_id: conversations.supplier_id,
+          car_id: conversations.car_id,
+          buyer_id: conversations.buyer_id // Include buyer_id for reference
         });
       }
     });
@@ -126,7 +127,7 @@ export default {
   try {
     // Fetch the existing conversation
     const { data: conversationData, error: conversationError } = await supabase
-      .from('Conversation')
+      .from('conversations')
       .select('id')
       .eq('supplier_id', sellerId)
       .eq('car_id', carId)

@@ -89,7 +89,7 @@ export default {
     if (sellerId && loggedInUserId) {
       try {
         const { data: carData, error: carError } = await supabase
-          .from('Car')
+          .from('cars')
           .select('brand, model')
           .eq('id', carId)
           .single();
@@ -99,7 +99,7 @@ export default {
         this.carModel = carData.model;
 
         const { data: conversationData, error: conversationError } = await supabase
-          .from('Conversation')
+          .from('conversations')
           .select('id, buyer_id, supplier_id')
           .eq('car_id', carId)
           .or(`supplier_id.eq.${loggedInUserId},buyer_id.eq.${loggedInUserId}`)
@@ -110,24 +110,25 @@ export default {
         if (conversationData) {
           this.chatId = conversationData.id;
           this.isSupplier = conversationData.supplier_id == loggedInUserId;
+         
 
           const { data: buyerData, error: buyerError } = await supabase
-            .from('User')
-            .select('username')
+            .from('users')
+            .select('user_name')
             .eq('id', conversationData.buyer_id)
             .single();
 
           if (buyerError) throw buyerError;
-          this.buyerName = buyerData.username;
+          this.buyerName = buyerData.user_name;
 
           const { data: supplierData, error: supplierError } = await supabase
-            .from('User')
-            .select('username')
+            .from('users')
+            .select('user_name')
             .eq('id', conversationData.supplier_id)
             .single();
 
           if (supplierError) throw supplierError;
-          this.supplierName = supplierData.username;
+          this.supplierName = supplierData.user_name;
 
           await this.fetchMessages();
           this.setupRealtimeSubscription();
@@ -144,7 +145,7 @@ export default {
     async fetchMessages() {
       try {
         const { data: messagesData, error: messagesError } = await supabase
-          .from('Messages')
+          .from('messages')
           .select('message, user_id, created_at')
           .eq('conversation_id', this.chatId)
           .order('created_at', { ascending: true });
@@ -155,15 +156,15 @@ export default {
           const senderId = message.user_id;
 
           const { data: senderData, error: senderError } = await supabase
-            .from('User')
-            .select('username')
+            .from('users')
+            .select('user_name')
             .eq('id', senderId)
             .single();
 
           if (senderError) throw senderError;
 
           return {
-            senderName: senderData.username,
+            senderName: senderData.user_name,
             text: message.message,
             created_at: message.created_at,
           };
@@ -179,7 +180,7 @@ export default {
           const loggedInUserId = localStorage.getItem('user_id');
 
           const { data, error: messageError } = await supabase
-            .from('Messages')
+            .from('messages')
             .insert([{ conversation_id: this.chatId, message: this.input, user_id: loggedInUserId }]);
 
           if (messageError) throw messageError;
@@ -195,7 +196,7 @@ export default {
     setupRealtimeSubscription() {
       const channel = supabase
         .channel('public:messages')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'Messages' }, (payload) => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, (payload) => {
           if (payload.new.conversation_id === this.chatId) {
             this.fetchMessages(); 
           }
@@ -225,7 +226,7 @@ import InsideNavbar from '@/layouts/InsideNavbar.vue';
   margin: 5px 0;
 }
 .messages-container {
-  max-height: 55vh;
+  max-height: 50vh;
   overflow-y: auto;
 }
 </style>

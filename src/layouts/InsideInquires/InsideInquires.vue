@@ -8,13 +8,19 @@
       <v-alert type="error">{{ error }}</v-alert>
     </v-col>
 
-    <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
+    <v-col v-if="!loading && !error && cars.length === 0" class="no-cars">
       <v-alert type="warning">No cars available for sale.</v-alert>
     </v-col>
   </v-row>
 
   <v-row v-if="carsWithTransactions.length > 0">
-    <v-col v-for="item in carsWithTransactions" :key="item.car.id" cols="12" md="6" class="mb-4">
+    <v-col
+      v-for="item in carsWithTransactions"
+      :key="item.car.id"
+      cols="12"
+      md="6"
+      class="mb-4"
+    >
       <v-card elevation="8" class="fixed-card">
         <v-row no-gutters>
           <v-col cols="4">
@@ -29,21 +35,30 @@
           </v-col>
 
           <v-col cols="8">
-            <v-card-title>{{ item.car.brand }} {{ item.car.model }}</v-card-title>
+            <v-card-title
+              >{{ item.car.brand }} {{ item.car.model }}</v-card-title
+            >
             <v-card-text>
-              <p class="truncate-text">
-                {{ item.car.description }}
+              <p class="truncate-text">{{ item.car.description }}</p>
+              <p>
+                <small class="text-body-secondary"
+                  >Added at: {{ item.transaction.created_at }}</small
+                >
               </p>
-              <p><small class="text-body-secondary">added at: {{ item.transaction.created_at }}</small></p>
             </v-card-text>
             <v-card-actions class="d-flex justify-content-end">
-              <v-btn color="red" @click="deleteCar(item.car.id)">
-                <v-icon left>mdi-delete</v-icon>
-                Delete
+              <v-btn color="red" @click="openConfirmationDialog(item.car.id)">
+                <v-icon left>mdi-cancel</v-icon>
+                Cancel
               </v-btn>
-              <v-btn color="blue" @click="chatWithSupplier(item.transaction.seller_id, item.car.id)">
-                <v-icon left>mdi-chat</v-icon>
-                Chat
+              <v-btn
+                color="green"
+                @click="
+                  finalizePurchase(item.transaction.id, item.transaction.price)
+                "
+              >
+                <v-icon left>mdi-check</v-icon>
+                Purchase
               </v-btn>
             </v-card-actions>
           </v-col>
@@ -51,10 +66,80 @@
       </v-card>
     </v-col>
   </v-row>
+
+  <v-dialog v-model="isConfirmationDialogVisible" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Confirmation Required</v-card-title>
+      <v-card-text>
+        <p>
+          Please confirm your purchase of this vehicle. Here are the terms and
+          conditions:
+        </p>
+        <ul>
+          <li>
+            You are responsible for the full payment of the price agreed upon.
+          </li>
+          <li>Any warranty information will be provided post-purchase.</li>
+          <li>Refund policies and procedures will be shared through email.</li>
+          <li>By proceeding, you accept all terms and conditions.</li>
+        </ul>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue" text @click="isConfirmationDialogVisible = false"
+          >Cancel</v-btn
+        >
+        <v-btn color="green" text @click="confirmFinalizePurchase"
+          >Confirm Purchase</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- New payment link dialog -->
+  <v-dialog v-model="isPaymentDialogVisible" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Proceed to Payment</v-card-title>
+      <v-card-text>
+        <p>
+          You are about to be redirected to the PayMongo page to finalize your
+          purchase.
+        </p>
+        <br>
+        <p class="text-center">Using Paymongo</p>
+        <v-row justify="center"  >
+          <v-col cols="12" md="4">
+        
+            <v-img
+              src="../../assets/images/paymongo.png"
+              alt="paymongo"
+              width="100%"
+             
+              ></v-img
+            >
+          </v-col>
+        </v-row>
+
+        <div class="d-flex justify-content-end mt-2">
+          <v-btn color="green" class="mx-2" text @click="openPaymentLink"
+            >Go to Payment</v-btn
+          >
+          <v-btn
+            color="blue darken-1"
+            class="mx-2"
+            text
+            @click="isPaymentDialogVisible = false"
+            >Cancel</v-btn
+          >
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import { supabase } from '../../lib/supaBase';
+import axios from "axios";
+import { supabase } from "../../lib/supaBase";
 
 export default {
   data() {
@@ -64,38 +149,62 @@ export default {
       carsWithTransactions: [],
       loading: true,
       error: null,
+      isDialogVisible: false,
+      isConfirmationDialogVisible: false,
+      isPaymentDialogVisible: false, // New dialog for payment
+      carIdToDelete: null,
+      transactionIdToFinalize: null,
+      priceToFinalize: null,
+      paymentLink: null, // To store the generated payment link
+      currentTransaction: null,
     };
   },
   async created() {
     await this.fetchCars();
   },
   methods: {
+    openConfirmationDialog(carId) {
+      this.isDialogVisible = true;
+      this.carIdToDelete = carId;
+    },
     async fetchCars() {
       this.loading = true;
-      const loggedInUserId = localStorage.getItem('user_id');
-      console.log(loggedInUserId);
+      const loggedInUserId = localStorage.getItem("user_id");
 
       try {
+        // Fetch purchased cars for the logged-in user
+        const { data: purchasedCars, error: purchaseError } = await supabase
+          .from("purchased_cars")
+          .select("transaction_id");
+
+        if (purchaseError) throw purchaseError;
+
+        const purchasedTransactionIds = purchasedCars.map(
+          (car) => car.transaction_id
+        );
+
+        // Fetch cars that are available for sale and not purchased
         const { data, error } = await supabase
-          .from('Transaction')
-          .select(`*, Car (*), User:buyer_id (*)`)
-          .eq('Car.forSale', true)
-          .eq('buyer_id', loggedInUserId);
+          .from("transactions")
+          .select(`*, cars (*), user:buyer_id (*)`)
+          .eq("cars.for_sale", true)
+          .eq("buyer_id", loggedInUserId)
+          .not("id", "in", `(${purchasedTransactionIds.join(",")})`);
 
         if (error) throw error;
 
         const carsForSale = data
-          .map(transaction => transaction.Car)
-          .filter(car => car !== null);
+          .map((transaction) => transaction.cars)
+          .filter((car) => car !== null);
 
         this.cars = this.shuffleArray(carsForSale);
 
         this.carsWithTransactions = data
-          .map(transaction => ({
-            car: transaction.Car,
+          .map((transaction) => ({
+            car: transaction.cars,
             transaction: transaction,
           }))
-          .filter(item => item.car !== null);
+          .filter((item) => item.car !== null);
       } catch (err) {
         this.error = err.message;
       } finally {
@@ -103,70 +212,108 @@ export default {
       }
     },
 
-    async deleteCar(carId) {
-  const confirmation = window.confirm("Are you sure you want to delete this Listing?");
-  
-  if (confirmation) {
-    try {
-      const { error } = await supabase
-        .from('Transaction')
-        .delete()
-        .eq('car_id', carId);
-      
-      if (error) throw error;
-      
-      this.carsWithTransactions = this.carsWithTransactions.filter(item => item.car.id !== carId);
-    } catch (err) {
-      this.error = err.message;
-    }
-  }
-},
+    openConfirmationDialog(carId) {
+      this.isDialogVisible = true;
+      this.carIdToDelete = carId;
+    },
 
+    async confirmDelete() {
+      try {
+        const { error } = await supabase
+          .from("transactions")
+          .delete()
+          .eq("car_id", this.carIdToDelete);
 
-async chatWithSupplier(sellerId, carId) {
-  try {
-    const loggedInUserId = localStorage.getItem('user_id');
-    if (!loggedInUserId) {
-      throw new Error('User is not logged in');
-    }
+        if (error) throw error;
 
-    // Check if the logged-in user is the buyer or supplier
-    const isBuyer = loggedInUserId !== sellerId;
+        this.carsWithTransactions = this.carsWithTransactions.filter(
+          (item) => item.car.id !== this.carIdToDelete
+        );
+        this.isDialogVisible = false;
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
 
-    // Fetch the existing conversation
-    const { data: conversationData, error: conversationError } = await supabase
-      .from('Conversation')
-      .select('id')
-      .eq('buyer_id', isBuyer ? loggedInUserId : sellerId)
-      .eq('supplier_id', isBuyer ? sellerId : loggedInUserId)
-      .eq('car_id', carId);
+    async finalizePurchase(transactionId) {
+      const transaction = this.carsWithTransactions.find(
+        (item) => item.transaction.id === transactionId
+      );
+      if (transaction) {
+        this.currentTransaction = transaction; // Store the current transaction
+        this.transactionIdToFinalize = transactionId;
+        this.carIdToFinalize = transaction.car.id;
+        this.priceToFinalize = transaction.car.price;
+        this.isConfirmationDialogVisible = true;
+      }
+    },
 
-    if (conversationError) throw conversationError;
+    async confirmFinalizePurchase() {
+      if (!this.currentTransaction) return;
 
-    if (conversationData && conversationData.length > 0) {
-      const chatId = conversationData[0].id;
+      const { car, transaction } = this.currentTransaction;
+      const amountInCentavos = car.price * 100; // Convert to centavos
+      console.log(amountInCentavos);
+      const options = {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6", // Base64-encoded private key
+        },
+        body: JSON.stringify({
+          data: {
+            attributes: {
+              amount: amountInCentavos,
+              description: car.for_sale ? "Car for Sale" : "Car for Rent",
+              remarks: car.for_sale ? "Sale transaction" : "Rental transaction",
+            },
+          },
+        }),
+      };
 
-      // Navigate to the Chat view with existing conversation
-      this.$router.push({ path: '/Chat', query: { chat_id: chatId, seller_id: sellerId, car_id: carId } });
-    } else {
-      // Create a new conversation if none exists
-      const { data: newConversationData, error: newConversationError } = await supabase
-        .from('Conversation')
-        .insert([{ buyer_id: isBuyer ? loggedInUserId : null, supplier_id: sellerId, car_id: carId }])
-        .select();
+      try {
+        const response = await fetch(
+          "https://api.paymongo.com/v1/links",
+          options
+        );
+        const result = await response.json();
 
-      if (newConversationError) throw newConversationError;
+        if (response.ok) {
+          this.paymentLink = result.data.attributes.checkout_url;
+          this.isConfirmationDialogVisible = false;
+          this.isPaymentDialogVisible = true;
 
-      const newChatId = newConversationData[0].id;
+          const warrantyDate = new Date();
+          warrantyDate.setFullYear(warrantyDate.getFullYear() + 1);
 
-      // Navigate to the Chat view with the new conversation
-      this.$router.push({ path: '/Chat', query: { chat_id: newChatId, seller_id: sellerId, car_id: carId } });
-    }
-  } catch (err) {
-    console.error('Error starting chat:', err);
-  }
-},
+          // After showing payment link, insert into 'purchased_cars' table
+          const { error } = await supabase.from("purchased_cars").insert([
+            {
+              price: car.price,
+              transaction_id: transaction.id,
+              warranty: warrantyDate.toISOString(),
+              car_id: car.id,
+            },
+          ]);
 
+          if (error) throw error;
+        } else {
+          throw new Error(
+            result.errors[0].detail || "Payment link creation failed"
+          );
+        }
+      } catch (err) {
+        this.error = err.message;
+        this.isConfirmationDialogVisible = false;
+      }
+    },
+
+    openPaymentLink() {
+      window.open(this.paymentLink, "_blank"); // Redirect to the payment link in a new tab
+      this.isPaymentDialogVisible = false; // Close the dialog
+      location.reload();
+    },
 
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {

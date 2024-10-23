@@ -17,7 +17,7 @@
                         <v-col cols="12" md="9">
                             <v-row class="mb-3">
                                 <v-col cols="12" md="6">
-                                    <v-text-field v-model="username" label="Username" outlined></v-text-field>
+                                    <v-text-field v-model="user_name" label="Username" outlined></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <v-select v-model="gender" :items="['Male', 'Female', 'Other']" label="Gender"
@@ -27,19 +27,19 @@
 
                             <v-row class="mb-3">
                                 <v-col cols="12" md="4">
-                                    <v-text-field v-model="firstname" label="First Name" outlined></v-text-field>
+                                    <v-text-field v-model="first_name" label="First Name" outlined></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="4">
-                                    <v-text-field v-model="middlename" label="Middle Name" outlined></v-text-field>
+                                    <v-text-field v-model="middle_name" label="Middle Name" outlined></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="4">
-                                    <v-text-field v-model="lastname" label="Last Name" outlined></v-text-field>
+                                    <v-text-field v-model="last_name" label="Last Name" outlined></v-text-field>
                                 </v-col>
                             </v-row>
 
                             <v-row class="mb-3">
                                 <v-col cols="12" md="4">
-                                    <v-text-field v-model="birthdate" label="Birthdate" type="date"
+                                    <v-text-field v-model="birth_date" label="Birthdate" type="date"
                                         outlined></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="4">
@@ -84,12 +84,12 @@ export default {
     data() {
         return {
             img: '',  // URL or path to the profile picture
-            username: '',
-            firstname: '',
-            middlename: '',
-            lastname: '',
+            user_name: '',
+            first_name: '',
+            middle_name: '',
+            last_name: '',
             gender: '',
-            birthdate: '',
+            birth_date: '',
             address: '',
             mobile_no: '',
             supa_id: '', // Add supa_id to data properties
@@ -103,7 +103,7 @@ export default {
             const userId = localStorage.getItem('user_id');
 
             const { data, error } = await supabase
-                .from('User')
+                .from('users')
                 .select('*')
                 .eq('id', userId)
                 .single(); // Fetch only one user record
@@ -116,11 +116,11 @@ export default {
             this.supa_id = data.id; // Save supa_id to data
             // Pre-fill the fields with existing data
             this.img = data.img || '';
-            this.username = data.username || '';
-            this.firstname = data.firstname || '';
-            this.middlename = data.middlename || '';
-            this.lastname = data.lastname || '';
-            this.birthdate = data.birthdate || '';
+            this.user_name = data.user_name || '';
+            this.first_name = data.first_name || '';
+            this.middle_name = data.middle_name || '';
+            this.last_name = data.last_name || '';
+            this.birth_date = data.birth_date || '';
             this.address = data.address || '';
             this.mobile_no = data.mobile_no || '';
         } catch (error) {
@@ -161,12 +161,12 @@ export default {
         async updateProfile() {
             // Construct the data object for the profile update
             const updatedData = {
-                username: this.username || undefined,
-                firstname: this.firstname || undefined,
-                middlename: this.middlename || undefined,
-                lastname: this.lastname || undefined,
+                user_name: this.user_name || undefined,
+                first_name: this.first_name || undefined,
+                middle_name: this.middle_name || undefined,
+                last_name: this.last_name || undefined,
                 gender: this.gender || undefined,
-                birthdate: this.birthdate || undefined,
+                birth_date: this.birth_date || undefined,
                 address: this.address || undefined,
                 mobile_no: this.mobile_no || undefined,
                 img: this.img || undefined  // Ensure profilePicture is included
@@ -175,7 +175,7 @@ export default {
             try {
                 // Update Supabase
                 const { data: supabaseData, error: supabaseError } = await supabase
-                    .from('User')
+                    .from('users')
                     .update(updatedData)
                     .eq('id', this.supa_id);
 
@@ -189,11 +189,11 @@ export default {
                 // Update SQLite database via backend
                 const response = await axios.post('http://localhost:3001/update-profile', {
                     supa_id: this.supa_id, // Send supa_id for filtering
-                    username: this.username || undefined,
-                    firstname: this.firstname || undefined,
-                    middlename: this.middlename || undefined,
-                    lastname: this.lastname || undefined,
-                    birthdate: this.birthdate || undefined,
+                    user_name: this.user_name || undefined,
+                    first_name: this.first_name || undefined,
+                    middle_name: this.middle_name || undefined,
+                    last_name: this.last_name || undefined,
+                    birth_date: this.birth_date || undefined,
                     address: this.address || undefined,
                     mobile_no: this.mobile_no || undefined
                 });

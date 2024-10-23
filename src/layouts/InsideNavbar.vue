@@ -7,10 +7,9 @@
     <div class="container-fluid">
       <!-- Logo and Title Section -->
       <router-link class="navbar-brand d-flex align-items-center" to="/Home">
-  <img src="@/assets/images/logo.jpeg" alt="logo" class="logopic" height="50" />
-  <h3 id="gidor" class="ms-2 mb-0">Auto Solutions</h3>
-</router-link>
-
+        <img src="@/assets/images/logo.jpeg" alt="logo" class="logopic" height="50" />
+        <h3 id="gidor" class="ms-2 mb-0">Auto Solutions</h3>
+      </router-link>
 
       <!-- Hamburger Menu Button -->
       <button class="navbar-toggler" type="button" @click="toggleMenu" aria-controls="navbarNav" aria-expanded="false"
@@ -20,8 +19,8 @@
 
       <!-- Navbar Links -->
       <div class="collapse navbar-collapse" :class="{ show: isMenuVisible }" id="navbarNav">
-        <div class="ms-auto d-flex align-items-center justify-content-end w-100">
-          <ul class="navbar-nav">
+        <div class="ms-auto d-flex flex-column flex-lg-row align-items-center justify-content-end w-100">
+          <ul class="navbar-nav text-center">
             <li class="nav-item">
               <router-link to="/Home" class="nav-link btn wes" @click="closeMenu">HOME</router-link>
             </li>
@@ -33,27 +32,35 @@
             </li>
             <li class="nav-item">
               <router-link to="/UserInfo" class="nav-link btn wes" @click="closeMenu" style="text-transform: uppercase;">
-  {{ username }}
-</router-link>
-
+                {{ user_name }}
+              </router-link>
             </li>
             <li class="nav-item">
               <router-link to="/" class="nav-link btn wes" @click="handleLogout">LOGOUT</router-link>
             </li>
-          </ul>
-          <router-link to="/UserInfo" @click="closeMenu">
-            <img :src="userImage" class="rounded-circle"
-              style="width: 3rem; height: 3rem; object-fit: cover; border: 2px solid white;" />
-          </router-link>
 
-          <!-- Theme Toggle -->
-          <div class="d-flex align-items-center ms-3">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="themeSwitch" :checked="theme === 'light'"
-                @change="toggleTheme">
-              <label class="form-check-label" for="themeSwitch">
-                <i :class="theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon'"></i>
-              </label>
+            <!-- Conditionally show the "Switch to Admin" link if userRole is true -->
+            <li v-if="userRole === true" class="nav-item">
+              <router-link to="/Admin" class="nav-link btn wes" @click="closeMenu">SWITCH TO ADMIN</router-link>
+            </li>
+          </ul>
+
+          <div class="d-flex align-items-center  mt-2 mt-lg-0">
+            <!-- User Image -->
+            <router-link to="/UserInfo" @click="closeMenu">
+              <img :src="userImage" class="rounded-circle user-image"
+                style="width: 3rem; height: 3rem; object-fit: cover; border: 2px solid white;" />
+            </router-link>
+
+            <!-- Theme Toggle -->
+            <div class="d-flex align-items-center ms-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="themeSwitch" :checked="theme === 'light'"
+                  @change="toggleTheme">
+                <label class="form-check-label" for="themeSwitch">
+                  <i :class="theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon'"></i>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -69,11 +76,12 @@ import { useRouter } from 'vue-router';
 import { supabase, doLogout as supabaseLogout } from '../lib/supaBase';
 
 const router = useRouter();
-const username = ref('Guest');
+const user_name = ref('Guest');
 const userImage = ref('');
 const isMenuVisible = ref(false);
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);
+const userRole = JSON.parse(localStorage.getItem('Role')) || false;
 
 // Fetch user data on component mount
 const fetchUserData = async () => {
@@ -81,7 +89,7 @@ const fetchUserData = async () => {
   if (!userId) return; // Exit if no user ID
 
   const { data, error } = await supabase
-    .from('User')
+    .from('users')
     .select('*')
     .eq('id', userId)
     .single();
@@ -91,7 +99,7 @@ const fetchUserData = async () => {
     return; // Exit on error
   }
 
-  username.value = data.username || 'Guest';
+  user_name.value = data.user_name || 'Guest';
   userImage.value = data.img || ''; // Set user image URL
 };
 
@@ -133,6 +141,7 @@ onMounted(() => {
 });
 </script>
 
+
 <style scoped>
 .logopic {
   border-radius: 30px;
@@ -145,33 +154,36 @@ onMounted(() => {
 }
 
 /* Media queries for responsive design */
-@media (max-width: 992px) { /* Large tablets and small desktops */
+@media (max-width: 992px) {
   #gidor {
     font-size: 1.25rem;
   }
 }
 
-@media (max-width: 768px) { /* Tablets */
+@media (max-width: 768px) { 
   .logopic {
-    height: 40px; /* Smaller logo for smaller screens */
+    height: 40px; 
   }
 
   #gidor {
-    font-size: 1rem; /* Smaller title for smaller screens */
+    font-size: 1rem; 
+  }
+  .user-image {
+    display: none;
   }
 }
 
-@media (max-width: 280px) { /* Mobile devices */
+@media (max-width: 280px) { 
   .logopic {
-    height: 30px; /* Even smaller logo for mobile */
+    height: 30px; 
   }
 
   #gidor {
-    font-size: 0.6rem; /* Adjust title size for mobile */
+    font-size: 0.6rem; 
   }
 }
 
-/* Button styles */
+/* Navbar link styles */
 .btn {
   text-decoration: none;
   font-size: 10px;
@@ -207,5 +219,4 @@ onMounted(() => {
 .uppercase-text {
   text-transform: uppercase;
 }
-
 </style>

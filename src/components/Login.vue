@@ -104,16 +104,16 @@ const login = async () => {
 
       // Fetching user profile from 'User' table
       const { data: profiles, error: profileError } = await supabase
-        .from("User")
+        .from("users")
         .select("*")
-        .eq("auth_id", user.id);
+        .eq("user_id", user.id);
 
       if (profileError || profiles.length === 0) {
         throw new Error("Profile fetch error.");
       }
 
       localStorage.setItem("user_id", profiles[0].id);
-      localStorage.setItem("Role", profiles[0].isadmin ? "true" : "false");
+      localStorage.setItem("Role", profiles[0].is_admin ? "true" : "false");
 
       router.push("/Home");
     } else {

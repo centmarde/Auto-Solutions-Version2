@@ -105,7 +105,7 @@
           <v-col cols="12" md="6" class="mb-3">
             <v-text-field
               label="Horsepower"
-              v-model="car.horsepower"
+              v-model="car.horse_power"
               placeholder="Enter horsepower"
             ></v-text-field>
           </v-col>
@@ -121,7 +121,7 @@
           <v-col cols="12" md="6" class="mb-3">
             <v-text-field
               label="Top Speed"
-              v-model="car.topSpeed"
+              v-model="car.top_speed"
               placeholder="Enter top speed"
             ></v-text-field>
           </v-col>
@@ -217,9 +217,9 @@ export default {
              
                 description: '',
                 engine: '',
-                horsepower: '',
+                horse_power: '',
                 torque: '',
-                topSpeed: '',
+                top_speed: '',
                 transmission: '',
               
             },
@@ -254,9 +254,9 @@ export default {
     if (!this.car.mileage) fieldsToFill.push('Mileage');
     if (!this.car.engine) fieldsToFill.push('Engine');
     if (!this.car.description) fieldsToFill.push('Description');
-    if (!this.car.horsepower) fieldsToFill.push('Horsepower');
+    if (!this.car.horse_power) fieldsToFill.push('Horsepower');
     if (!this.car.torque) fieldsToFill.push('Torque');
-    if (!this.car.topSpeed) fieldsToFill.push('TopSpeed');
+    if (!this.car.top_speed) fieldsToFill.push('TopSpeed');
     if (!this.car.year) fieldsToFill.push('YearModel');
     if (!this.car.transmission) fieldsToFill.push('Transmission');
 
@@ -281,13 +281,13 @@ export default {
                         this.car.description = value;
                         break;
                     case 'Horsepower':
-                        this.car.horsepower = value;
+                        this.car.horse_power = value;
                         break;
                     case 'Torque':
                         this.car.torque = value;
                         break;
                     case 'TopSpeed':
-                        this.car.topSpeed = value;
+                        this.car.top_speed = value;
                         break;
                     case 'YearModel':
                         this.car.year = value;
@@ -327,20 +327,20 @@ export default {
               
                 description: this.car.description,
                 engine: this.car.engine,
-                horsepower: this.car.horsepower,
+                horse_power: this.car.horse_power,
                 torque: this.car.torque,
-                topSpeed: this.car.topSpeed,
+                top_speed: this.car.top_speed,
                 transmission: this.car.transmission,
               
-                forSale: false,
-                forRent: false,
+                for_sale: false,
+                for_rent: false,
                 is_garage: true,
                 user_id: userId,
             };
 
             try {
                 const { data: insertData, error: insertError } = await supabase
-                    .from('Car')
+                    .from('cars')
                     .insert([carDetails])
                     .select();
 
@@ -352,7 +352,7 @@ export default {
                     const imageUrl = await this.imageUpload();
 
                     await supabase
-                        .from('Car')
+                        .from('cars')
                         .update({ img: imageUrl })
                         .match({ id: insertData[0].id });
                 }

@@ -112,7 +112,7 @@
             <v-col cols="12" md="6" class="mb-3">
               <v-text-field
                 label="Horsepower"
-                v-model="car.horsepower"
+                v-model="car.horse_power"
                 placeholder="Enter horsepower"
               ></v-text-field>
             </v-col>
@@ -128,7 +128,7 @@
             <v-col cols="12" md="6" class="mb-3">
               <v-text-field
                 label="Top Speed"
-                v-model="car.topSpeed"
+                v-model="car.top_speed"
                 placeholder="Enter top speed"
               ></v-text-field>
             </v-col>
@@ -153,7 +153,7 @@
             <v-col cols="12" md="6" class="mb-3">
               <v-text-field
                 label="Years Owned"
-                v-model="car.yearsowned"
+                v-model="car.years_owned"
                 placeholder="Years Owned"
                 required
               ></v-text-field>
@@ -212,6 +212,22 @@
           </v-row>
         </v-form>
       </v-card>
+
+      <v-dialog v-model="dialog" max-width="400px">
+  <v-card>
+    <v-card-title>Your car is under review</v-card-title>
+    <v-card-text>
+      Your car has been successfully submitted and is now pending review by our team. Check the Inquires page for updates.
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" text @click="dialog = false">Close</v-btn>
+<v-btn color="primary" to="/Carlisting">Listings</v-btn>
+
+
+    </v-card-actions>
+  </v-card>
+</v-dialog>
     </v-container>
   </template>
   
@@ -223,6 +239,7 @@
   export default {
       data() {
           return {
+            dialog: false,
               car: {
                   brand: '',
                   model: '',
@@ -231,11 +248,11 @@
                   price: null,
                   description: '',
                   engine: '',
-                  horsepower: '',
+                  horse_power: '',
                   torque: '',
-                  topSpeed: '',
+                  top_speed: '',
                   transmission: '',
-                  yearsowned: '',
+                  years_owned: '',
               },
               
               carData: [],
@@ -250,13 +267,16 @@
       },
       
       methods: {
+        showDialog() {
+      this.dialog = true;
+    },
         async generateAISuggestions() {
       // Check if required fields are filled
       const requiredFields = [];
       if (!this.car.brand) requiredFields.push('Brand');
       if (!this.car.model) requiredFields.push('Model');
       if (!this.car.price) requiredFields.push('Price');
-      if (!this.car.yearsowned) requiredFields.push('Years Owned');
+      if (!this.car.years_owned) requiredFields.push('Years Owned');
   
       if (requiredFields.length > 0) {
           alert(`Please fill in the following required fields: ${requiredFields.join(', ')}`);
@@ -268,9 +288,9 @@
       if (!this.car.mileage) fieldsToFill.push('Mileage');
       if (!this.car.engine) fieldsToFill.push('Engine');
       if (!this.car.description) fieldsToFill.push('Description');
-      if (!this.car.horsepower) fieldsToFill.push('Horsepower');
+      if (!this.car.horse_power) fieldsToFill.push('Horsepower');
       if (!this.car.torque) fieldsToFill.push('Torque');
-      if (!this.car.topSpeed) fieldsToFill.push('TopSpeed');
+      if (!this.car.top_speed) fieldsToFill.push('TopSpeed');
       if (!this.car.year) fieldsToFill.push('YearModel');
       if (!this.car.transmission) fieldsToFill.push('Transmission');
   
@@ -295,13 +315,13 @@
                           this.car.description = value;
                           break;
                       case 'Horsepower':
-                          this.car.horsepower = value;
+                          this.car.horse_power = value;
                           break;
                       case 'Torque':
                           this.car.torque = value;
                           break;
                       case 'TopSpeed':
-                          this.car.topSpeed = value;
+                          this.car.top_speed = value;
                           break;
                       case 'YearModel':
                           this.car.year = value;
@@ -325,7 +345,7 @@
   
   
           async submitCarDetails() {
-              if (!this.car.model || !this.car.brand || !this.car.price || !this.car.yearsowned) {
+              if (!this.car.model || !this.car.brand || !this.car.price || !this.car.years_owned) {
                   alert('Please fill in all required fields!');
                   return;
               }
@@ -341,20 +361,21 @@
                   price: this.car.price,
                   description: this.car.description,
                   engine: this.car.engine,
-                  horsepower: this.car.horsepower,
+                  horse_power: this.car.horse_power,
                   torque: this.car.torque,
-                  topSpeed: this.car.topSpeed,
+                  top_speed: this.car.top_speed,
                   transmission: this.car.transmission,
-                  yearsowned: this.car.yearsowned,
-                  forSale: false,
-                  forRent: true,
+                  years_owned: this.car.year_sowned,
+                  for_sale: false,
+                  for_rent: true,
                   is_garage: false,
                   user_id: userId,
+                  is_pending: true
               };
   
               try {
                   const { data: insertData, error: insertError } = await supabase
-                      .from('Car')
+                      .from('cars')
                       .insert([carDetails])
                       .select();
   
@@ -366,12 +387,13 @@
                       const imageUrl = await this.imageUpload();
   
                       await supabase
-                          .from('Car')
+                          .from('cars')
                           .update({ img: imageUrl })
                           .match({ id: insertData[0].id });
                   }
   
-                  alert('Car details submitted successfully!');
+                  this.showDialog();
+                 
               } catch (error) {
                   console.error('Error submitting car details:', error);
                   alert('Failed to submit car details.');

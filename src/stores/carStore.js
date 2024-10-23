@@ -14,14 +14,16 @@ export const useCarStore = defineStore('carStore', {
 
       try {
         const { data, error } = await supabase
-          .from('Car')
+          .from('cars')
           .select(`
             *,
-            User (
+            users (
               *
             )
+            
           `)
-          .eq('forSale', true) // Fetch only cars for sale
+          .eq('for_sale', true) // Fetch only cars for sale
+          .eq('is_pending', false)
           .neq('user_id', loggedInUserId);
 
         if (error) throw error;
