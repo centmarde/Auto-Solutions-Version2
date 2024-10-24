@@ -11,17 +11,22 @@ export const useAnimationStore = defineStore('animation', {
     async fetchAnimationData() {
       this.loading = true;
       try {
-        const response = await fetch('/param.json');
-        if (!response.ok) {
-          throw new Error('Failed to load param.json');
+        const cachedData = localStorage.getItem('animationData');
+        if (cachedData) {
+          this.animationData = JSON.parse(cachedData);
+        } else {
+          const response = await fetch('/param.json');
+          if (!response.ok) throw new Error('Failed to load param.json');
+          const data = await response.json();
+          this.animationData = data;
+          localStorage.setItem('animationData', JSON.stringify(data));
         }
-        const data = await response.json();
-        this.animationData = data;
       } catch (err) {
         this.error = err.message;
       } finally {
         this.loading = false;
       }
-    },
+    }
+    
   },
 });
