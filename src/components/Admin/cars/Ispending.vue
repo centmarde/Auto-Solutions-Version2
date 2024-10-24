@@ -1,5 +1,5 @@
 <template>
-    <UsersTemplate title="Pending Cars" is_pending="false" />
+    <UsersTemplate title="Pending Cars"  />
     </template>
     
     <script setup>
