@@ -4,7 +4,7 @@
         <v-col cols="12" lg="12" md="12" sm="5">
           <div>
             <v-card-title>
-              <h3 class="text-center" id="title">SELL YOUR CAR</h3>
+              <h3 class="text-center" id="title">SELL A CAR</h3>
             </v-card-title>
            
           </div>
