@@ -84,7 +84,7 @@
       <div class="card-body">
         <v-row>
           <v-col cols="12" md="12" class="d-flex justify-content-start">
-            <img class="img-float" src="../assets/supra_imgs/mostwanted1.png" style="width: 230px; height: 130px; left: -30px; top: 18px;" alt="Body Image">
+            <img class="img-float" src="../assets/supra_imgs/sticker.png" style="width: 180px; height: 95px; left: -30px; top: 18px;" alt="Body Image">
             <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px; left: 12px; bottom: 20px;"><b>CUSTOM BODY PAINT</b></p>
             <p class="price-float">Price: $5,000</p>
           </v-col>
@@ -296,7 +296,7 @@
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
                     <img class="img-float" src="https://example.com/path/to/back_image.jpg" alt="Back Image">
-                    <p class="title-float"><b>Back Model Name</b></p>
+                    <p class="title-float"><b>Decals Add-ons</b></p>
                     <p class="price-float">Price: $5,000</p>
                 </v-col>
             </v-row>
