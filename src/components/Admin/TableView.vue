@@ -2,7 +2,7 @@
   <v-container class="p-5 mts">
     <h1 class="text-center fw-bolder">{{ title }}</h1>
 
-    <v-table height="300px" fixed-header>
+    <v-table height="500px" fixed-header>
       <thead>
         <tr>
           <th class="text-left">ID</th>
