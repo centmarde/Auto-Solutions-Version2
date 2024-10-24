@@ -10,26 +10,34 @@ export const useCarStore = defineStore('carStore', {
   actions: {
     async fetchCars() {
       this.loading = true;
-      const loggedInUserId = localStorage.getItem("user_id"); // Get the logged-in user's ID
+      const loggedInUserId = localStorage.getItem("user_id");
 
       try {
-        const { data, error } = await supabase
+        const { data: cars, error: carsError } = await supabase
           .from('cars')
           .select(`
             *,
             users (
               *
+            ),
+            purchased_cars (
+              *
             )
-            
           `)
-          .eq('for_sale', true) // Fetch only cars for sale
+          .eq('for_sale', true)
           .eq('is_pending', false)
           .eq('is_for_shop', false)
           .neq('user_id', loggedInUserId);
+        
+        if (carsError) throw carsError;
+        
+        // Filter out cars that are not paid from the fetched cars
+        const unpaidCars = cars.filter(car => {
+          return car.purchased_cars.length === 0 || 
+                 !car.purchased_cars.some(purchase => purchase.is_paid);
+        });
 
-        if (error) throw error;
-
-        this.cars = this.shuffleArray(data); // Store the fetched cars in Pinia state
+        this.cars = this.shuffleArray(unpaidCars); // Store the filtered unpaid cars in Pinia state
       } catch (err) {
         this.error = err.message;
       } finally {

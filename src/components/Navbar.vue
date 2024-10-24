@@ -1,8 +1,13 @@
 <template>
   <header
     class="navbar navbar-expand-lg fixed-top"
-    :class="{'navbar-dark': isDark, 'navbar-light': !isDark}"
-    :style="{ backgroundColor: isDark ? 'rgba(52, 52, 52, 0.8)' : 'rgba(200, 200, 200, 0.8)', color: isDark ? '#fff' : '#333' }"
+    :class="{ 'navbar-dark': isDark, 'navbar-light': !isDark }"
+    :style="{
+      backgroundColor: isDark
+        ? 'rgba(52, 52, 52, 0.8)'
+        : 'rgba(200, 200, 200, 0.8)',
+      color: isDark ? '#fff' : '#333',
+    }"
   >
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="#">
@@ -36,24 +41,41 @@
             <a href="#CarSale" class="nav-link btn">CARS FOR SALE</a>
           </li>
           <li class="nav-item">
-            <a href="#sellcar23" class="nav-link btn" >SELL YOUR CAR</a>
+            <a href="#sellcar23" class="nav-link btn">SELL YOUR CAR</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link btn"><router-link to="/login" style="text-decoration: none; color:rgb(97, 40, 255);">RENT A CAR</router-link></a>
+            <a class="nav-link btn"
+              ><router-link
+                to="/login"
+                style="text-decoration: none; color: rgb(97, 40, 255)"
+                >RENT A CAR</router-link
+              ></a
+            >
           </li>
         </ul>
 
         <ul class="navbar-nav ms-auto d-flex align-items-center">
           <li class="nav-item d-flex">
-            <router-link to="/login" class="nav-link btn" @click="closeMenu">LOGIN</router-link>
+            <router-link to="/login" class="nav-link btn" @click="closeMenu"
+              >LOGIN</router-link
+            >
             <i class="fa fa-user-circle ms-1 mt-2" aria-hidden="true"></i>
           </li>
-          <li class="nav-item d-flex align-items-center ms-3">
+          <li class="nav-item d-flex align-items-center">
+            <!-- Theme Toggle -->
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="themeSwitch" :checked="isDark" @change="toggleTheme">
-              <label class="form-check-label" for="themeSwitch">
-                <i :class="isDark ? 'bi bi-sun' : 'bi bi-moon'"></i>
-              </label>
+              <v-switch
+                v-model="isChecked"
+                @change="toggleTheme"
+                hide-details
+                inset
+              >
+                <template v-slot:label>
+                  <v-icon>{{
+                    isChecked ? "mdi-brightness-5" : "mdi-brightness-3"
+                  }}</v-icon>
+                </template>
+              </v-switch>
             </div>
           </li>
         </ul>
@@ -63,10 +85,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useTheme } from 'vuetify';
+import { ref, onMounted } from "vue";
+import { useTheme } from "vuetify";
 
 const isMenuVisible = ref(false);
+const isChecked = ref(false);
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);
 
@@ -79,16 +102,16 @@ const toggleMenu = () => {
 };
 
 const toggleTheme = () => {
-  const newTheme = isDark.value ? 'light' : 'dark';
+  const newTheme = isDark.value ? "light" : "dark";
   theme.global.name.value = newTheme;
-  isDark.value = newTheme === 'dark';
-  localStorage.setItem('theme', newTheme); // Save theme in local storage
+  isDark.value = newTheme === "dark";
+  localStorage.setItem("theme", newTheme); // Save theme in local storage
 };
 
 onMounted(() => {
-  const savedTheme = localStorage.getItem('theme') || 'dark';
+  const savedTheme = localStorage.getItem("theme") || "dark";
   theme.global.name.value = savedTheme;
-  isDark.value = savedTheme === 'dark';
+  isDark.value = savedTheme === "dark";
 });
 </script>
 
@@ -100,16 +123,18 @@ onMounted(() => {
 
 #gidor {
   font-size: 1.2rem;
-  font-family: "Merriweather", serif; 
+  font-family: "Merriweather", serif;
 }
 
-@media (max-width: 992px) { /* Large tablets and small desktops */
+@media (max-width: 992px) {
+  /* Large tablets and small desktops */
   #gidor {
     font-size: 1.25rem;
   }
 }
 
-@media (max-width: 768px) { /* Tablets */
+@media (max-width: 768px) {
+  /* Tablets */
   .logopic {
     height: 40px; /* Smaller logo for smaller screens */
   }
@@ -119,7 +144,8 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 280px) { /* Mobile devices */
+@media (max-width: 280px) {
+  /* Mobile devices */
   .logopic {
     height: 30px; /* Even smaller logo for mobile */
   }
@@ -131,13 +157,12 @@ onMounted(() => {
 
 /* From Uiverse.io by biswacpcode */
 .btn {
- 
   text-decoration: none;
   font-size: 10px;
   border: none;
   background: none;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .btn::before {
@@ -146,7 +171,7 @@ onMounted(() => {
 
 .btn::after,
 .btn::before {
-  content: '';
+  content: "";
   width: 0%;
   height: 2px;
   background: rgb(97, 40, 255);
@@ -159,8 +184,7 @@ onMounted(() => {
   width: 100%;
 }
 
-.drp_btn{
+.drp_btn {
   margin-top: 2px;
 }
 </style>
-

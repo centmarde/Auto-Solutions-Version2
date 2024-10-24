@@ -30,11 +30,7 @@
             <li class="nav-item">
               <router-link to="/Inquires" class="nav-link btn wes" @click="closeMenu">INQUIRES</router-link>
             </li>
-            <li class="nav-item">
-              <router-link to="/UserInfo" class="nav-link btn wes" @click="closeMenu" style="text-transform: uppercase;">
-                {{ user_name }}
-              </router-link>
-            </li>
+           
             <li class="nav-item">
               <router-link to="/" class="nav-link btn wes" @click="handleLogout">LOGOUT</router-link>
             </li>
@@ -50,12 +46,18 @@
             <!-- Theme Toggle -->
             <div class="d-flex align-items-center ms-3">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="themeSwitch" :checked="theme === 'light'"
-                  @change="toggleTheme">
-                <label class="form-check-label" for="themeSwitch">
-                  <i :class="theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon'"></i>
-                </label>
-              </div>
+              <v-switch
+  v-model="isChecked"
+  @change="toggleTheme"
+  hide-details
+  inset
+>
+  <template v-slot:label>
+    <v-icon>{{ isChecked ? "mdi-brightness-5" : "mdi-brightness-3" }}</v-icon>
+  </template>
+</v-switch>
+
+</div>
             </div>
           </div>
         </div>
@@ -71,7 +73,7 @@ import { useRouter } from 'vue-router';
 import { supabase, doLogout as supabaseLogout } from '../lib/supaBase';
 
 const router = useRouter();
-const user_name = ref('Guest');
+const isChecked = ref(false);
 const userImage = ref('');
 const isMenuVisible = ref(false);
 const theme = useTheme();
@@ -93,7 +95,6 @@ const fetchUserData = async () => {
     return; // Exit on error
   }
 
-  user_name.value = data.user_name || 'Guest';
   userImage.value = data.img || ''; // Set user image URL
 };
 

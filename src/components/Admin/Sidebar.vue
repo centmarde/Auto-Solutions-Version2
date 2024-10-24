@@ -4,16 +4,16 @@
       :class="{'navbar-dark': isDark, 'navbar-light': !isDark}"
       :style="{ backgroundColor: isDark ? 'rgba(52, 52, 52, 0.8)' : 'rgba(200, 200, 200, 0.8)', color: isDark ? '#fff' : '#333' }"
     >
-      <div class="d-flex justify-content-center align-content-center flex-column h-50 position-fixed">
+      <div class="d-flex justify-content-center align-content-center flex-column h-70 position-fixed">
         <!-- First Link (Dashboard) -->
         <div class="mt-5 position-relative bot">
           <v-icon>mdi-view-dashboard</v-icon>
           <router-link
             to="/Admin"
-            class="btn wes fw-bold mt-1 text-white"
+            class="btn wes  mt-1 text-white"
             :class="{ underline: isActiveRoute('/Admin').value }"
           >
-            <p  class="mt-4 fw-bold fst">Dashboard</p>
+            <p  class="mt-4  fst">Dashboard</p>
             <v-divider></v-divider>
 
           </router-link>
@@ -25,23 +25,38 @@
           <i class="fa-solid fa-user fa-lg"></i>
           <router-link
             to="/Home"
-            class="btn wes fw-bold mt-1 text-white"
+            class="btn wes  mt-1 text-white"
           
           >
-            <p class="mt-4 fw-bold fst">View Client Side</p>
+            <p class="mt-4  fst">View Client Side</p>
             <v-divider></v-divider>
 
           </router-link>
         </div>
+
+        <div class="position-relative bot">
+          
+          <i class="fa-solid mdi mdi-code-block-tags fa-lg"></i>
+          <router-link
+            to="/Home"
+            class="btn wes  mt-1 text-white"
+          
+          >
+            <p class="mt-4  fst">Developers Side</p>
+            <v-divider></v-divider>
+
+          </router-link>
+        </div>
+
         <div class="position-relative bot">
           
          <v-icon>mdi mdi-car-clock </v-icon>
           <router-link
             to="/AdminReview"
-            class="btn wes fw-bold mt-1 text-white"
+            class="btn wes  mt-1 text-white"
           
           >
-            <p class="mt-4 fw-bold fst">Cars to Review</p>
+            <p class="mt-4  fst">Cars to Review</p>
             <v-divider></v-divider>
 
           </router-link>
@@ -52,11 +67,11 @@
           <i class="fa-solid fa-toolbox fa-lg"></i>
           <router-link
             to="/AdminMembers"
-            class="btn wes fw-bold mt-1 text-white"
+            class="btn wes  mt-1 text-white"
             :class="{ underline: isActiveRoute('/AdminMembers').value }"
           >
           
-            <p  class="mt-4 fw-bold fst">Admin Members</p>
+            <p  class="mt-4  fst">Admin Members</p>
             <v-divider></v-divider>
 
           </router-link>
@@ -145,7 +160,7 @@ const handleLogout = async () => {
   text-decoration: underline;
 }
 .fst {
-  font-size: 18px;
+  font-size: 15px;
  
 }
 .side{
