@@ -59,7 +59,7 @@
           </v-col>
 
           <v-col cols="12" md="8" class="scrollable-col">
-           <InsideRent  />
+           <InsideMyPurchased/>
           </v-col>
         </v-row>
       </v-card>
@@ -69,7 +69,7 @@
   
   <script setup>
   import InquiresNavbar from '../../layouts/InquiresNavbar.vue';
-  import InsideRent from '@/layouts/InsideInquires/InsideRent.vue';
+  import InsideMyPurchased from '@/layouts/InsideInquires/InsideMyPurchased.vue';
   </script>
   
   <style>

@@ -1,11 +1,10 @@
 <template>
   <v-container id="yyts" class="d-flex justify-center align-center fill-height">
     <v-row>
-      <!-- Animator consuming 8 columns on large screens -->
       <v-col cols="12" lg="8" md="6" sm="12">
-       <v-img class="supra" src="./../assets/images/supra_logo.png" ></v-img>
-       <p class="text" >45th anniversary edition</p>
-        <Animator class="animator-bg" />
+        <v-img class="supra" src="./../assets/images/supra_logo.png"></v-img>
+        <p class="text">45th anniversary edition</p>
+        <Animator v-if="!animatorStore.isLoaded" class="animator-bg" @loadComplete="handleLoadComplete" />
       </v-col>
 
       <!-- Login form consuming 4 columns on large screens -->
@@ -80,10 +79,11 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { supabase } from "../lib/supaBase"; // importing Supabase client
+import { supabase } from "../lib/supaBase";
 import axios from "axios";
 import { requiredValidator, emailValidator } from '../utils/validator.js';
 import Animator from "./Landing3d/Animator.vue";
+import { useAnimatorStore } from '../stores/loginStoreAnimator';
 
 
 // udfw jvvl ikom emdl SMTP password
@@ -93,7 +93,13 @@ const password = ref("");
 const isPasswordVisible = ref(false);
 const isSubmitting = ref(false);
 const router = useRouter();
+const animatorStore = useAnimatorStore();
 
+
+
+const handleLoadComplete = () => {
+  animatorStore.setLoaded(true);
+};
 const login = async () => {
   isSubmitting.value = true;
 
