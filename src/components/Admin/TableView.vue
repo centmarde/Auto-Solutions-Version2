@@ -1,13 +1,13 @@
 <template>
   <v-container class="p-5 mts">
-
     <h1 class="text-center fw-bolder">{{ title }}</h1>
 
-    <v-table height="300px" fixed-header>
+    <v-table height="500px" fixed-header>
       <thead>
         <tr>
           <th class="text-left">ID</th>
           <th class="text-left">Model</th>
+          <th class="text-left">Image</th>
           <th class="text-left">Year</th>
           <th class="text-left">Brand</th>
           <th class="text-left">Mileage</th>
@@ -24,6 +24,15 @@
         <tr v-for="(car, index) in paginatedCars" :key="car.id">
           <td>{{ index + 1 }}</td>
           <td>{{ car.model }}</td>
+          <td>
+            <img
+              :src="car.img"
+              alt="Car Image"
+              class=" car-image "
+              style="cursor: pointer;"
+              @click="openImage(car.img)"
+            />
+          </td>
           <td>{{ car.year }}</td>
           <td>{{ car.brand }}</td>
           <td>{{ car.mileage }}</td>
@@ -49,14 +58,21 @@
       @input="fetchCars"
       class="mt-4"
     ></v-pagination>
+
+    <!-- Dialog for enlarged image -->
+    <v-dialog v-model="dialog" max-width="600px">
+      <v-card>
+        <v-img :src="selectedImage" class="enlarged-image" aspect-ratio="16/9"></v-img>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
+
 
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 import { supabase } from '../../lib/supaBase';
-import { Chart } from 'chart.js';
 
 const props = defineProps({
   title: {
@@ -71,6 +87,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  is_pending: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const cars = ref([]);
@@ -78,6 +98,10 @@ const currentPage = ref(1);
 const itemsPerPage = 5; 
 const totalCarsForSale = ref(0);
 const totalCarsForRent = ref(0);
+
+// State for dialog and selected image
+const dialog = ref(false);
+const selectedImage = ref('');
 
 const fetchCars = async (table, forRent = false) => {
   const query = supabase
@@ -94,12 +118,11 @@ const fetchCars = async (table, forRent = false) => {
     console.error('Error fetching cars:', error);
   } else {
     cars.value = data;
-    calculateTotals(); // Calculate totals after fetching the data
+    calculateTotals();
   }
 };
 
 const calculateTotals = () => {
-  // Calculate the number of cars for sale and rent
   totalCarsForSale.value = cars.value.filter(car => car.for_sale).length;
   totalCarsForRent.value = cars.value.filter(car => car.for_rent).length;
 };
@@ -121,7 +144,7 @@ const deleteCar = async (carId) => {
     console.error('Error deleting car:', error);
   } else {
     cars.value = cars.value.filter(car => car.id !== carId);
-    calculateTotals(); // Recalculate totals after deletion
+    calculateTotals();
   }
 };
 
@@ -152,6 +175,11 @@ const confirmDisapprove = (carId) => {
   }
 };
 
+// Open image in dialog
+const openImage = (img) => {
+  selectedImage.value = img;
+  dialog.value = true;
+};
 
 onMounted(async () => {
   await fetchCars(props.tableName, props.forRent);
@@ -164,12 +192,24 @@ watch(() => [props.tableName, props.forRent], async ([newTable, newForRent]) => 
 
 
 
-<style>
-.max {
-  max-width: 1100px;
-}
 
+<style>
 .mts {
   margin-top: 40px;
+}
+
+.car-image {
+  cursor: pointer;
+  width: 100px;
+  height: auto;
+  transition: transform 0.3s;
+}
+
+.car-image:hover {
+  transform: scale(1.05);
+}
+
+#front {
+  z-index: 9999;
 }
 </style>
