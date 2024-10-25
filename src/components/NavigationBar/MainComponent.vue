@@ -30,7 +30,7 @@ import HandlingPage from "./HandlingPage.vue";
 import AnniversaryPage from "./AnniversaryPage.vue";
 import ExteriorPage from "./ExteriorPage.vue";
 import InteriorPage from "./InteriorPage.vue";
-// import TechnologyPage from "./TechnologyPage.vue";
+import TechnologyPage from "./TechnologyPage.vue";
 // import SafetyPage from "./SafetyPage.vue";
 
 export default {
@@ -43,7 +43,7 @@ export default {
         AnniversaryPage,
         ExteriorPage,
         InteriorPage,
-        // TechnologyPage,
+        TechnologyPage,
         // SafetyPage,
       ],
     };
