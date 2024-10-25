@@ -37,6 +37,7 @@ import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
 import HandlingPage from "@/components/NavigationBar/HandlingPage.vue";
 import AnniversaryPage from "@/components/NavigationBar/AnniversaryPage.vue";
+import ExteriorPage from "@/components/NavigationBar/ExteriorPage.vue";
 import LoanCarBase from "@/components/LoanCar/LoanCarBase.vue";
 
 const routes = setupLayouts([
@@ -158,6 +159,11 @@ const routes = setupLayouts([
     component: AnniversaryPage,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/ExteriorPage",
+    component: ExteriorPage,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
@@ -209,6 +215,7 @@ router.beforeEach((to, from, next) => {
     "/GarageContents",
     "/HandlingPage",
     "/AnniversaryPage",
+    "/ExteriorPage",
     "/LoanCarBase",
   ];
 
