@@ -31,7 +31,7 @@ import AnniversaryPage from "./AnniversaryPage.vue";
 import ExteriorPage from "./ExteriorPage.vue";
 import InteriorPage from "./InteriorPage.vue";
 import TechnologyPage from "./TechnologyPage.vue";
-// import SafetyPage from "./SafetyPage.vue";
+import SafetyPage from "./SafetyPage.vue";
 
 export default {
   data() {
@@ -44,7 +44,7 @@ export default {
         ExteriorPage,
         InteriorPage,
         TechnologyPage,
-        // SafetyPage,
+        SafetyPage,
       ],
     };
   },
