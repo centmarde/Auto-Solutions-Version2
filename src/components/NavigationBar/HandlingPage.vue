@@ -147,7 +147,7 @@
 
 <script>
 export default {
-  name: "AnniiversaryPage",
+  name: "HandlingPage",
   data() {
     return {
       isActive: false, // Tracks whether "View specs" is clicked
