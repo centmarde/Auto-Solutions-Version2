@@ -62,18 +62,19 @@
                         
                     </div>
                     <div class=" spacer col me-10 d-flex justify-content-end flex-wrap flex-md-nowrap align-items-center">
-    <button class="custom-button my-auto d-flex align-items-center"> 
-        <v-icon class="me-1 my-auto">mdi-shopping</v-icon> 
-        <span>PURCHASE</span>
-    </button>
+   
   
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="EngineButton"><v-icon class="me-1 my-auto">mdi-engine</v-icon> ENGINE</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BodyButton"> <v-icon class="me-1 my-auto" >mdi-car</v-icon> BODY</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BackButton"> <v-icon class="me-1 my-auto">mdi mdi-car-back</v-icon> TRUNK</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="TireButton"> <v-icon class="me-1 my-auto">mdi-tire</v-icon> TIRES</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="InteriorButton"> <v-icon class="me-1 my-auto" >mdi mdi-car-wrench</v-icon> INTERIOR</button>
+    <button class="custom-button my-auto d-flex align-items-center"> 
+        <v-icon class="ms-1 my-auto">mdi-shopping</v-icon> 
+        <span>NEXT</span>
+    </button>
     <button class="custom-button" @click="modalBody = true" style="display: none;">Open Modal</button>
- <!-- New Free Camera Button -->
+ 
 
 </div>
 

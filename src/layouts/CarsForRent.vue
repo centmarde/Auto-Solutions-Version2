@@ -91,6 +91,7 @@
             `)
             .eq('for_rent', true)
             .eq('is_pending', false)
+            .eq('is_for_shop', false)
             .neq('user_id', loggedInUserId);
   
           if (error) throw error;
