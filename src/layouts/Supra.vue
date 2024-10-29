@@ -70,8 +70,7 @@
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="TireButton"> <v-icon class="me-1 my-auto">mdi-tire</v-icon> TIRES</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="InteriorButton"> <v-icon class="me-1 my-auto" >mdi mdi-car-wrench</v-icon> INTERIOR</button>
     <button class="custom-button my-auto d-flex align-items-center"> 
-        <v-icon class="ms-1 my-auto">mdi-shopping</v-icon> 
-        <span>NEXT</span>
+      
     </button>
     <button class="custom-button" @click="modalBody = true" style="display: none;">Open Modal</button>
  

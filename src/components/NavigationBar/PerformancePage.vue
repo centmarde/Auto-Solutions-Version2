@@ -121,19 +121,6 @@
         </v-col>
       </v-row>
 
-      <div class="table-content mt-4 position-relative">
-  <!-- Background image of the car -->
-  <img class="content-img" src="../../assets/supra_imgs/handling.jpg" alt="content1">
-
-  <!-- Overlay container for text and link -->
-  <div class="overlay-content">
-    <p class="next-up-text">Next Up</p>
-    <h1 class="main-title">Handling</h1>
-    <router-link to="/HandlingPage" class="explore-feature">
-      Explore Next Feature
-    </router-link>
-  </div>
-</div>
 
     </v-container>
   </template>

@@ -1,17 +1,18 @@
 <template>
-  <v-card class="p-4" elevation="10">
+  <v-card elevation="10" id="loan-car-card" class="pa-10">
     <v-row>
       <v-col cols="12">
-        <h3 id="title" class="text-center">LOAN A CAR</h3>
+        <v-card-title>
+          <h3 id="title" class="text-center">LOAN A CAR</h3>
+        </v-card-title>
       </v-col>
 
       <v-col cols="12">
         <v-img
-          class="sts4"
+          class="d-block mx-auto"
           src="https://pngpix.com/images/hd/stylized-money-icon-vector-b7kfg9iwozjig9ie.jpg"
-          alt="ssed"
-          width="70%"
-          style="left: 15%"
+          alt="Loan Image"
+          width="8.5rem"
         ></v-img>
       </v-col>
     </v-row>
@@ -21,7 +22,7 @@
         <router-link to="/LoanCarBase" style="text-decoration: none;">
           <v-btn @click="handleSubmit" color="primary" class="btnn32">
             Get Started
-            <v-icon right> mdi-arrow-right </v-icon>
+            <v-icon right>mdi-arrow-right</v-icon>
           </v-btn>
         </router-link>
       </v-col>
@@ -41,11 +42,9 @@ export default {
       const isLoggedIn = localStorage.getItem("access_token") !== null;
 
       if (isLoggedIn) {
-       
-        // this.$router.push("/RentContents");
+        this.$router.push("/LoanCarBase");
       } else {
-       
-        // this.$router.push("/login");
+        this.$router.push("/login");
       }
     },
   },
@@ -53,7 +52,7 @@ export default {
 </script>
 
 <style scoped>
-#xrt23 {
+#loan-car-card {
   overflow: hidden;
 }
 
@@ -61,7 +60,7 @@ export default {
   font-family: "Merriweather", serif;
 }
 
-
+/* Image styling for responsive design */
 @media (max-width: 800px) and (min-width: 350px) {
   .sts4 {
     top: 20%;
@@ -70,24 +69,7 @@ export default {
   }
 }
 
-.erd3 {
-  width: 4.5rem;
-}
-
-@media (max-width: 999px) and (min-width: 350px) {
-  .erd3 {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@media (max-width: 1400px) and (min-width: 999px) {
-  .erd3 {
-    width: 4rem;
-    height: 4rem;
-  }
-}
-
+/* Button styling for "Get Started" */
 .btnn32 {
   position: relative;
   transition: all 0.3s ease-in-out;
@@ -99,7 +81,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffff;
+  color: #ffffff;
   gap: 10px;
   font-weight: bold;
   border: 3px solid #ffffff4d;
@@ -115,7 +97,7 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.btnn32hover {
+.btnn32:hover {
   transform: scale(1.05);
   border-color: #fff9;
 }
