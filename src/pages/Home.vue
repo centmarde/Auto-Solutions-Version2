@@ -6,12 +6,13 @@
     <Nav />
 
     <v-spacer height="100"></v-spacer>
-
+    <div class="text-center mt-5"><h1>Featured Car</h1></div>
+    <p class="text-center">2024 GR SUPRA</p>
     <FeaturedCar />
 
     <v-row>
       <v-col>
-        <MainComponent/>
+       <!--<MainComponent/>-->
       </v-col>
     </v-row>
    
