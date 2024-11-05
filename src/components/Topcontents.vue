@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAnimationStore } from '../stores/animationStore.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -50,29 +50,35 @@ import lottie from 'lottie-web';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Access the animation store
 const animationStore = useAnimationStore();
 
 onMounted(async () => {
   if (!animationStore.animationData) {
-    // Fetch animation data only if not already loaded
     await animationStore.fetchAnimationData();
   }
 
   const lottieContainers = document.querySelectorAll(".animation");
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        LottieScrollTrigger({
+          trigger: entry.target,
+          start: "top top",
+          endTrigger: ".end-lottie",
+          end: `bottom center += ${entry.target.offsetHeight}`,
+          renderer: "svg",
+          target: entry.target,
+          animationData: animationStore.animationData,
+          scrub: 0.5,
+          fps: 60,
+        });
+        observer.unobserve(entry.target); // Stop observing after loading
+      }
+    });
+  }, { threshold: 0.1 });
 
   lottieContainers.forEach(container => {
-    LottieScrollTrigger({
-      trigger: container,
-      start: "top top",
-      endTrigger: ".end-lottie",
-      end: `bottom center += ${container.offsetHeight}`,
-      renderer: "svg",
-      target: container,
-      animationData: animationStore.animationData,  // Use stored animation data
-      scrub: 0.5,
-      fps: 60,
-    });
+    observer.observe(container);
   });
 });
 
@@ -92,7 +98,7 @@ function LottieScrollTrigger(vars) {
       renderer: vars.renderer || "svg",
       loop: false,
       autoplay: false,
-      animationData: vars.animationData,  // Load the animation directly from data
+      animationData: vars.animationData,
       rendererSettings: vars.rendererSettings || {
         preserveAspectRatio: "xMidYMid slice",
       },
@@ -107,7 +113,11 @@ function LottieScrollTrigger(vars) {
       animation.frameTween = gsap.to(playhead, {
         frame: animation.totalFrames - 1,
         ease: "none",
-        onUpdate: () => animation.goToAndStop(playhead.frame, true),
+        onUpdate: () => {
+          requestAnimationFrame(() => {
+            animation.goToAndStop(playhead.frame, true);
+          });
+        },
         scrollTrigger: st,
       });
       return () => animation.destroy && animation.destroy();
@@ -115,32 +125,35 @@ function LottieScrollTrigger(vars) {
     ctx && ctx.add ? ctx.add(createTween) : createTween();
   });
 
+  // Additional GSAP animations for elements
   gsap.from(".trs", {
     scale: 0.8,
-  opacity: 0, 
-  duration: 0.1, 
-  ease: "power1.out", 
-  scrollTrigger: {
-    trigger: ".trs",
-    start: "top 80%",
-    toggleActions: "play none none reverse",
-  }
-});
-gsap.from(".trsx", {
-    scale: 0.8, 
-  opacity: 0, 
-  duration: 0.4, 
-  ease: "power1.out", 
-  scrollTrigger: {
-    trigger: ".trs",
-    start: "top 80%", 
-    toggleActions: "play none none reverse",
-  }
-});
+    opacity: 0,
+    duration: 0.1,
+    ease: "power1.out",
+    scrollTrigger: {
+      trigger: ".trs",
+      start: "top 80%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  gsap.from(".trsx", {
+    scale: 0.8,
+    opacity: 0,
+    duration: 0.4,
+    ease: "power1.out",
+    scrollTrigger: {
+      trigger: ".trs",
+      start: "top 80%",
+      toggleActions: "play none none reverse",
+    },
+  });
 
   return animation;
 }
 </script>
+
 
 
 

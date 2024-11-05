@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import { supabase } from '../lib/supaBase';
+import { defineStore } from "pinia";
+import { supabase } from "../lib/supaBase";
 
-export const useCarStore = defineStore('carStore', {
+export const useCarStore = defineStore("carStore", {
   state: () => ({
     cars: [],
     loading: false,
@@ -14,17 +14,20 @@ export const useCarStore = defineStore('carStore', {
 
       try {
         const { data, error } = await supabase
-          .from('cars')
-          .select(`
+          .from("cars")
+          .select(
+            `
             *,
             users (
               *
             )
             
-          `)
-          .eq('for_sale', true) // Fetch only cars for sale
-          .eq('is_pending', false)
-          .neq('user_id', loggedInUserId);
+          `
+          )
+          .eq("for_sale", true) // Fetch only cars for sale
+          .eq("is_pending", false)
+          .eq("is_for_shop", false)
+          .neq("user_id", loggedInUserId);
 
         if (error) throw error;
 

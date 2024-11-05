@@ -1,47 +1,51 @@
 <template>
   <v-app>
     <!-- Main page content -->
-    <v-main v-if="loaded">
-      <Navbar />
-      <Scroller />
-      <Topcontents />
+    <v-main>
+      <!-- Topcontents loads immediately but stays hidden behind IntroLoader -->
+      <Topcontents v-if="topContentLoaded" />
 
-      <v-container fluid id="ygar">
-        <v-row>
-          <v-col>
-            <Yourgarage />
-            <Popularcars />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" lg="6" md="6" sm="12">
-            <Sellcar />
-          </v-col>
-          <v-col cols="12" lg="6" md="6" sm="12">
-            <Researchcar />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <Carsearch />
-          </v-col>
-        </v-row>
-        <br><br>
-        <Footer />
-      </v-container>
+      <template v-if="loaded">
+        <Navbar />
+        <Scroller />
 
-      <!-- Scroll Down Awareness Indicator -->
-      <ScrollAwareness />
+        <v-container fluid id="ygar">
+          <v-row>
+            <v-col>
+              <Yourgarage />
+              <Popularcars />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" lg="6" md="6" sm="12">
+              <Sellcar />
+            </v-col>
+            <v-col cols="12" lg="6" md="6" sm="12">
+              <Researchcar />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <Carsearch />
+            </v-col>
+          </v-row>
+          <br><br>
+          <Footer />
+        </v-container>
+
+        <!-- Scroll Down Awareness Indicator -->
+        <ScrollAwareness />
+      </template>
     </v-main>
 
-    <!-- Loader Overlay -->
-    <div class="loader-overlay" :class="{ 'fade-out': loaded }">
-      <IntroLoader />
-      <!-- Optional skip button -->
+    <!-- Loader Overlay that hides Topcontents -->
+    <div class="loader-overlay" :class="{ 'fade-out': !isLoading }">
+      <IntroLoader v-if="isLoading" />
       <v-btn class="skip-btn" @click="skipLoader">Skip</v-btn>
     </div>
   </v-app>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -55,20 +59,31 @@ import Sellcar from '@/layouts/Sellcar.vue';
 import Yourgarage from '@/layouts/Yourgarage.vue';
 import IntroLoader from '@/layouts/Loader.vue';
 import Scroller from '@/layouts/ScrollAwareness.vue';
-import ScrollAwareness from '@/layouts/ScrollAwareness.vue'; // Import your new component
+import ScrollAwareness from '@/layouts/ScrollAwareness.vue';
 
-const loaded = ref(false); 
+const loaded = ref(false);  // Controls the main content loading
+const topContentLoaded = ref(false);  // Controls the immediate loading of Topcontents
+const isLoading = ref(true);  // Controls the visibility of IntroLoader
 
 const skipLoader = () => {
-  loaded.value = true; 
+  isLoading.value = false;  // Hide loader
+  loaded.value = true;  // Show rest of content immediately when skipping
 };
 
 onMounted(() => {
+  // Load Topcontents as soon as possible
+  topContentLoaded.value = true;
+
+  // Keep IntroLoader for 10 seconds before showing rest of the content
   setTimeout(() => {
-    loaded.value = true;
-  }, 10000); 
+    isLoading.value = false;  // Hide loader after 10 seconds
+    loaded.value = true;  // Load the rest of the components
+  }, 10000);  // 10 seconds loader duration
 });
 </script>
+
+
+
 
 <style scoped>
 #ygar {

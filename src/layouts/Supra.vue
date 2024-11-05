@@ -62,18 +62,18 @@
                         
                     </div>
                     <div class=" spacer col me-10 d-flex justify-content-end flex-wrap flex-md-nowrap align-items-center">
-    <button class="custom-button my-auto d-flex align-items-center"> 
-        <v-icon class="me-1 my-auto">mdi-shopping</v-icon> 
-        <span>PURCHASE</span>
-    </button>
+   
   
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="EngineButton"><v-icon class="me-1 my-auto">mdi-engine</v-icon> ENGINE</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BodyButton"> <v-icon class="me-1 my-auto" >mdi-car</v-icon> BODY</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="BackButton"> <v-icon class="me-1 my-auto">mdi mdi-car-back</v-icon> TRUNK</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="TireButton"> <v-icon class="me-1 my-auto">mdi-tire</v-icon> TIRES</button>
     <button class="custom-button ms-2 mt-2 mt-md-0 d-flex align-items-center" @click="InteriorButton"> <v-icon class="me-1 my-auto" >mdi mdi-car-wrench</v-icon> INTERIOR</button>
+    <button class="custom-button my-auto d-flex align-items-center"> 
+      
+    </button>
     <button class="custom-button" @click="modalBody = true" style="display: none;">Open Modal</button>
- <!-- New Free Camera Button -->
+ 
 
 </div>
 
@@ -84,7 +84,7 @@
       <div class="card-body">
         <v-row>
           <v-col cols="12" md="12" class="d-flex justify-content-start">
-            <img class="img-float" src="../assets/supra_imgs/mostwanted1.png" style="width: 230px; height: 130px; left: -30px; top: 18px;" alt="Body Image">
+            <img class="img-float" src="../assets/supra_imgs/sticker.png" style="width: 180px; height: 95px; left: -30px; top: 18px;" alt="Body Image">
             <p class="title-float" style="color: black; -webkit-text-stroke: 1px #EEEEEE; font-size: 25px; left: 12px; bottom: 20px;"><b>CUSTOM BODY PAINT</b></p>
             <p class="price-float">Price: $5,000</p>
           </v-col>
@@ -296,7 +296,7 @@
             <v-row>
                 <v-col cols="12" md="12" class="d-flex justify-content-start">
                     <img class="img-float" src="https://example.com/path/to/back_image.jpg" alt="Back Image">
-                    <p class="title-float"><b>Back Model Name</b></p>
+                    <p class="title-float"><b>Decals Add-ons</b></p>
                     <p class="price-float">Price: $5,000</p>
                 </v-col>
             </v-row>

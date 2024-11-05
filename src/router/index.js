@@ -38,6 +38,9 @@ import AdminReview from "@/pages/adminPages/AdminReview.vue";
 import HandlingPage from "@/components/NavigationBar/HandlingPage.vue";
 import AnniversaryPage from "@/components/NavigationBar/AnniversaryPage.vue";
 import LoanCarBase from "@/components/LoanCar/LoanCarBase.vue";
+import Mypurchased from "@/components/InquiresPage/Mypurchased.vue";
+import Featured from "@/pages/Featured.vue";
+import MainComponent from "@/components/NavigationBar/MainComponent.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -46,6 +49,11 @@ const routes = setupLayouts([
   { path: "/Register", component: Register, meta: { hideAi: false } },
   { path: "/:pathMatch(.*)*", component: NotFound, meta: { hideAi: false } },
   { path: "/CarInSale", component: CarInSale, meta: { requiresAuth: true } },
+  {
+    path: "/PurchasedCars",
+    component: Mypurchased,
+    meta: { requiresAuth: true },
+  },
   {
     path: "/LoanCarBase",
     component: LoanCarBase,
@@ -158,6 +166,16 @@ const routes = setupLayouts([
     component: AnniversaryPage,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/Featured",
+    component: Featured,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/MainComponent",
+    component: MainComponent,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
@@ -210,6 +228,7 @@ router.beforeEach((to, from, next) => {
     "/HandlingPage",
     "/AnniversaryPage",
     "/LoanCarBase",
+    "/PurchasedCars",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
