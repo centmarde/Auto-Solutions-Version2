@@ -1,68 +1,94 @@
 <template>
   <v-container fluid>
+   
     <v-row>
       <v-col cols="12" lg="12" md="12" sm="12">
         <v-card class="mt-2 shadow-lg">
           <v-row>
+           
             <v-col class="p-3" cols="12" lg="12">
-              <div class="video-container">
-                <video
-                  ref="supraVideo"
-                  src="../assets/videos/Supra.mp4"
-                  class="video-fit"
-                  loop
-                  autoplay
-                  muted
-                ></video>
-              </div>
+             
+                <div class="video-container">
+                  <video
+    ref="supraVideo"
+    src="../assets/videos/Supra.mp4"
+    class="video-fit"
+    loop
+    autoplay
+    muted
+  ></video>
+                </div>
+              
             </v-col>
             <v-col cols="12" lg="12">
-              <v-img
-                src="https://seeklogo.com/images/T/toyota-logo-3A02221675-seeklogo.com.png"
-                alt="Toyota"
-                class="img-fluid toyota_logo"
-              />
-              <v-card-title class="title_S">
-                <b>2024 GR Supra</b>
-                <p>Starting MSRP $ 46,440*</p>
-              </v-card-title>
-              <div class="title_span">
-                <p>
-                  45th Anniversary Edition shown in Mikan Blast. Prototype shown. Professional driver on closed course. <br />
-                  Do not attempt.
-                </p>
-              </div>
-              <v-card-actions>
-                <v-row justify="center" align="center" class="d-flex justify-content-center">
-                  <v-col cols="12" md="6" class="d-flex justify-center">
-                    <router-link to="/Supra" class="tr" exact>
-                      <v-btn color="border" class="border">
-                        View in 3D
-                        <v-icon right>mdi-arrow-right</v-icon>
-                      </v-btn>
-                    </router-link>
-                  </v-col>
-                  <v-col cols="12" md="6" class="d-flex justify-center">
-                    <router-link to="/MainComponent" class="tr" exact>
-                      <v-btn color="border" class="border">
-                        More info
-                        <v-icon right>mdi-arrow-right</v-icon>
-                      </v-btn>
-                    </router-link>
-                  </v-col>
-                </v-row>
+              <v-img src="https://seeklogo.com/images/T/toyota-logo-3A02221675-seeklogo.com.png" alt="Toyota" class="img-fluid toyota_logo" />
+              <v-card-title class="title_S"><b>2024 GR Supra</b> <p> Starting MSRP $ 46,440* </p></v-card-title>
+              
+                <div class="title_span">
+                  <p>45th Anniversary Edition shown in Mikan Blast. Prototype shown. Professional driver on closed course. <br> Do not attempt.</p></div>
+                
+              
+              <v-card-actions class="d-flex justify-content-end">
+                <router-link to="/Supra" class="tr" exact>
+                  <v-btn color="light">
+                    Build
+                    <v-icon right>
+                      mdi-arrow-right
+                    </v-icon>
+                  </v-btn>
+                </router-link>
               </v-card-actions>
             </v-col>
           </v-row>
         </v-card>
+
       </v-col>
+
+      <!-- <v-col cols="12" lg="12" md="12" sm="12">
+        <v-card class="mt-2 shadow-lg">
+          <v-img src="../assets/images/Honda_Civic.png" class="card-img-top" alt="2024 Honda Civic"></v-img>
+          <v-card-title>2024 Honda Civic</v-card-title>
+          <v-card-text>
+            <p>The Honda Civic is a reliable and fuel-efficient compact sedan, offering a perfect blend of style, performance, and practicality. Known for its modern design and advanced technology, the Civic is a top choice for daily commuters.</p>
+          </v-card-text>
+          <v-card-actions>
+            <router-link to="/Honda" class="tr" exact>
+              <v-btn color="primary">
+                Explore More
+                <v-icon right>
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+            </router-link>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12" lg="12" md="12" sm="12">
+        <v-card class="mt-2 shadow-lg">
+          <v-img src="../assets/images/NissanZ.png" class="card-img-top" alt="2024 Nissan Z Performance"></v-img>
+          <v-card-title>2024 Nissan Z Performance</v-card-title>
+          <v-card-text>
+            <p>The 2024 Nissan Z Performance is a high-powered sports car with a rich legacy. Combining retro-inspired styling with modern technology, this iconic coupe offers thrilling performance and sharp handling for driving enthusiasts.</p>
+          </v-card-text>
+          <v-card-actions>
+            <router-link to="/Nissan" class="tr" exact>
+              <v-btn color="primary">
+                Explore More
+                <v-icon right>
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+            </router-link>
+          </v-card-actions>
+        </v-card>
+      </v-col> -->
     </v-row>
   </v-container>
 </template>
 
 <script>
 import { onMounted, ref } from 'vue';
-import MainComponent from '@/components/NavigationBar/MainComponent.vue';
 
 
 
