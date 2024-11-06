@@ -34,7 +34,7 @@
               </div>
               <v-card-actions>
                 <v-row justify="center" align="center" class="d-flex justify-content-center">
-                  <v-col cols="12" md="6" class="d-flex justify-center">
+                  <v-col cols="12" md="4" class="d-flex justify-center">
                     <router-link to="/Supra" class="tr" exact>
                       <v-btn color="border" class="border">
                         View in 3D
@@ -42,7 +42,7 @@
                       </v-btn>
                     </router-link>
                   </v-col>
-                  <v-col cols="12" md="6" class="d-flex justify-center">
+                  <v-col cols="12" md="4" class="d-flex justify-center">
                     <router-link to="/MainComponent" class="tr" exact>
                       <v-btn color="border" class="border">
                         More info
@@ -50,6 +50,15 @@
                       </v-btn>
                     </router-link>
                   </v-col>
+                  <v-col cols="12" md="4" class="d-flex justify-center">
+                  <a href="https://www.toyota.com/southeasttoyota/deals-incentives/financial-estimates-supra/?vehicles=supra" target="_blank" rel="noopener noreferrer" class="tr">
+                    <v-btn color="border" class="border">
+                      Interested
+                      <v-icon right>mdi-arrow-right</v-icon>
+                    </v-btn>
+                  </a>
+                </v-col>
+
                 </v-row>
               </v-card-actions>
             </v-col>
