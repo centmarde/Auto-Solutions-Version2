@@ -47,6 +47,7 @@ td {
 }
 th {
   background-color: #f4f4f4;
+  color: #0a0909;
 }
 button {
   color: white;

@@ -1,27 +1,46 @@
 <template>
-  <h2>Loan a Car</h2>
-  <div class="loan-car-form">
-    <form @submit.prevent="submitLoanRequest">
-      <div>
-        <label for="name">Name:</label>
-        <input type="text" v-model="loanRequest.name" required />
-      </div>
-      <div>
-        <label for="carModel">Car Model:</label>
-        <input type="text" v-model="loanRequest.carModel" required />
-      </div>
-      <div>
-        <label for="duration">Loan Duration (months):</label>
-        <input type="number" v-model="loanRequest.duration" required />
-      </div>
-      <div>
-        <label for="income">Monthly Income:</label>
-        <input type="number" v-model="loanRequest.income" required />
-      </div>
-      <button type="submit">Submit Loan Request</button>
-    </form>
-    <loan-request-table :requests="loanRequests" @remove="removeLoanRequest" />
-  </div>
+  <v-card class="mx-auto my-10 px-10" elevation="16" max-width="800">
+    <v-card-item>
+      <v-card-title> Loan a Car </v-card-title>
+      <v-card-subtitle> Get a car loan quickly and easily </v-card-subtitle>
+    </v-card-item>
+
+    <v-card-text>
+      Please fill out the form below to submit a loan request. Our team will
+      review your application and get back to you as soon as possible.
+    </v-card-text>
+
+    <div class="loan-car-form">
+      <form @submit.prevent="submitLoanRequest">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" v-model="loanRequest.name" required />
+        </div>
+        <div class="form-group">
+          <label for="carModel">Car Model:</label>
+          <input type="text" v-model="loanRequest.carModel" required />
+        </div>
+        <div class="form-group">
+          <label for="duration">Loan Duration (months):</label>
+          <input type="number" v-model="loanRequest.duration" required />
+        </div>
+        <div class="form-group">
+          <label for="income">Monthly Income:</label>
+          <input type="number" v-model="loanRequest.income" required />
+        </div>
+        <div class="form-group">
+          <button type="submit" class="centered-button">
+            Submit Loan Request
+          </button>
+        </div>
+      </form>
+
+      <loan-request-table
+        :requests="loanRequests"
+        @remove="removeLoanRequest"
+      />
+    </div>
+  </v-card>
 </template>
 
 <script>
@@ -67,23 +86,45 @@ export default {
 </script>
 
 <style scoped>
-h2 {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
 .loan-car-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   max-width: 400px;
   margin: 0 auto;
-  padding-top: 5%;
+  padding-top: 3%;
 }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
 label {
-  display: block;
-  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  width: 100%;
+  margin-bottom: 5px;
 }
-button {
+
+.centered-button {
+  align-self: center;
   margin-top: 15px;
+  border-radius: 7px;
+  padding: 8px 16px;
+  background-color: royalblue;
+}
+
+.centered-button:hover {
+  background-color: rgb(7, 42, 147);
+}
+
+input {
+  border: 2px solid white;
+  width: 100%;
+  padding: 5px;
 }
 </style>
