@@ -1,18 +1,17 @@
 <template>
-  <v-card elevation="10" id="loan-car-card" class="pa-10">
+  <v-card class="p-4" elevation="10">
     <v-row>
       <v-col cols="12">
-        <v-card-title>
-          <h3 id="title" class="text-center">LOAN A CAR</h3>
-        </v-card-title>
+        <h3 id="title" class="text-center">LOAN A CAR</h3>
       </v-col>
 
       <v-col cols="12">
         <v-img
-          class="d-block mx-auto"
+          class="sts4"
           src="https://pngpix.com/images/hd/stylized-money-icon-vector-b7kfg9iwozjig9ie.jpg"
-          alt="Loan Image"
-          width="8.5rem"
+          alt="ssed"
+          width="70%"
+          style="left: 15%"
         ></v-img>
       </v-col>
     </v-row>
@@ -22,7 +21,7 @@
         <router-link to="/LoanCarBase" style="text-decoration: none;">
           <v-btn @click="handleSubmit" color="primary" class="btnn32">
             Get Started
-            <v-icon right>mdi-arrow-right</v-icon>
+            <v-icon right> mdi-arrow-right </v-icon>
           </v-btn>
         </router-link>
       </v-col>
@@ -42,9 +41,11 @@ export default {
       const isLoggedIn = localStorage.getItem("access_token") !== null;
 
       if (isLoggedIn) {
-        this.$router.push("/LoanCarBase");
+       
+        // this.$router.push("/RentContents");
       } else {
-        this.$router.push("/login");
+       
+        // this.$router.push("/login");
       }
     },
   },
@@ -52,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-#loan-car-card {
+#xrt23 {
   overflow: hidden;
 }
 
@@ -60,7 +61,7 @@ export default {
   font-family: "Merriweather", serif;
 }
 
-/* Image styling for responsive design */
+
 @media (max-width: 800px) and (min-width: 350px) {
   .sts4 {
     top: 20%;
@@ -69,7 +70,24 @@ export default {
   }
 }
 
-/* Button styling for "Get Started" */
+.erd3 {
+  width: 4.5rem;
+}
+
+@media (max-width: 999px) and (min-width: 350px) {
+  .erd3 {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+@media (max-width: 1400px) and (min-width: 999px) {
+  .erd3 {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
 .btnn32 {
   position: relative;
   transition: all 0.3s ease-in-out;
@@ -81,7 +99,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #ffff;
   gap: 10px;
   font-weight: bold;
   border: 3px solid #ffffff4d;
@@ -97,7 +115,7 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.btnn32:hover {
+.btnn32hover {
   transform: scale(1.05);
   border-color: #fff9;
 }
