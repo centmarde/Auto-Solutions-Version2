@@ -13,7 +13,7 @@
     <div class="loan-car-form">
       <form @submit.prevent="submitLoanRequest">
         <div class="form-group">
-          <label for="name">Name:</label>
+          <label for="name">Car Brand:</label>
           <input type="text" v-model="loanRequest.name" required />
         </div>
         <div class="form-group">
