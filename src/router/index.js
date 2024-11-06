@@ -38,6 +38,7 @@ import AdminReview from "@/pages/adminPages/AdminReview.vue";
 import HandlingPage from "@/components/NavigationBar/HandlingPage.vue";
 import AnniversaryPage from "@/components/NavigationBar/AnniversaryPage.vue";
 import LoanCarBase from "@/components/LoanCar/LoanCarBase.vue";
+//import LoanRequestTable from "@/components/LoanCar/LoanRequestTable.vue";
 import Mypurchased from "@/components/InquiresPage/Mypurchased.vue";
 import Featured from "@/pages/Featured.vue";
 import MainComponent from "@/components/NavigationBar/MainComponent.vue";
