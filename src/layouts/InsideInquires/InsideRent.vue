@@ -70,6 +70,44 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <!-- Rent Confirmation Dialog -->
+  <v-dialog v-model="isConfirmationDialogVisible" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Confirm Rent</v-card-title>
+      <v-card-text>
+        <p>Please confirm your rental of this vehicle. Here are the terms and conditions:</p>
+        <ul>
+          <li>You are responsible for the full payment of the agreed rental price.</li>
+          <li>Any rental agreement details will be provided post-payment.</li>
+        </ul>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue" text @click="isConfirmationDialogVisible = false">Cancel</v-btn>
+        <v-btn color="green" text @click="confirmFinalizeRental">Confirm Rent</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Payment Link Dialog -->
+  <v-dialog v-model="isPaymentDialogVisible" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Proceed to Payment</v-card-title>
+      <v-card-text>
+        <p>You are about to be redirected to the PayMongo page to finalize your rental payment.</p>
+        <v-row justify="center">
+          <v-col cols="12" md="4">
+            <v-img src="../../assets/images/paymongo.png" alt="paymongo" width="100%"></v-img>
+          </v-col>
+        </v-row>
+        <div class="d-flex justify-content-end mt-2">
+          <v-btn color="green" class="mx-2" text @click="openPaymentLink">Go to Payment</v-btn>
+          <v-btn color="blue darken-1" class="mx-2" text @click="isPaymentDialogVisible = false">Cancel</v-btn>
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -83,8 +121,13 @@ export default {
       carsWithTransactions: [],
       loading: true,
       error: null,
-      isCancelDialogVisible: false, // Controls visibility of the cancel dialog
-      carIdToCancel: null, // Stores the car ID to cancel
+      isCancelDialogVisible: false,
+      isConfirmationDialogVisible: false,
+      isPaymentDialogVisible: false,
+      carIdToCancel: null,
+      transactionIdToFinalize: null,
+      currentTransaction: null,
+      paymentLink: null,
     };
   },
   async created() {
@@ -93,29 +136,29 @@ export default {
   methods: {
     async fetchCars() {
       this.loading = true;
-      const loggedInUserId = localStorage.getItem("user_id");
+      this.error = null;
 
       try {
+        const loggedInUserId = localStorage.getItem("user_id");
+
         const { data, error } = await supabase
           .from("transactions")
-          .select(`*, cars (*), user:buyer_id (*)`)
+          .select("*, cars (*), user:buyer_id (*)")
           .eq("cars.for_rent", true)
           .eq("buyer_id", loggedInUserId);
 
         if (error) throw error;
 
-        const carsForRent = data
-          .map((transaction) => transaction.cars)
-          .filter((car) => car !== null);
-
-        this.cars = this.shuffleArray(carsForRent);
         this.carsWithTransactions = data
           .map((transaction) => ({
             car: transaction.cars,
             transaction: transaction,
           }))
           .filter((item) => item.car !== null);
+
+        this.cars = this.carsWithTransactions.map((item) => item.car);
       } catch (err) {
+        console.error("Error fetching cars:", err);
         this.error = err.message;
       } finally {
         this.loading = false;
@@ -128,56 +171,113 @@ export default {
     },
 
     async confirmCancel() {
-  try {
-    if (!this.carIdToCancel) {
-      throw new Error("No car selected for cancellation.");
-    }
+      try {
+        if (!this.carIdToCancel) {
+          throw new Error("No car selected for cancellation.");
+        }
 
-    //  the transaction ID associated with the car
-    const transaction = this.carsWithTransactions.find(
-      (item) => item.car.id === this.carIdToCancel
-    );
-    if (!transaction) {
-      throw new Error("Transaction not found for the selected car.");
-    }
-    const transactionIdToCancel = transaction.transaction.id;
+        const transaction = this.carsWithTransactions.find(
+          (item) => item.car.id === this.carIdToCancel
+        );
+        if (!transaction) {
+          throw new Error("Transaction not found for the selected car.");
+        }
+        const transactionIdToCancel = transaction.transaction.id;
 
-    //  delete related rows in `purchased_cars` table based on transaction ID
-    const { error: purchasedCarsError } = await supabase
-      .from("purchased_cars")
-      .delete()
-      .eq("transaction_id", transactionIdToCancel);
+        const { error: purchasedCarsError } = await supabase
+          .from("purchased_cars")
+          .delete()
+          .eq("transaction_id", transactionIdToCancel);
 
-    if (purchasedCarsError) throw purchasedCarsError;
+        if (purchasedCarsError) throw purchasedCarsError;
 
-    // delete the transaction in `transactions` table based on transaction ID
-    const { error: transactionError } = await supabase
-      .from("transactions")
-      .delete()
-      .eq("id", transactionIdToCancel);
+        const { error: transactionError } = await supabase
+          .from("transactions")
+          .delete()
+          .eq("id", transactionIdToCancel);
 
-    if (transactionError) throw transactionError;
+        if (transactionError) throw transactionError;
 
-    // Update the UI by removing the canceled car from the list
-    this.carsWithTransactions = this.carsWithTransactions.filter(
-      (item) => item.car.id !== this.carIdToCancel
-    );
-
-  } catch (err) {
-    this.error = err.message;
-  } finally {
-    this.isCancelDialogVisible = false;
-    this.carIdToCancel = null;
-  }
-}
-,
-
-    shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        this.carsWithTransactions = this.carsWithTransactions.filter(
+          (item) => item.car.id !== this.carIdToCancel
+        );
+      } catch (err) {
+        this.error = err.message;
+      } finally {
+        this.isCancelDialogVisible = false;
+        this.carIdToCancel = null;
       }
-      return array;
+    },
+
+    finalizeRental(transactionId) {
+      const transaction = this.carsWithTransactions.find(
+        (item) => item.transaction.id === transactionId
+      );
+      if (transaction) {
+        this.currentTransaction = transaction;
+        this.transactionIdToFinalize = transactionId;
+        this.isConfirmationDialogVisible = true;
+      }
+    },
+
+    async confirmFinalizeRental() {
+      if (!this.currentTransaction) return;
+
+      const { car, transaction } = this.currentTransaction;
+      const amountInCentavos = car.price * 100;
+      const options = {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6",
+        },
+        body: JSON.stringify({
+          data: {
+            attributes: {
+              amount: amountInCentavos,
+              description: "Car for Rent",
+              remarks: "Rental transaction",
+            },
+          },
+        }),
+      };
+
+      try {
+        const response = await fetch("https://api.paymongo.com/v1/links", options);
+        const result = await response.json();
+
+        if (response.ok) {
+          this.paymentLink = result.data.attributes.checkout_url;
+          this.isConfirmationDialogVisible = false;
+          this.isPaymentDialogVisible = true;
+
+          const rentalEndDate = new Date();
+          rentalEndDate.setDate(rentalEndDate.getDate() + 30);
+
+          const { error } = await supabase.from("purchased_cars").insert([
+            {
+              price: car.price,
+              transaction_id: transaction.id,
+              rental_end: rentalEndDate.toISOString(),
+              car_id: car.id,
+            },
+          ]);
+
+          if (error) throw error;
+        } else {
+          throw new Error(result.errors[0].detail || "Payment link creation failed");
+        }
+      } catch (err) {
+        this.error = err.message;
+        this.isConfirmationDialogVisible = false;
+      }
+    },
+
+    openPaymentLink() {
+      window.open(this.paymentLink, "_blank");
+      this.isPaymentDialogVisible = false;
+      location.reload();
     },
   },
 };
