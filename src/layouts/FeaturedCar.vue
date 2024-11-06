@@ -35,6 +35,7 @@
               <v-card-actions>
                 <v-row justify="center" align="center" class="d-flex justify-content-center">
                   <v-col cols="12" md="4" class="d-flex justify-center">
+                   
                     <router-link to="/Supra" class="tr" exact>
                       <v-btn color="border" class="border">
                         View in 3D
@@ -179,16 +180,17 @@ export default {
 .title_S{
   position: absolute;
   left: 1rem;
-  bottom: 6.5rem;
+  bottom: 8.5rem;
   font-size: 30px;
   color: #EEEEEE;
 }
 .title_span{
   position: absolute;
   left: 2rem;
-  bottom: 5rem;
+  bottom: 7rem;
   font-size: 10px;
   color: #EEEEEE;
+  
 }
 .toyota_logo{
   position: absolute;
@@ -199,15 +201,17 @@ export default {
 }
 @media (max-width: 480px) {
   .title_S {
-    position: relative;
+    position: absolute;
+    bottom: 210px;
     font-size: 10px; /* Further reduced font size for very small screens */
   }
 
   .title_span {
-    position: absolute;
-    bottom: 140px;
+    position: relative;
+    top: 20px;
     font-size: 5px; /* Further reduced font size for very small screens */
   }
+  
 
   .toyota_logo {
     position: absolute;
@@ -223,4 +227,15 @@ export default {
 }
 
 }
+@media (max-width: 960px) {
+  .title_S{
+  bottom: 13.5rem;
+  font-size: 20px;
+  }
+  .title_span{
+    bottom: 10.5rem;
+    font-size: 10px;
+  }
+}
+
 </style>
