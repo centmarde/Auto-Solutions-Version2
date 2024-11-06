@@ -9,11 +9,7 @@
 
     <FeaturedCar />
 
-    <v-row>
-      <v-col>
-        <MainComponent/>
-      </v-col>
-    </v-row>
+
    
     <v-divider></v-divider>
 
