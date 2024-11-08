@@ -71,24 +71,74 @@
     </v-card>
   </v-dialog>
 
-  <!-- Rent Confirmation Dialog -->
-  <v-dialog v-model="isConfirmationDialogVisible" max-width="500px">
-    <v-card>
-      <v-card-title class="headline">Confirm Rent</v-card-title>
-      <v-card-text>
-        <p>Please confirm your rental of this vehicle. Here are the terms and conditions:</p>
-        <ul>
-          <li>You are responsible for the full payment of the agreed rental price.</li>
-          <li>Any rental agreement details will be provided post-payment.</li>
-        </ul>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue" text @click="isConfirmationDialogVisible = false">Cancel</v-btn>
-        <v-btn color="green" text @click="confirmFinalizeRental">Confirm Rent</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+<!-- Rent Confirmation Dialog -->
+<v-dialog v-model="isConfirmationDialogVisible" max-width="500px">
+  <v-card>
+    <v-card-title class="headline">Confirm Rent</v-card-title>
+    <v-card-text>
+      <p>Please confirm your rental of this vehicle. Select the start and end dates for the rental:</p>
+
+      <!-- Date Pickers for Start and End Dates -->
+      <v-row>
+      <!-- Start Date Picker -->
+<v-col cols="12">
+  <v-text-field
+    v-model="formattedStartDate"
+    label="Start Date"
+    prepend-icon="mdi-calendar"
+    @click="startDatePickerVisible = true"
+    readonly
+  ></v-text-field>
+  <v-date-picker
+    v-if="startDatePickerVisible"
+    v-model="startDate"
+    @input="updateStartDate; startDatePickerVisible = false"
+  ></v-date-picker>
+</v-col>
+
+<!-- End Date Picker -->
+<v-col cols="12">
+  <v-text-field
+    v-model="formattedEndDate"
+    label="End Date"
+    prepend-icon="mdi-calendar"
+    @click="endDatePickerVisible = true"
+    readonly
+  ></v-text-field>
+  <v-date-picker
+    v-if="endDatePickerVisible"
+    v-model="endDate"
+    :min="startDate"
+    @input="updateEndDate; endDatePickerVisible = false"
+  ></v-date-picker>
+</v-col>
+
+      </v-row>
+
+      <!-- Display the Total Days Calculated -->
+      <p>Total Days: {{ totalDays }}</p>
+      <p>Terms and conditions:</p>
+      <ul>
+        <li>You are responsible for the full payment of the agreed rental price.</li>
+        <li>Any rental agreement details will be provided post-payment.</li>
+      </ul>
+    </v-card-text>
+
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="blue" text @click="isConfirmationDialogVisible = false">Cancel</v-btn>
+      <v-btn color="green" text :disabled="totalDays <= 0" @click="confirmFinalizeRental">
+        Confirm Rent
+      </v-btn>
+
+
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
+
+
+
 
   <!-- Payment Link Dialog -->
   <v-dialog v-model="isPaymentDialogVisible" max-width="500px">
@@ -128,11 +178,31 @@ export default {
       transactionIdToFinalize: null,
       currentTransaction: null,
       paymentLink: null,
+      startDate: null,          
+    endDate: null,             
+    totalDays: 0,
+    startDatePickerVisible: false,
+    endDatePickerVisible: false,
     };
   },
   async created() {
     await this.fetchCars();
   },
+  computed: {
+    totalDays() {
+    if (this.startDate && this.endDate) {
+      const start = new Date(this.startDate);
+      const end = new Date(this.endDate);
+      const difference = (end - start) / (1000 * 60 * 60 * 24);
+      return difference >= 0 ? difference : 0;
+    }
+    return 0;
+  }
+},
+watch: {
+  startDate: 'calculateTotalDays',
+  endDate: 'calculateTotalDays'
+},
   methods: {
     async fetchCars() {
       this.loading = true;
@@ -164,6 +234,26 @@ export default {
         this.loading = false;
       }
     },
+    updateStartDate(date) {
+  this.startDate = new Date(date);
+  this.calculateTotalDays();
+},
+updateEndDate(date) {
+  this.endDate = new Date(date);
+  this.calculateTotalDays();
+},
+
+  calculateTotalDays() {
+  if (this.startDate && this.endDate) {
+    const start = new Date(this.startDate);
+    const end = new Date(this.endDate);
+    const timeDiff = end - start;
+
+    this.totalDays = timeDiff > 0 ? Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) : 0;
+  } else {
+    this.totalDays = 0;
+  }
+},
 
     openCancelDialog(carId) {
       this.carIdToCancel = carId;
@@ -171,44 +261,45 @@ export default {
     },
 
     async confirmCancel() {
-      try {
-        if (!this.carIdToCancel) {
-          throw new Error("No car selected for cancellation.");
-        }
+  try {
+    if (!this.carIdToCancel) {
+      throw new Error("No car selected for cancellation.");
+    }
 
-        const transaction = this.carsWithTransactions.find(
-          (item) => item.car.id === this.carIdToCancel
-        );
-        if (!transaction) {
-          throw new Error("Transaction not found for the selected car.");
-        }
-        const transactionIdToCancel = transaction.transaction.id;
+    const transaction = this.carsWithTransactions.find(
+      (item) => item.car.id === this.carIdToCancel
+    );
+    if (!transaction) {
+      throw new Error("Transaction not found for the selected car.");
+    }
+    const transactionIdToCancel = transaction.transaction.id;
 
-        const { error: purchasedCarsError } = await supabase
-          .from("purchased_cars")
-          .delete()
-          .eq("transaction_id", transactionIdToCancel);
+    // Delete related records in rented_cars first
+    const { error: rentedCarsError } = await supabase
+      .from("rented_cars")
+      .delete()
+      .eq("transaction_id", transactionIdToCancel);
 
-        if (purchasedCarsError) throw purchasedCarsError;
+    if (rentedCarsError) throw rentedCarsError;
 
-        const { error: transactionError } = await supabase
-          .from("transactions")
-          .delete()
-          .eq("id", transactionIdToCancel);
+    // Now delete the transaction
+    const { error: transactionError } = await supabase
+      .from("transactions")
+      .delete()
+      .eq("id", transactionIdToCancel);
 
-        if (transactionError) throw transactionError;
+    if (transactionError) throw transactionError;
 
-        this.carsWithTransactions = this.carsWithTransactions.filter(
-          (item) => item.car.id !== this.carIdToCancel
-        );
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.isCancelDialogVisible = false;
-        this.carIdToCancel = null;
-      }
-    },
-
+    this.carsWithTransactions = this.carsWithTransactions.filter(
+      (item) => item.car.id !== this.carIdToCancel
+    );
+  } catch (err) {
+    this.error = err.message;
+  } finally {
+    this.isCancelDialogVisible = false;
+    this.carIdToCancel = null;
+  }
+},
     finalizeRental(transactionId) {
       const transaction = this.carsWithTransactions.find(
         (item) => item.transaction.id === transactionId
@@ -220,59 +311,74 @@ export default {
       }
     },
 
-    async confirmFinalizeRental() {
-      if (!this.currentTransaction) return;
+    calculateTotalDays() {
+      if (this.startDate && this.endDate) {
+        const start = new Date(this.startDate);
+        const end = new Date(this.endDate);
+        const timeDiff = end - start;
 
-      const { car, transaction } = this.currentTransaction;
-      const amountInCentavos = car.price * 100;
-      const options = {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
-          authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6",
-        },
-        body: JSON.stringify({
-          data: {
-            attributes: {
-              amount: amountInCentavos,
-              description: "Car for Rent",
-              remarks: "Rental transaction",
-            },
-          },
-        }),
-      };
-
-      try {
-        const response = await fetch("https://api.paymongo.com/v1/links", options);
-        const result = await response.json();
-
-        if (response.ok) {
-          this.paymentLink = result.data.attributes.checkout_url;
-          this.isConfirmationDialogVisible = false;
-          this.isPaymentDialogVisible = true;
-
-          const rentalEndDate = new Date();
-          rentalEndDate.setDate(rentalEndDate.getDate() + 30);
-
-          const { error } = await supabase.from("purchased_cars").insert([
-            {
-              price: car.price,
-              transaction_id: transaction.id,
-              rental_end: rentalEndDate.toISOString(),
-              car_id: car.id,
-            },
-          ]);
-
-          if (error) throw error;
-        } else {
-          throw new Error(result.errors[0].detail || "Payment link creation failed");
-        }
-      } catch (err) {
-        this.error = err.message;
-        this.isConfirmationDialogVisible = false;
+        this.totalDays = timeDiff > 0 ? Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) : -1;
       }
     },
+
+    async confirmFinalizeRental() {
+  if (!this.currentTransaction || this.totalDays <= 0) return;
+
+  const { car, transaction } = this.currentTransaction;
+  const totalPrice = car.price * this.totalDays; // Calculate total price based on daily rate
+
+  const options = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6",
+    },
+    body: JSON.stringify({
+      data: {
+        attributes: {
+          amount: totalPrice * 100, // amount in centavos for PayMongo
+          description: "Car for Rent",
+          remarks: "Rental transaction",
+        },
+      },
+    }),
+  };
+
+  try {
+    const response = await fetch("https://api.paymongo.com/v1/links", options);
+    const result = await response.json();
+
+    if (response.ok) {
+      this.paymentLink = result.data.attributes.checkout_url;
+      this.isConfirmationDialogVisible = false;
+      this.isPaymentDialogVisible = true;
+
+      // Insert the rental details into `rented_cars` table in Supabase
+      const { error } = await supabase.from("rented_cars").insert([
+  {
+    price: totalPrice,
+    transaction_id: transaction.id,
+    date_start: this.startDate.toISOString(),
+    date_end: this.endDate.toISOString(),
+    cars_id: car.id,
+    total_days: this.totalDays, // Set total_days to the calculated total days
+    created_at: new Date().toISOString() // Set created_at to current timestamp
+  },
+]);
+
+
+
+      if (error) throw error;
+    } else {
+      throw new Error(result.errors[0].detail || "Payment link creation failed");
+    }
+  } catch (err) {
+    this.error = err.message;
+    this.isConfirmationDialogVisible = false;
+  }
+}
+,
 
     openPaymentLink() {
       window.open(this.paymentLink, "_blank");
