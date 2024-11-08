@@ -80,42 +80,38 @@
 
       <!-- Date Pickers for Start and End Dates -->
       <v-row>
-      <!-- Start Date Picker -->
-<v-col cols="12">
-  <v-text-field
-    v-model="formattedStartDate"
-    label="Start Date"
-    prepend-icon="mdi-calendar"
-    @click="startDatePickerVisible = true"
-    readonly
-  ></v-text-field>
-  <v-date-picker
-    v-if="startDatePickerVisible"
-    v-model="startDate"
-    @input="updateStartDate; startDatePickerVisible = false"
-  ></v-date-picker>
-</v-col>
+        <v-col cols="12">
+          <v-text-field
+            v-model="formattedStartDate"
+            label="Start Date"
+            prepend-icon="mdi-calendar"
+            @click="startDatePickerVisible = true"
+            readonly
+          ></v-text-field>
+          <v-date-picker
+            v-if="startDatePickerVisible"
+            v-model="startDate"
+            @input="updateStartDate; startDatePickerVisible = false"
+          ></v-date-picker>
+        </v-col>
 
-<!-- End Date Picker -->
-<v-col cols="12">
-  <v-text-field
-    v-model="formattedEndDate"
-    label="End Date"
-    prepend-icon="mdi-calendar"
-    @click="endDatePickerVisible = true"
-    readonly
-  ></v-text-field>
-  <v-date-picker
-    v-if="endDatePickerVisible"
-    v-model="endDate"
-    :min="startDate"
-    @input="updateEndDate; endDatePickerVisible = false"
-  ></v-date-picker>
-</v-col>
-
+        <v-col cols="12">
+          <v-text-field
+            v-model="formattedEndDate"
+            label="End Date"
+            prepend-icon="mdi-calendar"
+            @click="endDatePickerVisible = true"
+            readonly
+          ></v-text-field>
+          <v-date-picker
+            v-if="endDatePickerVisible"
+            v-model="endDate"
+            :min="startDate"
+            @input="updateEndDate; endDatePickerVisible = false"
+          ></v-date-picker>
+        </v-col>
       </v-row>
 
-      <!-- Display the Total Days Calculated -->
       <p>Total Days: {{ totalDays }}</p>
       <p>Terms and conditions:</p>
       <ul>
@@ -125,14 +121,11 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="blue" text @click="isConfirmationDialogVisible = false">Cancel</v-btn>
-      <v-btn color="green" text :disabled="totalDays <= 0" @click="confirmFinalizeRental">
-        Confirm Rent
-      </v-btn>
+  <v-btn color="green" :disabled="!areDatesValid" @click="choosePayment('online')">Pay Online</v-btn>
+  <v-btn color="blue" :disabled="!areDatesValid" @click="choosePayment('in-person')">Pay In Person</v-btn>
+  <v-btn color="red" text @click="isConfirmationDialogVisible = false">Cancel</v-btn>
+</v-card-actions>
 
-
-    </v-card-actions>
   </v-card>
 </v-dialog>
 
@@ -183,13 +176,18 @@ export default {
     totalDays: 0,
     startDatePickerVisible: false,
     endDatePickerVisible: false,
+    isConfirmationDialogVisible: false,
+    paymentType: null,
     };
   },
   async created() {
     await this.fetchCars();
   },
   computed: {
-    totalDays() {
+  areDatesValid() {
+    return this.startDate !== null && this.endDate !== null;
+  },
+  totalDays() {
     if (this.startDate && this.endDate) {
       const start = new Date(this.startDate);
       const end = new Date(this.endDate);
@@ -199,6 +197,7 @@ export default {
     return 0;
   }
 },
+
 watch: {
   startDate: 'calculateTotalDays',
   endDate: 'calculateTotalDays'
@@ -321,69 +320,101 @@ updateEndDate(date) {
       }
     },
 
-    async confirmFinalizeRental() {
-  if (!this.currentTransaction || this.totalDays <= 0) return;
+    async choosePayment(type) {
+      this.paymentType = type;
 
-  const { car, transaction } = this.currentTransaction;
-  const totalPrice = car.price * this.totalDays; // Calculate total price based on daily rate
-
-  const options = {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "content-type": "application/json",
-      authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6",
+      if (type === "online") {
+        await this.handleOnlinePayment();
+      } else if (type === "in-person") {
+        await this.handleInPersonPayment();
+      }
     },
-    body: JSON.stringify({
-      data: {
-        attributes: {
-          amount: totalPrice * 100, // amount in centavos for PayMongo
-          description: "Car for Rent",
-          remarks: "Rental transaction",
+    async handleOnlinePayment() {
+      const { car, transaction } = this.currentTransaction;
+
+      const totalPrice = car.price * this.totalDays;
+      const options = {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6",
         },
-      },
-    }),
-  };
+        body: JSON.stringify({
+          data: {
+            attributes: {
+              amount: totalPrice * 100,
+              description: "Car for Rent",
+              remarks: "Rental transaction",
+            },
+          },
+        }),
+      };
 
-  try {
-    const response = await fetch("https://api.paymongo.com/v1/links", options);
-    const result = await response.json();
+      try {
+        const response = await fetch("https://api.paymongo.com/v1/links", options);
+        const result = await response.json();
 
-    if (response.ok) {
-      this.paymentLink = result.data.attributes.checkout_url;
-      this.isConfirmationDialogVisible = false;
-      this.isPaymentDialogVisible = true;
+        if (response.ok) {
+          this.paymentLink = result.data.attributes.checkout_url;
 
-      // Insert the rental details into `rented_cars` table in Supabase
-      const { error } = await supabase.from("rented_cars").insert([
-  {
-    price: totalPrice,
-    transaction_id: transaction.id,
-    date_start: this.startDate.toISOString(),
-    date_end: this.endDate.toISOString(),
-    cars_id: car.id,
-    total_days: this.totalDays, // Set total_days to the calculated total days
-    created_at: new Date().toISOString() // Set created_at to current timestamp
-  },
-]);
+          // Insert rental record into Supabase with is_paid = true
+          const { error } = await supabase.from("rented_cars").insert([
+            {
+              price: totalPrice,
+              transaction_id: transaction.id,
+              date_start: this.startDate.toISOString(),
+              date_end: this.endDate.toISOString(),
+              cars_id: car.id,
+              total_days: this.totalDays,
+              created_at: new Date().toISOString(),
+              is_paid: true,
+            },
+          ]);
 
+          if (error) throw error;
 
+          // Redirect to payment link
+          window.open(this.paymentLink, "_blank");
+          this.isConfirmationDialogVisible = false;
+          location.reload();
+        } else {
+          throw new Error(result.errors[0]?.detail || "Payment link creation failed.");
+        }
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
+    async handleInPersonPayment() {
+      const { car, transaction } = this.currentTransaction;
 
-      if (error) throw error;
-    } else {
-      throw new Error(result.errors[0].detail || "Payment link creation failed");
-    }
-  } catch (err) {
-    this.error = err.message;
-    this.isConfirmationDialogVisible = false;
-  }
-}
-,
+      const totalPrice = car.price * this.totalDays;
 
-    openPaymentLink() {
-      window.open(this.paymentLink, "_blank");
-      this.isPaymentDialogVisible = false;
-      location.reload();
+      try {
+        // Insert rental record into Supabase with is_paid = false
+        const { error } = await supabase.from("rented_cars").insert([
+          {
+            price: totalPrice,
+            transaction_id: transaction.id,
+            date_start: this.startDate.toISOString(),
+            date_end: this.endDate.toISOString(),
+            cars_id: car.id,
+            total_days: this.totalDays,
+            created_at: new Date().toISOString(),
+            is_paid: false,
+          },
+        ]);
+
+        if (error) throw error;
+
+        this.isConfirmationDialogVisible = false;
+
+        // Notify the user about the in-person payment process
+        alert("You have chosen to pay in person. Please complete your payment within 3 days.");
+        location.reload();
+      } catch (err) {
+        this.error = err.message;
+      }
     },
   },
 };
