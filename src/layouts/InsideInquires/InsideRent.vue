@@ -42,34 +42,38 @@
               <p class="truncate-text">{{ item.car.description }}</p>
               <p><small class="text-body-secondary">Added at: {{ item.transaction.created_at }}</small></p>
             </v-card-text>
-            <v-card-actions class="d-flex justify-content-end">
-              <v-btn color="red" @click="openCancelDialog(item.car.id)">
-                <v-icon left>mdi-cancel</v-icon>
-                Cancel
-              </v-btn>
-              <v-btn color="green" @click="finalizeRental(item.transaction.id)">
-                <v-icon left>mdi-check</v-icon>
-                Rent
-              </v-btn>
-            </v-card-actions>
+
+           <!-- Check if the transaction is rented -->
+           <div v-if="isTransactionRented(item.transaction.id)">
+            <!-- Display message for rented transaction -->
+            <span v-if="item.rented_cars[0].is_paid">
+              The car has been paid. You must go to the store or something.
+            </span>
+            <span v-else>
+              You have 3 days to pay the rented car, or it will be cancelled.
+            </span>
+          </div>
+
+          <v-card-actions v-else class="d-flex justify-content-end">
+            <!-- Cancel the transaction -->
+            <v-btn color="red" @click="openCancelDialog(item.transaction.id)">
+              <v-icon left>mdi-cancel</v-icon>
+              Cancel
+            </v-btn>
+
+            <!-- Finalize the rental process -->
+            <v-btn color="green" @click="finalizeRental(item.transaction.id)">
+              <v-icon left>mdi-check</v-icon>
+              Rent
+            </v-btn>
+          </v-card-actions>
+
+
           </v-col>
         </v-row>
       </v-card>
     </v-col>
   </v-row>
-
-  <!-- Cancel Confirmation Dialog -->
-  <v-dialog v-model="isCancelDialogVisible" max-width="500px">
-    <v-card>
-      <v-card-title class="headline">Cancel Transaction</v-card-title>
-      <v-card-text>Are you sure you want to cancel this transaction?</v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="isCancelDialogVisible = false">Back</v-btn>
-        <v-btn color="red" text @click="confirmCancel">Confirm Cancellation</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 
 <!-- Rent Confirmation Dialog -->
 <v-dialog v-model="isConfirmationDialogVisible" max-width="500px">
@@ -129,10 +133,6 @@
   </v-card>
 </v-dialog>
 
-
-
-
-
   <!-- Payment Link Dialog -->
   <v-dialog v-model="isPaymentDialogVisible" max-width="500px">
     <v-card>
@@ -151,6 +151,29 @@
       </v-card-text>
     </v-card>
   </v-dialog>
+  <!--cancel dialog-->
+  <v-dialog v-model="isCancelDialogVisible" max-width="500px">
+  <v-card>
+    <v-card-title class="headline">Cancel Rental</v-card-title>
+    <v-card-text>
+      <p>Are you sure you want to cancel this rental transaction? This action cannot be undone.</p>
+      <p>Any associated data with this rental will be permanently removed.</p>
+    </v-card-text>
+    
+    <v-card-actions class="d-flex justify-content-end">
+      <!-- Button to Close Dialog Without Cancelling -->
+      <v-btn color="grey" text @click="isCancelDialogVisible = false">
+        <v-icon left>mdi-close</v-icon>Close
+      </v-btn>
+
+      <!-- Confirm Button to Execute the Cancellation -->
+      <v-btn color="red" text @click="confirmCancel">
+        <v-icon left>mdi-alert</v-icon>Confirm Cancel
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
 </template>
 
 <script>
@@ -176,12 +199,14 @@ export default {
     totalDays: 0,
     startDatePickerVisible: false,
     endDatePickerVisible: false,
-    isConfirmationDialogVisible: false,
     paymentType: null,
     };
   },
   async created() {
     await this.fetchCars();
+      // Log data here to inspect structure
+      console.log(JSON.parse(JSON.stringify(this.carsWithTransactions)));
+
   },
   computed: {
   areDatesValid() {
@@ -196,13 +221,14 @@ export default {
     }
     return 0;
   }
+  
 },
 
 watch: {
   startDate: 'calculateTotalDays',
   endDate: 'calculateTotalDays'
 },
-  methods: {
+methods: {
     async fetchCars() {
       this.loading = true;
       this.error = null;
@@ -211,19 +237,23 @@ watch: {
         const loggedInUserId = localStorage.getItem("user_id");
 
         const { data, error } = await supabase
-          .from("transactions")
-          .select("*, cars (*), user:buyer_id (*)")
-          .eq("cars.for_rent", true)
-          .eq("buyer_id", loggedInUserId);
+      .from("transactions")
+      .select("*, cars (*), rented_cars (*), user:buyer_id (*)")
+      .eq("cars.for_rent", true)
+      .eq("buyer_id", loggedInUserId);
+
+
+
 
         if (error) throw error;
 
-        this.carsWithTransactions = data
-          .map((transaction) => ({
-            car: transaction.cars,
-            transaction: transaction,
-          }))
-          .filter((item) => item.car !== null);
+        this.carsWithTransactions = data.map((transaction) => ({
+          car: transaction.cars,
+          rented_cars: transaction.rented_cars,
+          transaction: transaction,
+        })).filter((item) => item.car !== null);
+
+        
 
         this.cars = this.carsWithTransactions.map((item) => item.car);
       } catch (err) {
@@ -233,51 +263,21 @@ watch: {
         this.loading = false;
       }
     },
-    updateStartDate(date) {
-  this.startDate = new Date(date);
-  this.calculateTotalDays();
-},
-updateEndDate(date) {
-  this.endDate = new Date(date);
-  this.calculateTotalDays();
-},
-
-  calculateTotalDays() {
-  if (this.startDate && this.endDate) {
-    const start = new Date(this.startDate);
-    const end = new Date(this.endDate);
-    const timeDiff = end - start;
-
-    this.totalDays = timeDiff > 0 ? Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) : 0;
-  } else {
-    this.totalDays = 0;
-  }
-},
-
-    openCancelDialog(carId) {
-      this.carIdToCancel = carId;
+    openCancelDialog(transactionId) {
+      this.transactionIdToCancel = transactionId;
       this.isCancelDialogVisible = true;
     },
-
     async confirmCancel() {
   try {
-    if (!this.carIdToCancel) {
-      throw new Error("No car selected for cancellation.");
+    if (!this.transactionIdToCancel) {
+      throw new Error("No transaction selected for cancellation.");
     }
-
-    const transaction = this.carsWithTransactions.find(
-      (item) => item.car.id === this.carIdToCancel
-    );
-    if (!transaction) {
-      throw new Error("Transaction not found for the selected car.");
-    }
-    const transactionIdToCancel = transaction.transaction.id;
 
     // Delete related records in rented_cars first
     const { error: rentedCarsError } = await supabase
       .from("rented_cars")
       .delete()
-      .eq("transaction_id", transactionIdToCancel);
+      .eq("transaction_id", this.transactionIdToCancel);
 
     if (rentedCarsError) throw rentedCarsError;
 
@@ -285,30 +285,32 @@ updateEndDate(date) {
     const { error: transactionError } = await supabase
       .from("transactions")
       .delete()
-      .eq("id", transactionIdToCancel);
+      .eq("id", this.transactionIdToCancel);
 
     if (transactionError) throw transactionError;
 
+    // Remove the canceled transaction from local state
     this.carsWithTransactions = this.carsWithTransactions.filter(
-      (item) => item.car.id !== this.carIdToCancel
+      (item) => item.transaction.id !== this.transactionIdToCancel
     );
   } catch (err) {
     this.error = err.message;
   } finally {
     this.isCancelDialogVisible = false;
-    this.carIdToCancel = null;
+    this.transactionIdToCancel = null;
   }
 },
-    finalizeRental(transactionId) {
-      const transaction = this.carsWithTransactions.find(
-        (item) => item.transaction.id === transactionId
-      );
-      if (transaction) {
-        this.currentTransaction = transaction;
-        this.transactionIdToFinalize = transactionId;
-        this.isConfirmationDialogVisible = true;
-      }
-    },
+finalizeRental(transactionId) {
+  const transaction = this.carsWithTransactions.find(
+    (item) => item.transaction.id === transactionId
+  );
+  if (transaction) {
+    this.currentTransaction = transaction;
+    this.transactionIdToFinalize = transactionId;
+    this.isConfirmationDialogVisible = true;
+  }
+},
+
 
     calculateTotalDays() {
       if (this.startDate && this.endDate) {
@@ -416,8 +418,16 @@ updateEndDate(date) {
         this.error = err.message;
       }
     },
-  },
+    isTransactionRented(transactionId) {
+  return this.carsWithTransactions.some(item =>
+    item.rented_cars && item.rented_cars.some(rentedCar => rentedCar.transaction_id === transactionId)
+  );
+}
+
+
+},
 };
+
 </script>
 
 <style scoped>
