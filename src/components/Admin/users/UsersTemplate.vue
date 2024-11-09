@@ -1,7 +1,6 @@
 <template>
-
       <!-- Dialog for enlarged image -->
-     <v-dialog v-model="dialog" max-width="600px">
+      <v-dialog v-model="dialog" max-width="600px" class="high-z-index">
       <v-card>
         <v-img :src="selectedImage" class="enlarged-image" aspect-ratio="16/9"></v-img>
       </v-card>
@@ -9,7 +8,7 @@
   <v-container class="p-5 mts">
     <h1 class="text-center fw-bolder">{{ title }}</h1>
 
-    <v-table height="500px" fixed-header>
+    <v-table height="500px">
       <thead>
         <tr>
           <th class="text-left">ID</th>
@@ -23,14 +22,13 @@
       </thead>
       <tbody>
         <tr v-for="(user, index) in paginatedUsers" :key="user.id">
-          <td>{{ index + 1 }}</td>
+          <td>{{ user.id }}</td>
           <td>{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}</td>
           <td>
             <img
               :src="user.img"
               alt="User Image"
               class="user-image"
-              style="cursor: pointer;"
               @click="openImage(user.img)"
             />
           </td>
@@ -81,13 +79,12 @@ const dialog = ref(false);
 const selectedImage = ref('');
 
 // Fetch users from the database
-const fetchUsers = async (isadmin) => {
-  const query = supabase
+const fetchUsers = async () => {
+  const { data, error } = await supabase
     .from('users')
     .select('id, first_name, middle_name, last_name, img, address, birth_date, gender')
-    .eq('is_admin', isadmin);
+    .eq('is_admin', props.isadmin);
 
-  const { data, error } = await query;
   if (error) {
     console.error('Error fetching users:', error);
   } else {
@@ -130,9 +127,7 @@ const openImage = (img) => {
   dialog.value = true;
 };
 
-onMounted(() => {
-  fetchUsers(props.isadmin);
-});
+onMounted(fetchUsers);
 </script>
 
 <style>
@@ -151,7 +146,8 @@ onMounted(() => {
   transform: scale(1.05);
 }
 
-.v-overlay__content {
-  z-index: 1050 !important;
+/* Ensure the dialog appears in front */
+.high-z-index .v-overlay__content {
+  z-index: 2000 !important;
 }
 </style>

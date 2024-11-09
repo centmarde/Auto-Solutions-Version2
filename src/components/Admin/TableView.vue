@@ -91,6 +91,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  checkRented: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const cars = ref([]);
@@ -104,13 +108,22 @@ const dialog = ref(false);
 const selectedImage = ref('');
 
 const fetchCars = async (table, forRent = false) => {
-  const query = supabase
-    .from(table)
-    .select('*')
-    .eq('is_pending', false);
+  let query = supabase.from(table).select('*').eq('is_pending', false);
 
   if (forRent) {
-    query.eq('for_rent', true); 
+    query = query.eq('for_rent', true);
+  }
+
+  // Check the rented_cars table if checkRented is true
+  if (props.checkRented) {
+    const rentedCarsQuery = await supabase.from('rented_cars').select('cars_id');
+    if (rentedCarsQuery.error) {
+      console.error('Error fetching rented cars:', rentedCarsQuery.error);
+      return;
+    }
+
+    const rentedCarIds = rentedCarsQuery.data.map(car => car.cars_id);
+    query = query.in('id', rentedCarIds);
   }
 
   const { data, error } = await query;
@@ -121,6 +134,7 @@ const fetchCars = async (table, forRent = false) => {
     calculateTotals();
   }
 };
+
 
 const calculateTotals = () => {
   totalCarsForSale.value = cars.value.filter(car => car.for_sale).length;

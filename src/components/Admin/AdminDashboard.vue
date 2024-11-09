@@ -8,7 +8,7 @@
         <Card class="col-6" title="Total Cars for Sale" link="/CarInSale" :num="carCount" />
         <Card class="col-6" title="Total Cars for Rent" link="/CarInRent" :num="totalCarsForRent" />
         <Card class="col-6" title="Car Purchased" link="/CarBeenPurchased" :num="purchasedCount" />
-        <Card class="col-6" title="Car Rented" />
+        <Card class="col-6" title="Car Rented" link="/Rented" :num="rentedCount" />
       </div>
     </div>
   </div>
@@ -28,6 +28,7 @@ let chartInstance = null;
 const carCount = ref(0);
 const totalCarsForRent = ref(0); 
 const purchasedCount = ref(0);
+const rentedCount = ref(0)
 
 const fetchCarCount = async () => {
   try {
@@ -42,6 +43,19 @@ const fetchCarCount = async () => {
     carCount.value = data.length;  
   } catch (err) {
     console.error("Error fetching car count:", err.message);
+  }
+};
+const fetchRentedCarsCount = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('rented_cars')
+      .select('id'); // Adjust this if there's a different column structure
+
+    if (error) throw error;
+
+    rentedCount.value = data.length;
+  } catch (err) {
+    console.error("Error fetching rented car count:", err.message);
   }
 };
 
@@ -141,6 +155,7 @@ onMounted(async () => {
   await fetchCarCount();  
   await fetchtotalCarsForRent();
   await fetchtotalCarsPurchased();
+  await fetchRentedCarsCount();
   initializeBarChart(); 
 });
 
