@@ -13,13 +13,7 @@
             GR Supra’s available Adaptive Variable Suspension (AVS) allows this sports car to transform from comfortable cruiser to track bruiser and back again—almost instantaneously.
           </p>
         </div>
-        <v-tab
-          class="view-specs-tab"
-          :class="{ active: isActive }"
-          @click="toggleUnderline"
-        >
-          View specs
-        </v-tab>
+       
       </v-col>
     </v-row>
 
@@ -34,13 +28,7 @@
           <!-- Car description -->
           <p class="car-description mt-3 ms-5">Ready to take the heat, GR Supra’s available Brembo® * brakes are designed to give you firm, consistent braking force, on or off the track.</p>
         </div>
-        <v-tab
-          class="view-specs-tab"
-          :class="{ active: isActive }"
-          @click="toggleUnderline"
-        >
-          View specs
-        </v-tab>
+       
       </v-col>
 
       <!-- Second image in the last column -->
@@ -52,13 +40,7 @@
           <!-- Car description -->
           <p class="car-description mt-3 ms-5">GR Supra's wide stance helps it provide high-speed comfort and confidence-inspiring agility.</p>
         </div>
-        <v-tab
-          class="view-specs-tab"
-          :class="{ active: isActive }"
-          @click="toggleUnderline"
-        >
-          View specs
-        </v-tab>
+       
       </v-col>
     </v-row>
 
@@ -73,13 +55,7 @@
    angle and steering angle information and send this data to a main processor. In an instant, this processor can take this data
     and activate a multi-plate clutch, which can control the locking ratio between both wheels from 0 to 100 percent. For you, 
     this means you can control your driving line with precision.</p>
-<v-tab
-  class="view-specs-tab"
-  :class="{ active: isActive }"
-  @click="toggleUnderline"
->
-  View specs
-</v-tab>
+
 </div>
 
 <!-- New section with 3 columns -->
@@ -96,13 +72,7 @@
              Air that finds its way underneath GR Supra is redirected via carefully crafted channels and spats, helping this sports car 
              feel stable and planted at speed.</p>
         </div>
-        <v-tab
-          class="view-specs-tab"
-          :class="{ active: isActive }"
-          @click="toggleUnderline"
-        >
-          View specs
-        </v-tab>
+      
       </v-col>
 
       <!-- Second image in the last column -->
@@ -117,13 +87,7 @@
              Its powerplant was strategically placed to sit as low and as far back as possible, helping keep the car’s center 
              of mass, well, in the center of the car, for optimum handling performance.</p>
         </div>
-        <v-tab
-          class="view-specs-tab"
-          :class="{ active: isActive }"
-          @click="toggleUnderline"
-        >
-          View specs
-        </v-tab>
+       
       </v-col>
     </v-row>
 
@@ -166,12 +130,7 @@ export default {
   height: auto; /* Adjusted to ensure image maintains aspect ratio */
 }
 
-.view-specs-tab {
-  cursor: pointer;
-  color: blue;
-  text-decoration: underline;
-  margin-top: 10px; /* Added margin for spacing */
-}
+
 
 .extra-img {
   width: 100%;
