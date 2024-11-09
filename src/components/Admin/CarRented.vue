@@ -12,6 +12,7 @@
             <th class="text-left">Date End</th>
             <th class="text-left">Total Days</th>
             <th class="text-left">Is Paid</th>
+            <th class="text-left">Total Amount</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -31,9 +32,9 @@
             <td>{{ car.date_end }}</td>
             <td>{{ car.total_days }}</td>
             <td>{{ car.is_paid ? 'Yes' : 'No' }}</td>
+            <td>{{ car.total_amount}}</td>
             <td class="text-center">
               <v-btn color="error" @click="confirmDelete(car.id)">Delete</v-btn>
-              <v-btn color="warning" @click="confirmDisapprove(car.id)">Disapprove</v-btn>
             </td>
           </tr>
         </tbody>
@@ -58,79 +59,96 @@
   </template>
   
   <script setup>
-  import { ref, onMounted, computed } from 'vue';
-  import { supabase } from '../../lib/supaBase';
-  
-  const props = defineProps({
-    title: {
-      type: String,
-      default: 'Rented Cars',
-    },
-  });
-  
-  const cars = ref([]);
-  const currentPage = ref(1);
-  const itemsPerPage = 5;
-  
-  // State for dialog and selected image
-  const dialog = ref(false);
-  const selectedImage = ref('');
-  
-  // Fetch only cars from rented_cars table with related details from cars and transactions tables
-  const fetchCars = async () => {
-    // Query rented_cars table and join with cars and transactions details
-    const { data: rentedCarsData, error } = await supabase
+import { ref, onMounted, computed } from 'vue';
+import { supabase } from '../../lib/supaBase';
+
+const props = defineProps({
+  title: {
+    type: String,
+    default: 'Rented Cars',
+  },
+});
+
+const cars = ref([]);
+const currentPage = ref(1);
+const itemsPerPage = 5;
+
+// State for dialog and selected image
+const dialog = ref(false);
+const selectedImage = ref('');
+
+// Fetch only cars from rented_cars table with related details from cars and transactions tables
+const fetchCars = async () => {
+  const { data: rentedCarsData, error } = await supabase
+    .from('rented_cars')
+    .select(`
+      id,
+      date_start,
+      date_end,
+      total_days,
+      is_paid,
+      total_amount,
+      cars (model, img),
+      transactions (buyer_id)
+    `);
+
+  if (error) {
+    console.error('Error fetching rented cars:', error);
+    return;
+  }
+
+  cars.value = rentedCarsData.map(item => ({
+    id: item.id,
+    model: item.cars.model,
+    img: item.cars.img,
+    date_start: item.date_start,
+    date_end: item.date_end,
+    total_days: item.total_days,
+    is_paid: item.is_paid,
+    total_amount: item.total_amount,
+    user_id: item.transactions.buyer_id,
+  }));
+};
+
+// Paginated cars based on current page
+const paginatedCars = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return cars.value.slice(start, start + itemsPerPage);
+});
+
+// Calculate total number of pages
+const pageCount = computed(() => {
+  return Math.ceil(cars.value.length / itemsPerPage);
+});
+
+// Open image in dialog
+const openImage = (img) => {
+  selectedImage.value = img;
+  dialog.value = true;
+};
+
+// Confirm and delete a rented car record
+const confirmDelete = async (rentedCarId) => {
+  if (confirm("Are you sure you want to delete this rental record?")) {
+    const { error } = await supabase
       .from('rented_cars')
-      .select(`
-        id,
-        date_start,
-        date_end,
-        total_days,
-        is_paid,
-        cars (model, img),
-        transactions (buyer_id)
-      `);
-  
+      .delete()
+      .eq('id', rentedCarId);
+
     if (error) {
-      console.error('Error fetching rented cars:', error);
-      return;
+      console.error('Error deleting rented car:', error);
+    } else {
+      alert('Rental record deleted successfully.');
+      await fetchCars(); // Refresh the list after deletion
     }
-  
-    // Map the fetched data to include car and transaction details
-    cars.value = rentedCarsData.map(item => ({
-      id: item.id,
-      model: item.cars.model,
-      img: item.cars.img,
-      date_start: item.date_start,
-      date_end: item.date_end,
-      total_days: item.total_days,
-      is_paid: item.is_paid,
-      user_id: item.transactions.buyer_id, // Ensure this matches your database field for user ID
-    }));
-  };
-  
-  // Paginated cars based on current page
-  const paginatedCars = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage;
-    return cars.value.slice(start, start + itemsPerPage);
-  });
-  
-  // Calculate total number of pages
-  const pageCount = computed(() => {
-    return Math.ceil(cars.value.length / itemsPerPage);
-  });
-  
-  // Open image in dialog
-  const openImage = (img) => {
-    selectedImage.value = img;
-    dialog.value = true;
-  };
-  
-  onMounted(async () => {
-    await fetchCars();
-  });
-  </script>
-  
+  }
+};
+
+onMounted(async () => {
+  await fetchCars();
+});
+</script>
+
   <style>
   .mts {
     margin-top: 40px;
