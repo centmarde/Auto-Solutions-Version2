@@ -23,7 +23,7 @@
       md="6"
       class="mb-4"
     >
-      <v-card elevation="8" class="fixed-card">
+      <v-card elevation="8" class="">
         <v-row no-gutters>
           <v-col cols="4">
             <v-img
@@ -44,14 +44,15 @@
             </v-card-text>
 
            <!-- Check if the transaction is rented -->
-           <div v-if="isTransactionRented(item.transaction.id)">
-            <!-- Display message for rented transaction -->
-            <span v-if="item.rented_cars[0].is_paid">
-              The car has been paid. You must go to the store or something.
-            </span>
-            <span v-else>
-              You have 3 days to pay the rented car, or it will be cancelled.
-            </span>
+          <div v-if="isTransactionRented(item.transaction.id)">
+            <!-- Display alert for rented transaction with payment status -->
+            <v-alert v-if="item.rented_cars[0].is_paid" type="success" dense outlined>
+              The car has been paid. Please proceed to the store to complete the process.
+            </v-alert>
+            
+            <v-alert v-else type="warning" dense outlined>
+              You have 3 days to pay for the rented car, or the reservation will be cancelled.
+            </v-alert>
           </div>
 
           <v-card-actions v-else class="d-flex justify-content-end">
@@ -66,9 +67,7 @@
               <v-icon left>mdi-check</v-icon>
               Rent
             </v-btn>
-          </v-card-actions>
-
-
+</v-card-actions>
           </v-col>
         </v-row>
       </v-card>
