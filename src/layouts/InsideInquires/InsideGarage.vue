@@ -8,9 +8,12 @@
         <v-alert type="error">{{ error }}</v-alert>
       </v-col>
   
+      <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
+        <v-alert type="warning">No Cars Have Been Listed.</v-alert>
+      </v-col>
     </v-row>
   
-    <v-row>
+    <v-row v-if="carsWithTransactions.length > 0">
       <v-col v-for="item in carsWithTransactions" :key="item.car.id" cols="12" md="6" class="mb-4">
         <v-card elevation="8">
           <v-row no-gutters>

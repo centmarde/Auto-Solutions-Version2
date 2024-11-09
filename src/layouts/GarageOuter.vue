@@ -1,18 +1,16 @@
 <template>
-  <v-card elevation="10" id="garage-card" class="pa-10">
+  <v-card class="p-4" elevation="10">
     <v-row>
-      <v-col cols="12" lg="12" md="12" sm="5">
-        <v-card-title>
-          <h3 id="title" class="text-center">GARAGE</h3>
-        </v-card-title>
+      <v-col cols="12">
+        <h3 id="title" class="text-center">GARAGE</h3>
       </v-col>
 
-      <v-col cols="12" lg="12" md="12" sm="5">
+      <v-col cols="12">
         <v-img
-          class="d-block mx-auto"
+          class="sts4"
           src="https://www.cars.com/images/garage-landing/garage-hero.webp"
-          alt="Garage Image"
-          width="8.5rem"
+          alt="ssed"
+          width="70%"
           style="left: 15%"
         ></v-img>
       </v-col>
@@ -23,7 +21,7 @@
         <router-link to="/Garage" style="text-decoration: none;">
           <v-btn @click="handleSubmit" color="primary" class="btnn32">
             Get Started
-            <v-icon right>mdi-arrow-right</v-icon>
+            <v-icon right> mdi-arrow-right </v-icon>
           </v-btn>
         </router-link>
       </v-col>
@@ -44,10 +42,10 @@ export default {
       const isLoggedIn = localStorage.getItem("access_token") !== null;
 
       if (isLoggedIn) {
-        // If logged in, redirect to rent contents page
+        // If logged in, redirect to sell contents page (e.g., Home)
         this.$router.push("/RentContents");
       } else {
-        // If not logged in, redirect to login page
+        // If not logged in, redirect to Register page
         this.$router.push("/login");
       }
     },
@@ -56,7 +54,7 @@ export default {
 </script>
 
 <style scoped>
-#garage-card {
+#xrt23 {
   overflow: hidden;
 }
 
@@ -64,7 +62,6 @@ export default {
   font-family: "Merriweather", serif;
 }
 
-/* Image styling for responsive design */
 @media (max-width: 800px) and (min-width: 350px) {
   .sts4 {
     top: 20%;
@@ -73,7 +70,24 @@ export default {
   }
 }
 
-/* Button styling for "Get Started" */
+.erd3 {
+  width: 4.5rem;
+}
+
+@media (max-width: 999px) and (min-width: 350px) {
+  .erd3 {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+@media (max-width: 1400px) and (min-width: 999px) {
+  .erd3 {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
 .btnn32 {
   position: relative;
   transition: all 0.3s ease-in-out;
@@ -85,7 +99,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #ffff;
   gap: 10px;
   font-weight: bold;
   border: 3px solid #ffffff4d;
@@ -101,7 +115,7 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.btnn32:hover {
+.btnn32hover {
   transform: scale(1.05);
   border-color: #fff9;
 }
