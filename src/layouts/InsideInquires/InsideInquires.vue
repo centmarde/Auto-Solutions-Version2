@@ -1,14 +1,15 @@
 <template>
   <!-- Loading, Error, No Cars Display -->
-  <v-row v-if="loading || error || cars.length === 0">
-    <v-col v-if="loading" class="loading">
-      <v-alert type="info">Loading...</v-alert>
-    </v-col>
-    <v-col v-if="error" class="error">
-      <v-alert type="error">{{ error }}</v-alert>
-    </v-col>
-    <v-col v-if="!loading && !error && cars.length === 0" class="no-cars">
-      <v-alert type="warning">No cars available for sale.</v-alert>
+  <v-row v-if="loading || error || carsWithTransactions.length === 0">
+    <v-col>
+      <v-alert v-if="loading" type="info">Loading...</v-alert>
+      <v-alert v-else-if="error" type="error">
+        {{ error }}
+        <v-btn color="primary" text @click="fetchCars">Retry</v-btn>
+      </v-alert>
+      <v-alert v-else-if="!loading && !error && carsWithTransactions.length === 0" type="warning">
+        No cars available for sale.
+      </v-alert>
     </v-col>
   </v-row>
 
@@ -21,7 +22,7 @@
       md="6"
       class="mb-4"
     >
-      <v-card elevation="8" class="fixed-card">
+      <v-card elevation="8">
         <v-row no-gutters>
           <v-col cols="4">
             <v-img
@@ -42,7 +43,18 @@
                 <small class="text-body-secondary">Added at: {{ item.transaction.created_at }}</small>
               </p>
             </v-card-text>
-            <v-card-actions class="d-flex justify-content-end">
+
+            <!-- Check if the transaction is purchased -->
+            <div v-if="isTransactionPurchased(item.transaction.id)">
+              <v-alert v-if="item.purchased_cars[0].is_paid" type="success" dense outlined>
+                The car has been paid. Please proceed to the store to complete the process.
+              </v-alert>
+              <v-alert v-else type="warning" dense outlined>
+                You have 3 days to pay for the purchased car, or the reservation will be cancelled.
+              </v-alert>
+            </div>
+
+            <v-card-actions v-else class="d-flex justify-content-end">
               <v-btn color="red" @click="openCancelDialog(item.car.id)">
                 <v-icon left>mdi-cancel</v-icon>
                 Cancel
@@ -58,23 +70,17 @@
     </v-col>
   </v-row>
 
-  <!-- Purchase Confirmation Dialog -->
-  <v-dialog v-model="isConfirmationDialogVisible" max-width="500px">
+  <!-- Payment Choice and Confirmation Dialog -->
+  <v-dialog v-model="isPaymentChoiceDialogVisible" max-width="500px">
     <v-card>
-      <v-card-title class="headline">Confirmation Required</v-card-title>
+      <v-card-title class="headline">Select Payment Method</v-card-title>
       <v-card-text>
-        <p>Please confirm your purchase of this vehicle. Here are the terms and conditions:</p>
-        <ul>
-          <li>You are responsible for the full payment of the price agreed upon.</li>
-          <li>Any warranty information will be provided post-purchase.</li>
-          <li>Refund policies and procedures will be shared through email.</li>
-          <li>By proceeding, you accept all terms and conditions.</li>
-        </ul>
+        <p>Please select your payment option:</p>
+        <v-btn color="green" text @click="choosePayment('online')">Pay Online</v-btn>
+        <v-btn color="blue" text @click="choosePayment('in-person')">Pay In Person</v-btn>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue" text @click="isConfirmationDialogVisible = false">Cancel</v-btn>
-        <v-btn color="green" text @click="confirmFinalizePurchase">Confirm Purchase</v-btn>
+        <v-btn color="blue" text @click="isPaymentChoiceDialogVisible = false">Cancel</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -85,8 +91,6 @@
       <v-card-title class="headline">Proceed to Payment</v-card-title>
       <v-card-text>
         <p>You are about to be redirected to the PayMongo page to finalize your purchase.</p>
-        <br>
-        <p class="text-center">Using Paymongo</p>
         <v-row justify="center">
           <v-col cols="12" md="4">
             <v-img src="../../assets/images/paymongo.png" alt="paymongo" width="100%"></v-img>
@@ -115,26 +119,22 @@
 </template>
 
 <script>
-import axios from "axios";
 import { supabase } from "../../lib/supaBase";
 
 export default {
   data() {
     return {
-      cars: [],
-      transactions: [],
       carsWithTransactions: [],
       loading: true,
       error: null,
-      isConfirmationDialogVisible: false,
+      isPaymentChoiceDialogVisible: false,
       isPaymentDialogVisible: false,
       isCancelDialogVisible: false,
-      carIdToDelete: null,
       transactionIdToFinalize: null,
-      priceToFinalize: null,
-      paymentLink: null,
       carIdToCancel: null,
       currentTransaction: null,
+      paymentLink: null,
+      paymentType: null,
     };
   },
   async created() {
@@ -147,7 +147,10 @@ export default {
     },
     async confirmCancel() {
       try {
-        const { error } = await supabase.from("transactions").delete().eq("car_id", this.carIdToCancel);
+        const { error } = await supabase
+          .from("transactions")
+          .delete()
+          .eq("car_id", this.carIdToCancel);
 
         if (error) throw error;
 
@@ -161,35 +164,23 @@ export default {
     },
     async fetchCars() {
       this.loading = true;
+      this.error = null;
       const loggedInUserId = localStorage.getItem("user_id");
 
       try {
-        const { data: purchasedCars, error: purchaseError } = await supabase
-          .from("purchased_cars")
-          .select("transaction_id");
-
-        if (purchaseError) throw purchaseError;
-
-        const purchasedTransactionIds = purchasedCars.map((car) => car.transaction_id);
-
         const { data, error } = await supabase
           .from("transactions")
-          .select(`*, cars (*), user:buyer_id (*)`)
+          .select(`*, cars (*), user:buyer_id (*), purchased_cars (*)`)
           .eq("cars.for_sale", true)
-          .eq("buyer_id", loggedInUserId)
-          .not("id", "in", `(${purchasedTransactionIds.join(",")})`);
+          .eq("buyer_id", loggedInUserId);
 
         if (error) throw error;
 
-        const carsForSale = data.map((transaction) => transaction.cars).filter((car) => car !== null);
-
-        this.cars = this.shuffleArray(carsForSale);
-        this.carsWithTransactions = data
-          .map((transaction) => ({
-            car: transaction.cars,
-            transaction: transaction,
-          }))
-          .filter((item) => item.car !== null);
+        this.carsWithTransactions = data.map((transaction) => ({
+          car: transaction.cars,
+          transaction: transaction,
+          purchased_cars: transaction.purchased_cars,
+        })).filter((item) => item.car !== null);
       } catch (err) {
         this.error = err.message;
       } finally {
@@ -197,20 +188,27 @@ export default {
       }
     },
     async finalizePurchase(transactionId) {
-      const transaction = this.carsWithTransactions.find((item) => item.transaction.id === transactionId);
+      const transaction = this.carsWithTransactions.find(
+        (item) => item.transaction.id === transactionId
+      );
       if (transaction) {
         this.currentTransaction = transaction;
-        this.transactionIdToFinalize = transactionId;
-        this.carIdToFinalize = transaction.car.id;
-        this.priceToFinalize = transaction.car.price;
-        this.isConfirmationDialogVisible = true;
+        this.isPaymentChoiceDialogVisible = true;
       }
     },
-    async confirmFinalizePurchase() {
-      if (!this.currentTransaction) return;
-
+    choosePayment(type) {
+      this.paymentType = type;
+      this.isPaymentChoiceDialogVisible = false;
+      if (type === "online") {
+        this.handleOnlinePayment();
+      } else {
+        this.handleInPersonPayment();
+      }
+    },
+    async handleOnlinePayment() {
       const { car, transaction } = this.currentTransaction;
       const amountInCentavos = car.price * 100;
+
       const options = {
         method: "POST",
         headers: {
@@ -222,8 +220,8 @@ export default {
           data: {
             attributes: {
               amount: amountInCentavos,
-              description: car.for_sale ? "Car for Sale" : "Car for Rent",
-              remarks: car.for_sale ? "Sale transaction" : "Rental transaction",
+              description: "Car for Sale",
+              remarks: "Purchase transaction",
             },
           },
         }),
@@ -235,7 +233,6 @@ export default {
 
         if (response.ok) {
           this.paymentLink = result.data.attributes.checkout_url;
-          this.isConfirmationDialogVisible = false;
           this.isPaymentDialogVisible = true;
 
           const warrantyDate = new Date();
@@ -247,16 +244,45 @@ export default {
               transaction_id: transaction.id,
               warranty: warrantyDate.toISOString(),
               car_id: car.id,
+              is_paid: true,
             },
           ]);
 
           if (error) throw error;
         } else {
-          throw new Error(result.errors[0].detail || "Payment link creation failed");
+          throw new Error(
+            result.errors[0]?.detail || "Payment link creation failed"
+          );
         }
       } catch (err) {
         this.error = err.message;
-        this.isConfirmationDialogVisible = false;
+      }
+    },
+    async handleInPersonPayment() {
+      const { car, transaction } = this.currentTransaction;
+
+      try {
+        const warrantyDate = new Date();
+        warrantyDate.setFullYear(warrantyDate.getFullYear() + 1);
+
+        const { error } = await supabase.from("purchased_cars").insert([
+          {
+            price: car.price,
+            transaction_id: transaction.id,
+            warranty: warrantyDate.toISOString(),
+            car_id: car.id,
+            is_paid: false,
+          },
+        ]);
+
+        if (error) throw error;
+
+        alert(
+          "You have chosen to pay in person. Please complete your payment within 3 days."
+        );
+        location.reload();
+      } catch (err) {
+        this.error = err.message;
       }
     },
     openPaymentLink() {
@@ -264,12 +290,14 @@ export default {
       this.isPaymentDialogVisible = false;
       location.reload();
     },
-    shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+    isTransactionPurchased(transactionId) {
+      return this.carsWithTransactions.some(
+        (item) =>
+          item.purchased_cars &&
+          item.purchased_cars.some(
+            (purchasedCar) => purchasedCar.transaction_id === transactionId
+          )
+      );
     },
   },
 };

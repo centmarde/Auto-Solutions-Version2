@@ -331,92 +331,92 @@ finalizeRental(transactionId) {
       }
     },
     async handleOnlinePayment() {
-      const { car, transaction } = this.currentTransaction;
+  const { car, transaction } = this.currentTransaction;
 
-      const totalPrice = car.price * this.totalDays;
-      const options = {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
-          authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6",
+  const totalPrice = car.price * this.totalDays;
+  const options = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      authorization: "Basic c2tfdGVzdF84VGtzZW1LcHZucExnVURGRUJWTTg1YTE6",
+    },
+    body: JSON.stringify({
+      data: {
+        attributes: {
+          amount: totalPrice * 100,
+          description: "Car for Rent",
+          remarks: "Rental transaction",
         },
-        body: JSON.stringify({
-          data: {
-            attributes: {
-              amount: totalPrice * 100,
-              description: "Car for Rent",
-              remarks: "Rental transaction",
-            },
-          },
-        }),
-      };
+      },
+    }),
+  };
 
-      try {
-        const response = await fetch("https://api.paymongo.com/v1/links", options);
-        const result = await response.json();
+  try {
+    const response = await fetch("https://api.paymongo.com/v1/links", options);
+    const result = await response.json();
 
-        if (response.ok) {
-          this.paymentLink = result.data.attributes.checkout_url;
+    if (response.ok) {
+      this.paymentLink = result.data.attributes.checkout_url;
 
-          // Insert rental record into Supabase with is_paid = true
-          const { error } = await supabase.from("rented_cars").insert([
-            {
-              price: totalPrice,
-              transaction_id: transaction.id,
-              date_start: this.startDate.toISOString(),
-              date_end: this.endDate.toISOString(),
-              cars_id: car.id,
-              total_days: this.totalDays,
-              created_at: new Date().toISOString(),
-              is_paid: true,
-            },
-          ]);
+      // Insert rental record into Supabase with is_paid = true and total_amount
+      const { error } = await supabase.from("rented_cars").insert([
+        {
+          price: car.price,
+          total_amount: totalPrice, // Store total amount here
+          transaction_id: transaction.id,
+          date_start: this.startDate.toISOString(),
+          date_end: this.endDate.toISOString(),
+          cars_id: car.id,
+          total_days: this.totalDays,
+          created_at: new Date().toISOString(),
+          is_paid: true,
+        },
+      ]);
 
-          if (error) throw error;
+      if (error) throw error;
 
-          // Redirect to payment link
-          window.open(this.paymentLink, "_blank");
-          this.isConfirmationDialogVisible = false;
-          location.reload();
-        } else {
-          throw new Error(result.errors[0]?.detail || "Payment link creation failed.");
-        }
-      } catch (err) {
-        this.error = err.message;
-      }
-    },
-    async handleInPersonPayment() {
-      const { car, transaction } = this.currentTransaction;
+      window.open(this.paymentLink, "_blank");
+      this.isConfirmationDialogVisible = false;
+      location.reload();
+    } else {
+      throw new Error(result.errors[0]?.detail || "Payment link creation failed.");
+    }
+  } catch (err) {
+    this.error = err.message;
+  }
+},
 
-      const totalPrice = car.price * this.totalDays;
+async handleInPersonPayment() {
+  const { car, transaction } = this.currentTransaction;
 
-      try {
-        // Insert rental record into Supabase with is_paid = false
-        const { error } = await supabase.from("rented_cars").insert([
-          {
-            price: totalPrice,
-            transaction_id: transaction.id,
-            date_start: this.startDate.toISOString(),
-            date_end: this.endDate.toISOString(),
-            cars_id: car.id,
-            total_days: this.totalDays,
-            created_at: new Date().toISOString(),
-            is_paid: false,
-          },
-        ]);
+  const totalPrice = car.price * this.totalDays;
 
-        if (error) throw error;
+  try {
+    // Insert rental record into Supabase with is_paid = false and total_amount
+    const { error } = await supabase.from("rented_cars").insert([
+      {
+        price: car.price,
+        total_amount: totalPrice, // Store total amount here
+        transaction_id: transaction.id,
+        date_start: this.startDate.toISOString(),
+        date_end: this.endDate.toISOString(),
+        cars_id: car.id,
+        total_days: this.totalDays,
+        created_at: new Date().toISOString(),
+        is_paid: false,
+      },
+    ]);
 
-        this.isConfirmationDialogVisible = false;
+    if (error) throw error;
 
-        // Notify the user about the in-person payment process
-        alert("You have chosen to pay in person. Please complete your payment within 3 days.");
-        location.reload();
-      } catch (err) {
-        this.error = err.message;
-      }
-    },
+    this.isConfirmationDialogVisible = false;
+    alert("You have chosen to pay in person. Please complete your payment within 3 days.");
+    location.reload();
+  } catch (err) {
+    this.error = err.message;
+  }
+},
     isTransactionRented(transactionId) {
   return this.carsWithTransactions.some(item =>
     item.rented_cars && item.rented_cars.some(rentedCar => rentedCar.transaction_id === transactionId)
