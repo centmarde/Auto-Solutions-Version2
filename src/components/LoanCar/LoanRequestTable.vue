@@ -35,6 +35,8 @@ export default {
 <style scoped>
 .loan-request-table {
   margin-top: 20px;
+  margin-bottom: 30px;
+  border-radius: 20%;
 }
 table {
   width: 100%;
