@@ -35,7 +35,7 @@
                 <router-link to="/CarListing" class="d-block">
                   <v-btn block color="primary">
                     <v-icon left>mdi-format-list-bulleted</v-icon>
-                    My Listings
+                    My car Listings
                   </v-btn>
                 </router-link>
               </v-col>
