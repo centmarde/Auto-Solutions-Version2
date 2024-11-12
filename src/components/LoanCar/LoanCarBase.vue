@@ -1,10 +1,9 @@
 <template>
   <router-link to="/Home"><button>Back to Home Page</button></router-link>
   <v-card class="mx-auto my-10 px-10" elevation="16" max-width="800">
-    <v-card-item>
-      <v-card-title>Loan a Car</v-card-title>
-      <v-card-subtitle>Get a car loan quickly and easily</v-card-subtitle>
-    </v-card-item>
+    <!-- Card Header -->
+    <v-card-title>Loan a Car</v-card-title>
+    <v-card-subtitle>Get a car loan quickly and easily</v-card-subtitle>
 
     <v-card-text>
       Please fill out the form below to submit a loan request. Our team will
@@ -15,9 +14,9 @@
       <form @submit.prevent="submitLoanRequest">
         <!-- Carousel to select a car -->
         <div class="form-group">
-          <label>Select a Car:</label>
+          <label class="centered-label">Select a Car:</label>
           <v-carousel
-            height="400"
+            height="500"
             show-arrows="hover"
             cycle
             hide-delimiter-background
@@ -30,7 +29,7 @@
             >
               <v-sheet height="100%">
                 <div class="d-flex fill-height justify-center align-center">
-                  <img :src="car.image" :alt="car.name" class="car-image" />
+                  <img :src="car.img" :alt="car.name" class="car-image" />
                 </div>
                 <div class="car-name">{{ car.name }}</div>
               </v-sheet>
@@ -40,10 +39,10 @@
             formErrors.selectedCar
           }}</span>
           <div v-if="loanRequest.selectedCar" class="selected-car">
-            Selected Car: {{ loanRequest.selectedCar.name }}
+            Selected Car: {{ loanRequest.selectedCar.model }}
+            {{ loanRequest.selectedCar.brand }}
           </div>
 
-          <!-- Undo button that shows when a car is selected -->
           <div v-if="loanRequest.selectedCar">
             <button type="button" @click="undoCarSelection" class="undo-button">
               Undo Selection
@@ -53,7 +52,9 @@
 
         <!-- Loan Duration -->
         <div class="form-group">
-          <label for="duration">Loan Duration (months):</label>
+          <label class="centered-label" for="duration"
+            >Loan Duration (months):</label
+          >
           <input
             type="number"
             v-model="loanRequest.duration"
@@ -67,7 +68,7 @@
 
         <!-- Monthly Income -->
         <div class="form-group">
-          <label for="income">Monthly Income:</label>
+          <label class="centered-label" for="income">Monthly Income:</label>
           <input
             type="number"
             v-model="loanRequest.income"
@@ -86,7 +87,6 @@
         </div>
       </form>
 
-      <!-- Loan Request Table -->
       <loan-request-table
         :requests="loanRequests"
         @remove="removeLoanRequest"
@@ -96,16 +96,9 @@
 </template>
 
 <script>
-import { createClient } from "@supabase/supabase-js";
-import LoanRequestTable from "./LoanRequestTable.vue";
-
-const supabaseUrl = "https://xgjgtijbrkcwwsliqubk.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnamd0aWpicmtjd3dzbGlxdWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ4MzYxMzAsImV4cCI6MjA0MDQxMjEzMH0.C8nvHjy-fHXY4bxI1OBTf3NqVf76RznvwoO1-ReC-5s";
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from "../../lib/supaBase";
 
 export default {
-  components: { LoanRequestTable },
   data() {
     return {
       loanRequest: {
@@ -119,17 +112,15 @@ export default {
         duration: null,
         income: null,
       },
-      carOptions: [], // Initialize carOptions as an empty array
+      carOptions: [],
     };
   },
   methods: {
     selectCar(car) {
-      // Set the selected car when an image is clicked
       this.loanRequest.selectedCar = car;
       this.formErrors.selectedCar = null;
     },
     undoCarSelection() {
-      // Reset the selected car to null when the undo button is clicked
       this.loanRequest.selectedCar = null;
     },
     validateForm() {
@@ -144,12 +135,12 @@ export default {
         this.formErrors.selectedCar = "Please select a car.";
         isValid = false;
       }
-      if (!this.loanRequest.duration) {
-        this.formErrors.duration = "Loan Duration is required.";
+      if (!this.loanRequest.duration || this.loanRequest.duration <= 0) {
+        this.formErrors.duration = "Loan Duration must be positive.";
         isValid = false;
       }
-      if (!this.loanRequest.income) {
-        this.formErrors.income = "Monthly Income is required.";
+      if (!this.loanRequest.income || this.loanRequest.income <= 0) {
+        this.formErrors.income = "Monthly Income must be positive.";
         isValid = false;
       }
 
@@ -176,21 +167,21 @@ export default {
       this.saveLoanRequests();
     },
     async fetchCarOptions() {
-      // Fetch car data from Supabase
-      const { data, error } = await supabase
-        .from("cars") // Replace 'cars' with your actual table name
-        .select("name, image"); // Adjust the fields as needed
+      try {
+        const { data, error } = await supabase
+          .from("cars")
+          .select("model, brand, img");
 
-      if (error) {
+        if (error) throw error;
+        this.carOptions = data;
+      } catch (error) {
         console.error("Error fetching car options:", error);
-      } else {
-        this.carOptions = data; // Set the fetched data to carOptions
       }
     },
   },
   mounted() {
     this.loadLoanRequests();
-    this.fetchCarOptions(); // Fetch car options when the component is mounted
+    this.fetchCarOptions();
   },
 };
 </script>
@@ -205,6 +196,11 @@ export default {
 .form-group {
   display: flex;
   flex-direction: column;
+}
+
+.centered-label {
+  text-align: center;
+  font-weight: bold;
 }
 
 .error {
@@ -222,8 +218,9 @@ export default {
 }
 
 .car-image {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  max-height: 90%;
+  object-fit: cover;
 }
 
 .car-name {
