@@ -1,7 +1,7 @@
 <template>
   <v-row v-if="userCars.length > 0">
     <v-col v-for="car in userCars" :key="car.id" cols="12" md="6" class="mb-4">
-      <v-card elevation="8" class="fixed-card" @click="handleCardClick(car.id)">
+      <v-card elevation="8" @click="handleCardClick(car.id)">
         <v-row no-gutters>
           <v-col cols="4">
             <v-img
@@ -26,6 +26,10 @@
                 {{ car.forSale && car.forRent ? 'For Sale and Open for Rent' : car.forSale ? 'For Sale' : car.forRent ? 'Open for Rent' : '' }}
               </p>
 
+              <!-- Transaction Status Message -->
+              <p v-if="isCarInTransaction(car.id)" class="transaction-status">
+                Your car is in transaction
+              </p>
               <!-- Pending or Approved Indicator -->
               <v-chip
                 :color="car.is_pending ? 'orange' : 'green'"
@@ -59,11 +63,11 @@ import { supabase } from '../../lib/supaBase';
 export default {
   data() {
     return {
-      cars: [],
       userCars: [],
+      transactionsCarIds: [],
       loading: true,
       error: null,
-      selectedCarId: null, 
+      selectedCarId: null,
       editModal: false,
       editedCar: {},
       valid: false,
@@ -71,6 +75,7 @@ export default {
   },
   async created() {
     await this.fetchUserCars();
+    await this.fetchTransactionCarIds();
   },
   methods: {
     async fetchUserCars() {
@@ -85,16 +90,28 @@ export default {
 
         if (error) throw error;
 
-        this.userCars = data || []; 
-
-        this.userCars.forEach(car => {
-          console.log(`Car ID: ${car.id}`); 
-        });
+        this.userCars = data || [];
       } catch (err) {
         this.error = err.message;
       } finally {
         this.loading = false;
       }
+    },
+    async fetchTransactionCarIds() {
+      try {
+        const { data, error } = await supabase
+          .from('transactions')
+          .select('car_id'); 
+
+        if (error) throw error;
+
+        this.transactionsCarIds = data.map(transaction => transaction.car_id);
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
+    isCarInTransaction(carId) {
+      return this.transactionsCarIds.includes(carId); // Check if car ID exists in transactions
     },
     handleCardClick(carId) {
       this.selectedCarId = carId; 
@@ -110,7 +127,6 @@ export default {
         const { error } = await supabase.from('cars').update(updatedData).eq('id', id); 
         if (error) throw error;
 
-       
         const index = this.userCars.findIndex(car => car.id === id);
         if (index !== -1) {
           this.userCars[index] = { ...this.userCars[index], ...updatedData };
@@ -171,5 +187,13 @@ export default {
 
 .car-status {
   font-weight: bold; 
+}
+.transaction-status{
+  background-color: #ffcccb; /* Light red background color */
+  color: #800000; /* Darker text for contrast */
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-top: 8px;
 }
 </style>

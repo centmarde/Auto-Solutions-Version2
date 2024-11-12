@@ -13,13 +13,6 @@
               Intensify the connection between you and your GR Supra. Available with a 6-speed intelligent Manual Transmission (iMT) that optimizes your revs as you shift, the 3.0L 6-cylinder engine puts 382 horsepower * and 368 lb.-ft. of torque at your fingertips. Take the reins as you go through every corner while the g-forces make you feel like you're sinking into your seat. It’s time to personalize the power delivered to the rear wheels and find the sweet spot where your revs match up to your heartbeat.
             </p>
           </div>
-          <v-tab
-            class="view-specs-tab"
-            :class="{ active: isActive }"
-            @click="toggleUnderline"
-          >
-            View specs
-          </v-tab>
         </v-col>
       </v-row>
   
@@ -35,13 +28,6 @@
             <p class="car-description mt-3 ms-5">The fire-breathing heart of GR Supra is its signature, turbocharged 3.0-liter inline 6-cylinder engine. Producing 382 horsepower * with an impressive 368 lb.-ft. of torque, this engine 
               uses smart technologies like a twin-scroll turbocharger, Variable Valve Timing and an electric wastegate, giving you plenty of power and instant response.</p>
           </div>
-          <v-tab
-            class="view-specs-tab"
-            :class="{ active: isActive }"
-            @click="toggleUnderline"
-          >
-            View specs
-          </v-tab>
         </v-col>
   
         <!-- Second image in the last column -->
@@ -54,13 +40,6 @@
             <p class="car-description mt-3 ms-5">GR Supra's 2.0-liter and 3.0-liter engines feature unique cat-back exhausts that are tuned to match their specific performance characteristics. 
               Not only does this help unleash each engine's potential, but it also gives them both a unique and glorious exhaust note.</p>
           </div>
-          <v-tab
-            class="view-specs-tab"
-            :class="{ active: isActive }"
-            @click="toggleUnderline"
-          >
-            View specs
-          </v-tab>
         </v-col>
       </v-row>
   
@@ -73,13 +52,7 @@
   <p class="car-description mt-3 ms-5">Gazoo Racing is Toyota’s global racing division,
     in which we indulge our passion for motorsport. Every vehicle with the Gazoo Racing (GR) 
     badge has been thoroughly tested, honed, and perfected through extensive testing at racetracks across the globe.</p>
-  <v-tab
-    class="view-specs-tab"
-    :class="{ active: isActive }"
-    @click="toggleUnderline"
-  >
-    Learn more
-  </v-tab>
+ 
 </div>
 
  <!-- New section with 3 columns -->
@@ -93,13 +66,6 @@
             <!-- Car description -->
             <p class="car-description mt-3 ms-5">GR Supra 2.0 features a powerful, turbocharged inline-four, rated at 255 horsepower * and 295 lb.-ft. of torque. Compact and lightweight, the dimensions of this powerplant allow it to sit far back in the engine bay, helping GR Supra 2.0 achieve a near-perfect weight balance.</p>
           </div>
-          <v-tab
-            class="view-specs-tab"
-            :class="{ active: isActive }"
-            @click="toggleUnderline"
-          >
-            View specs
-          </v-tab>
         </v-col>
   
         <!-- Second image in the last column -->
@@ -111,13 +77,6 @@
             <!-- Car description -->
             <p class="car-description mt-3 ms-5">Because daily driving isn’t an exercise in maximum attack, GR Supra offers Normal and Sport driving modes. Normal Mode is perfect for your commute, offering a smooth ride, easy handling and effortless shifting. Pressing the button to activate Sport Mode transforms GR Supra into a true track-dominating beast, punctuated with a deeper, meaner exhaust rumble. All of GR Supra's senses heighten, giving you instant response and a whole lot more adrenaline.</p>
           </div>
-          <v-tab
-            class="view-specs-tab"
-            :class="{ active: isActive }"
-            @click="toggleUnderline"
-          >
-            View specs
-          </v-tab>
         </v-col>
       </v-row>
 

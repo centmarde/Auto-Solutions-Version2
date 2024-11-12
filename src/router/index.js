@@ -42,6 +42,7 @@ import LoanCarBase from "@/components/LoanCar/LoanCarBase.vue";
 import Mypurchased from "@/components/InquiresPage/Mypurchased.vue";
 import Featured from "@/pages/Featured.vue";
 import MainComponent from "@/components/NavigationBar/MainComponent.vue";
+import Rented from "@/pages/adminPages/RentedCars.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -177,6 +178,11 @@ const routes = setupLayouts([
     component: MainComponent,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/Rented",
+    component: Rented,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
@@ -230,6 +236,7 @@ router.beforeEach((to, from, next) => {
     "/AnniversaryPage",
     "/LoanCarBase",
     "/PurchasedCars",
+    "/Rented",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
