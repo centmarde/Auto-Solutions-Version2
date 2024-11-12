@@ -1,21 +1,20 @@
 <template>
-  <router-link to="/Home">
-    <button
-      class="Home"
-      :class="{
-        'dark-mode-button': $vuetify.theme.dark,
-        'light-mode-button': !$vuetify.theme.dark,
-      }"
+  <router-link to="/Home" class="tr" exact>
+    <v-btn
+      class="lofi"
+      :style="{ width: '10%', marginTop: '3%', marginLeft: '5%' }"
     >
-      Back to Home Page
-    </button>
+      Exit
+      <v-icon right>mdi-arrow-left</v-icon>
+    </v-btn>
   </router-link>
+
   <v-card class="mx-auto my-10 px-10" elevation="16" max-width="800">
     <!-- Card Header -->
     <v-card-title class="title">Loan a Car</v-card-title>
-    <v-card-subtitle class="subtitle"
-      >Get a car loan quickly and easily</v-card-subtitle
-    >
+    <v-card-subtitle class="subtitle">
+      Get a car loan quickly and easily
+    </v-card-subtitle>
 
     <v-card-text>
       Please fill out the form below to submit a loan request. Our team will
@@ -47,9 +46,9 @@
               </v-sheet>
             </v-carousel-item>
           </v-carousel>
-          <span v-if="formErrors.selectedCar" class="error">{{
-            formErrors.selectedCar
-          }}</span>
+          <span v-if="formErrors.selectedCar" class="error">
+            {{ formErrors.selectedCar }}
+          </span>
           <div v-if="loanRequest.selectedCar" class="selected-car">
             Selected Car: {{ loanRequest.selectedCar.model }}
             {{ loanRequest.selectedCar.brand }}
@@ -73,9 +72,9 @@
             class="outlined-input"
             :class="{ 'dark-mode': $vuetify.theme.dark }"
           />
-          <span v-if="formErrors.duration" class="error">{{
-            formErrors.duration
-          }}</span>
+          <span v-if="formErrors.duration" class="error">
+            {{ formErrors.duration }}
+          </span>
         </div>
 
         <!-- Monthly Income -->
@@ -87,9 +86,9 @@
             class="outlined-input"
             :class="{ 'dark-mode': $vuetify.theme.dark }"
           />
-          <span v-if="formErrors.income" class="error">{{
-            formErrors.income
-          }}</span>
+          <span v-if="formErrors.income" class="error">
+            {{ formErrors.income }}
+          </span>
         </div>
 
         <div class="form-group">
@@ -199,19 +198,6 @@ export default {
 </script>
 
 <style scoped>
-.Home {
-  margin-top: 3%;
-  margin-left: 5%;
-}
-
-.light-mode-button {
-  color: black; /* Light mode text color */
-}
-
-.dark-mode-button {
-  color: white; /* Dark mode text color */
-}
-
 .title {
   text-align: center;
   font-weight: bold;
