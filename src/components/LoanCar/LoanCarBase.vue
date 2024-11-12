@@ -1,9 +1,21 @@
 <template>
-  <router-link to="/Home"><button>Back to Home Page</button></router-link>
+  <router-link to="/Home">
+    <button
+      class="Home"
+      :class="{
+        'dark-mode-button': $vuetify.theme.dark,
+        'light-mode-button': !$vuetify.theme.dark,
+      }"
+    >
+      Back to Home Page
+    </button>
+  </router-link>
   <v-card class="mx-auto my-10 px-10" elevation="16" max-width="800">
     <!-- Card Header -->
-    <v-card-title>Loan a Car</v-card-title>
-    <v-card-subtitle>Get a car loan quickly and easily</v-card-subtitle>
+    <v-card-title class="title">Loan a Car</v-card-title>
+    <v-card-subtitle class="subtitle"
+      >Get a car loan quickly and easily</v-card-subtitle
+    >
 
     <v-card-text>
       Please fill out the form below to submit a loan request. Our team will
@@ -187,6 +199,28 @@ export default {
 </script>
 
 <style scoped>
+.Home {
+  margin-top: 3%;
+  margin-left: 5%;
+}
+
+.light-mode-button {
+  color: black; /* Light mode text color */
+}
+
+.dark-mode-button {
+  color: white; /* Dark mode text color */
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+}
+
+.subtitle {
+  text-align: center;
+}
+
 .loan-car-form {
   display: flex;
   flex-direction: column;
@@ -240,6 +274,7 @@ export default {
   border: none;
   padding: 10px;
   cursor: pointer;
+  border-radius: 8px; /* Added border radius */
 }
 
 .centered-button {
@@ -249,12 +284,14 @@ export default {
   padding: 10px;
   cursor: pointer;
   margin: 3%;
+  border-radius: 8px; /* Added border radius */
 }
 
 .outlined-input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-top: 3%;
 }
 
 .dark-mode {
