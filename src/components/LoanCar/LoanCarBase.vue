@@ -157,11 +157,33 @@ export default {
 
       return isValid;
     },
-    submitLoanRequest() {
+    async submitLoanRequest() {
       if (this.validateForm()) {
-        this.loanRequests.push({ ...this.loanRequest });
-        this.saveLoanRequests();
-        this.loanRequest = { selectedCar: null, duration: "", income: "" };
+        try {
+          // Insert loan request data into Supabase
+          const { error } = await supabase.from("loan_cars").insert([
+            {
+              car_id: this.loanRequest.selectedCar.id,
+              model: this.loanRequest.selectedCar.model,
+              brand: this.loanRequest.selectedCar.brand,
+              loan_duration: this.loanRequest.duration,
+              monthly_income: this.loanRequest.income,
+            },
+          ]);
+
+          if (error) throw error;
+
+          // Add to local loanRequests array for display in the table (optional)
+          this.loanRequests.push({ ...this.loanRequest });
+
+          // Reset form
+          this.loanRequest = { selectedCar: null, duration: "", income: "" };
+
+          // Optionally save to local storage
+          this.saveLoanRequests();
+        } catch (error) {
+          console.error("Error submitting loan request:", error);
+        }
       }
     },
     saveLoanRequests() {
@@ -181,7 +203,7 @@ export default {
       try {
         const { data, error } = await supabase
           .from("cars")
-          .select("model, brand, img");
+          .select("id, model, brand, img");
 
         if (error) throw error;
         this.carOptions = data;
@@ -190,6 +212,7 @@ export default {
       }
     },
   },
+
   mounted() {
     this.loadLoanRequests();
     this.fetchCarOptions();
