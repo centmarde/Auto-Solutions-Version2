@@ -71,7 +71,7 @@
             <!-- Price -->
             <v-col cols="12" md="6" class="mb-3">
               <v-text-field
-                label="Price (PHP)"
+                label="Price per day(PHP)"
                 v-model="car.price"
                 placeholder="Enter price in PHP"
               ></v-text-field>

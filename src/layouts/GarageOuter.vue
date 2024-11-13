@@ -1,16 +1,18 @@
 <template>
-  <v-card class="p-4" elevation="10">
+  <v-card elevation="10" id="garage-card" class="pa-10">
     <v-row>
-      <v-col cols="12">
-        <h3 id="title" class="text-center">GARAGE</h3>
+      <v-col cols="12" lg="12" md="12" sm="5">
+        <v-card-title>
+          <h3 id="title" class="text-center">GARAGE</h3>
+        </v-card-title>
       </v-col>
 
-      <v-col cols="12">
+      <v-col cols="12" lg="12" md="12" sm="5">
         <v-img
-          class="sts4"
+          class="d-block mx-auto"
           src="https://www.cars.com/images/garage-landing/garage-hero.webp"
-          alt="ssed"
-          width="70%"
+          alt="Garage Image"
+          width="8.5rem"
           style="left: 15%"
         ></v-img>
       </v-col>
@@ -21,7 +23,7 @@
         <router-link to="/Garage" style="text-decoration: none;">
           <v-btn @click="handleSubmit" color="primary" class="btnn32">
             Get Started
-            <v-icon right> mdi-arrow-right </v-icon>
+            <v-icon right>mdi-arrow-right</v-icon>
           </v-btn>
         </router-link>
       </v-col>
@@ -42,10 +44,10 @@ export default {
       const isLoggedIn = localStorage.getItem("access_token") !== null;
 
       if (isLoggedIn) {
-        // If logged in, redirect to sell contents page (e.g., Home)
+        // If logged in, redirect to rent contents page
         this.$router.push("/RentContents");
       } else {
-        // If not logged in, redirect to Register page
+        // If not logged in, redirect to login page
         this.$router.push("/login");
       }
     },
@@ -54,7 +56,7 @@ export default {
 </script>
 
 <style scoped>
-#xrt23 {
+#garage-card {
   overflow: hidden;
 }
 
@@ -62,6 +64,7 @@ export default {
   font-family: "Merriweather", serif;
 }
 
+/* Image styling for responsive design */
 @media (max-width: 800px) and (min-width: 350px) {
   .sts4 {
     top: 20%;
@@ -70,24 +73,7 @@ export default {
   }
 }
 
-.erd3 {
-  width: 4.5rem;
-}
-
-@media (max-width: 999px) and (min-width: 350px) {
-  .erd3 {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@media (max-width: 1400px) and (min-width: 999px) {
-  .erd3 {
-    width: 4rem;
-    height: 4rem;
-  }
-}
-
+/* Button styling for "Get Started" */
 .btnn32 {
   position: relative;
   transition: all 0.3s ease-in-out;
@@ -99,7 +85,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffff;
+  color: #ffffff;
   gap: 10px;
   font-weight: bold;
   border: 3px solid #ffffff4d;
@@ -115,7 +101,7 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.btnn32hover {
+.btnn32:hover {
   transform: scale(1.05);
   border-color: #fff9;
 }
