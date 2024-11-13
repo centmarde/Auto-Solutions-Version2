@@ -9,7 +9,7 @@
 
 <script setup>
 import AdminSlots from "@/components/Admin/AdminSlots.vue";
-import Admins from "@/components/Admin/cars/Ispending.vue";
+import Admins from "C:/Web dev/Auto-sol/Auto-Solutions-Version2/src/components/LoanCar/PendingLoans.vue";
 </script>
 
 <style>
