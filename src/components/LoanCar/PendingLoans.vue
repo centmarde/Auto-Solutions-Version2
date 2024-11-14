@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import UsersTemplate from "C:/Web dev/Auto-sol/Auto-Solutions-Version2/src/components/LoanCar/LoanCarsTemplate.vue";
+import UsersTemplate from "../../../src/components/LoanCar/LoanCarsTemplate.vue";
 </script>

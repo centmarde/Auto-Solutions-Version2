@@ -74,7 +74,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { supabase } from "C:/Web dev/Auto-sol/Auto-Solutions-Version2/src/lib/supaBase.js";
+import { supabase } from "../../../src/lib/supaBase.js";
 
 const loans = ref([]);
 const currentPage = ref(1);
