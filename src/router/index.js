@@ -35,6 +35,7 @@ import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
+import LoanReview from "@/pages/adminPages/LoanReview.vue";
 import HandlingPage from "@/components/NavigationBar/HandlingPage.vue";
 import AnniversaryPage from "@/components/NavigationBar/AnniversaryPage.vue";
 import LoanCarBase from "@/components/LoanCar/LoanCarBase.vue";
@@ -155,6 +156,11 @@ const routes = setupLayouts([
   {
     path: "/AdminReview",
     component: AdminReview,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/LoanReview",
+    component: LoanReview,
     meta: { requiresAuth: true },
   },
   {
