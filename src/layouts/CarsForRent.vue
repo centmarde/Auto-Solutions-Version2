@@ -1,5 +1,5 @@
 <template>
-  <v-container class="cars-for-sale">
+  <v-container class="cars-for-rent">
     <v-row>
       <v-col>
         <v-container class="pa-5" elevation="8">
@@ -8,6 +8,7 @@
       </v-col>
     </v-row>
 
+    <!-- Loading, Error, or No Cars -->
     <v-row v-if="loading || error || cars.length === 0">
       <v-col v-if="loading" class="loading">
         <v-alert type="info">Loading...</v-alert>
@@ -22,9 +23,14 @@
       </v-col>
     </v-row>
 
+    <!-- Car List Carousel -->
     <v-row v-else>
       <v-carousel hide-delimiters cycle show-arrows autoplay>
-        <v-carousel-item v-for="(chunk, index) in chunkedCars" :key="index">
+        <v-carousel-item
+          v-for="(chunk, index) in chunkedCars"
+          :key="index"
+          class="carousel-item"
+        >
           <v-row>
             <v-col
               v-for="car in chunk"
@@ -33,13 +39,12 @@
               md="3"
               class="mb-4"
             >
-              <v-card elevation="8">
+              <v-card elevation="8" class="car-card">
                 <v-img
                   v-if="car.img"
                   :src="car.img"
                   alt="Car Image"
-                  class="card-img-top"
-                  contain
+                  class="car-image"
                   cover
                 ></v-img>
                 <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
@@ -138,17 +143,7 @@ export default {
 </script>
 
 <style scoped>
-.koy {
-  text-decoration: none;
-}
-
-.card-img-top {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-}
-
-.cars-for-sale {
+.cars-for-rent {
   padding: 20px;
 }
 
@@ -165,17 +160,22 @@ export default {
   font-size: 18px;
 }
 
-.car-item {
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+.carousel-item {
+  height: 90%;
+  overflow: hidden;
+}
+
+.car-card {
+  height: 400px; /* Fixed height for consistent layout */
+  overflow: hidden; /* Prevent overflow of content */
 }
 
 .car-image {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 250px; /* Adjust as necessary */
+  object-fit: cover; /* Ensure images fill the space without distortion */
 }
+
 .arimo {
   font-family: "Arimo", sans-serif;
   font-optical-sizing: auto;

@@ -33,22 +33,25 @@
     <!-- Car List Carousel -->
     <v-row v-else>
       <v-carousel hide-delimiters cycle show-arrows autoplay>
-        <v-carousel-item v-for="(chunk, index) in chunkedCars" :key="index">
+        <v-carousel-item
+          v-for="(chunk, index) in chunkedCars"
+          :key="index"
+          class="carousel-item"
+        >
           <v-row>
             <v-col
               v-for="car in chunk"
               :key="car.id"
               cols="12"
               md="3"
-              class="mb-4 border-3 border"
+              class="mb-4"
             >
-              <v-card elevation="8">
+              <v-card elevation="8" class="car-card">
                 <v-img
                   v-if="car.img"
                   :src="car.img"
                   alt="Car Image"
-                  class="card-img-top"
-                  contain
+                  class="car-image"
                   cover
                 ></v-img>
                 <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
@@ -79,9 +82,9 @@ import { onMounted, onBeforeUnmount, computed, ref } from "vue";
 const carStore = useCarStore();
 const chunkSize = ref(4); // Default chunk size for larger screens
 
-// Method to update chunk size
+//  to update chunk size based on screen width
 const updateChunkSize = () => {
-  chunkSize.value = window.innerWidth < 600 ? 1 : 4; // Adjust threshold as needed
+  chunkSize.value = window.innerWidth < 768 ? 1 : 4; // Adjust for smaller screens like iPads
 };
 
 // Computed property to chunk cars for layout
@@ -106,16 +109,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.koy {
-  text-decoration: none;
-}
-
-.card-img-top {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-}
-
 .cars-for-sale {
   padding: 20px;
 }
@@ -133,17 +126,22 @@ onBeforeUnmount(() => {
   font-size: 18px;
 }
 
-.car-item {
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+.carousel-item {
+  height: 90%;
+  overflow: hidden;
+}
+
+.car-card {
+  height: 400px; /* Fixed height for uniform cards */
+  overflow: hidden; /* Prevent overflow of content */
 }
 
 .car-image {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 250px; /* Adjust as necessary */
+  object-fit: cover; /* Ensure images fill the space without distortion */
 }
+
 .arimo {
   font-family: "Arimo", sans-serif;
   font-optical-sizing: auto;

@@ -50,11 +50,7 @@
       elevation="8"
       fluid
     >
-      <v-row>
-        <v-col>
-          <CarsForSale />
-        </v-col>
-      </v-row>
+      <CarsForSale />
     </v-sheet>
     <v-divider></v-divider>
 
