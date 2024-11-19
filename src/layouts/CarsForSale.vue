@@ -2,14 +2,16 @@
   <v-container class="cars-for-sale">
     <v-row>
       <v-col>
-        <v-card class="pa-5" elevation="8">
+        <v-container class="pa-5" elevation="8">
           <h1 class="my-4 text-center">Cars for Sale</h1>
-        </v-card>
+        </v-container>
       </v-col>
     </v-row>
 
     <!-- Loading, Error, or No Cars -->
-    <v-row v-if="carStore.loading || carStore.error || carStore.cars.length === 0">
+    <v-row
+      v-if="carStore.loading || carStore.error || carStore.cars.length === 0"
+    >
       <v-col v-if="carStore.loading" class="loading">
         <v-alert type="info">Loading...</v-alert>
       </v-col>
@@ -18,7 +20,12 @@
         <v-alert type="error">{{ carStore.error }}</v-alert>
       </v-col>
 
-      <v-col v-if="carStore.cars.length === 0 && !carStore.loading && !carStore.error" class="no-cars">
+      <v-col
+        v-if="
+          carStore.cars.length === 0 && !carStore.loading && !carStore.error
+        "
+        class="no-cars"
+      >
         <v-alert type="warning">No cars available for sale.</v-alert>
       </v-col>
     </v-row>
@@ -28,12 +35,28 @@
       <v-carousel hide-delimiters cycle show-arrows autoplay>
         <v-carousel-item v-for="(chunk, index) in chunkedCars" :key="index">
           <v-row>
-            <v-col v-for="car in chunk" :key="car.id" cols="12" md="3" class="mb-4">
+            <v-col
+              v-for="car in chunk"
+              :key="car.id"
+              cols="12"
+              md="3"
+              class="mb-4"
+            >
               <v-card elevation="8">
-                <v-img v-if="car.img" :src="car.img" alt="Car Image" class="card-img-top" contain cover></v-img>
+                <v-img
+                  v-if="car.img"
+                  :src="car.img"
+                  alt="Car Image"
+                  class="card-img-top"
+                  contain
+                  cover
+                ></v-img>
                 <v-card-title>{{ car.brand }} {{ car.model }}</v-card-title>
                 <v-card-actions>
-                  <router-link :to="{ name: 'CarDetails', params: { id: car.id } }" exact>
+                  <router-link
+                    :to="{ name: 'CarDetails', params: { id: car.id } }"
+                    exact
+                  >
                     <v-btn class="mx-auto" outlined color="primary">
                       <span>More Information</span>
                       <v-icon>mdi-arrow-right</v-icon>
@@ -50,8 +73,8 @@
 </template>
 
 <script setup>
-import { useCarStore } from '../stores/carStore.js';
-import { onMounted, onBeforeUnmount, computed, ref } from 'vue';
+import { useCarStore } from "../stores/carStore.js";
+import { onMounted, onBeforeUnmount, computed, ref } from "vue";
 
 const carStore = useCarStore();
 const chunkSize = ref(4); // Default chunk size for larger screens
@@ -74,11 +97,11 @@ const chunkedCars = computed(() => {
 onMounted(async () => {
   await carStore.fetchCars(); // Fetch cars from Pinia store
   updateChunkSize(); // Set initial chunk size
-  window.addEventListener('resize', updateChunkSize); // Listen for window resize
+  window.addEventListener("resize", updateChunkSize); // Listen for window resize
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateChunkSize); // Clean up the listener
+  window.removeEventListener("resize", updateChunkSize); // Clean up the listener
 });
 </script>
 

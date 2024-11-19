@@ -10,7 +10,6 @@
     <p class="text-center">2024 GR SUPRA</p>
     <FeaturedCar />
 
-   
     <v-divider></v-divider>
 
     <v-container>
@@ -46,13 +45,17 @@
 
     <v-divider></v-divider>
 
-    <v-container>
+    <v-sheet
+      :class="isDark ? 'bg-grey-darken-4' : 'bg-blue-grey-lighten-1'"
+      elevation="8"
+      fluid
+    >
       <v-row>
         <v-col>
           <CarsForSale />
         </v-col>
       </v-row>
-    </v-container>
+    </v-sheet>
     <v-divider></v-divider>
 
     <v-container>
@@ -62,20 +65,26 @@
         </v-col>
       </v-row>
     </v-container>
-  <div class="pb-2 border-top">
-    <h1 class="text-center fw-bolder pt-5">Find us here! </h1>
-    <v-container>
-      <div id="map"></div> 
-    </v-container>
-  </div>
+    <v-sheet
+      :class="isDark ? 'bg-grey-darken-4' : 'bg-blue-grey-lighten-1'"
+      elevation="8"
+      fluid
+    >
+      <div class="pb-2 border-top">
+        <h1 class="text-center fw-bolder pt-5">Find us here!</h1>
+        <v-container>
+          <div id="map" class="z-3"></div>
+        </v-container>
+      </div>
+    </v-sheet>
     <Footer />
   </v-app>
 </template>
 
 <script setup>
-import 'leaflet/dist/leaflet.css'; 
-import L from 'leaflet';
-import { onMounted } from 'vue';
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import { ref, onMounted, watch } from "vue";
 import { doLogout } from "../lib/supaBase";
 import Nav from "../layouts/InsideNavbar.vue";
 import FeaturedCar from "../layouts/FeaturedCar.vue";
@@ -88,27 +97,48 @@ import Garage from "../layouts/GarageOuter.vue";
 import Compare from "../layouts/Compare.vue";
 import Ai from "../layouts/Ai.vue";
 import LoanCarOuter from "@/layouts/LoanCarOuter.vue";
-import MainComponent from "../components/NavigationBar/MainComponent.vue";
+import { useTheme } from "vuetify";
+
+const theme = useTheme();
+const isDark = ref(theme.global.current.value.dark);
+
+// Watch theme changes and update `isDark`
+watch(
+  () => theme.global.name.value,
+  (newTheme) => {
+    isDark.value = newTheme === "dark";
+  }
+);
+
+// Initialize the theme and map
+onMounted(() => {
+  const savedTheme = localStorage.getItem("theme") || "dark";
+  theme.global.name.value = savedTheme; // Set theme
+  isDark.value = savedTheme === "dark"; // Update reactive theme variable
+
+  // Initialize map
+  const map = L.map("map").setView([8.956213, 125.597562], 13); // Location: CSU
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  L.marker([8.956213, 125.597562])
+    .addTo(map)
+    .bindPopup("Auto Solutions")
+    .openPopup();
+});
 
 const logout = async () => {
   await doLogout();
 };
-
-onMounted(() => {
-  //  location of CSU badi atik2 sa auto-sol
-  let map = L.map('map').setView([8.956213, 125.597562], 13); // Latitude and Longitude Sa CSU
-
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-
-  L.marker([8.956213, 125.597562]).addTo(map) 
-    .bindPopup('Auto Solutions')
-    .openPopup();
-});
 </script>
+
 <style>
- #map{
+#map {
   height: 500px;
- }
+}
+.v-container {
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+}
 </style>
