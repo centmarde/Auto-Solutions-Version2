@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-container class="pa-5" elevation="8">
-          <h1 class="my-4 text-center">Cars for Rent</h1>
+          <h1 class="my-4 text-center arimo">Cars for Rent</h1>
         </v-container>
       </v-col>
     </v-row>
@@ -175,5 +175,11 @@ export default {
 .car-image {
   max-width: 100%;
   height: auto;
+}
+.arimo {
+  font-family: "Arimo", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 692;
+  font-style: italic;
 }
 </style>

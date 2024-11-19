@@ -46,7 +46,7 @@
     <v-divider></v-divider>
 
     <v-sheet
-      :class="isDark ? 'bg-grey-darken-4' : 'bg-blue-grey-lighten-1'"
+      :class="isDark ? 'bg-grey-darken-4' : 'bg-grey-lighten-1'"
       elevation="8"
       fluid
     >
@@ -66,14 +66,16 @@
       </v-row>
     </v-container>
     <v-sheet
-      :class="isDark ? 'bg-grey-darken-4' : 'bg-blue-grey-lighten-1'"
+      :class="isDark ? 'bg-grey-darken-4' : 'bg-grey-lighten-1'"
       elevation="8"
       fluid
     >
       <div class="pb-2 border-top">
         <h1 class="text-center fw-bolder pt-5">Find us here!</h1>
         <v-container>
-          <div id="map" class="z-3"></div>
+          <v-sheet elevation="10">
+            <div id="map" class="z-3"></div>
+          </v-sheet>
         </v-container>
       </div>
     </v-sheet>
