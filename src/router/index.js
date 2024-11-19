@@ -218,7 +218,7 @@ router.beforeEach((to, from, next) => {
     JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
   console.log(userRole);
-  const publicPages = ["/", "/login", "/Register"];
+  const publicPages = ["/", "/login", "/register"];
   const protectedPages = [
     "/Home",
     "/car/:id",
