@@ -10,8 +10,6 @@
     <p class="text-center">2024 GR SUPRA</p>
     <FeaturedCar />
 
-    <v-divider></v-divider>
-
     <v-container>
       <v-row>
         <v-col cols="12" md="6" lg="3">
@@ -43,8 +41,6 @@
       </v-row>
     </v-container>
 
-    <v-divider></v-divider>
-
     <v-sheet
       :class="isDark ? 'bg-grey-darken-4' : 'bg-grey-lighten-1'"
       elevation="8"
@@ -52,29 +48,53 @@
     >
       <CarsForSale />
     </v-sheet>
-    <v-divider></v-divider>
 
-    <v-container>
-      <v-row>
-        <v-col>
-          <CarsForRent />
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-sheet
-      :class="isDark ? 'bg-grey-darken-4' : 'bg-grey-lighten-1'"
+    <v-container
+      :class="isDark ? 'bgrent' : 'bg-grey-lighten-1'"
       elevation="8"
       fluid
     >
-      <div class="pb-2 border-top">
-        <h1 class="text-center fw-bolder pt-5">Find us here!</h1>
-        <v-container>
-          <v-sheet elevation="10">
-            <div id="map" class="z-3"></div>
-          </v-sheet>
-        </v-container>
-      </div>
-    </v-sheet>
+      <CarsForRent />
+    </v-container>
+    <v-container>
+      <h1 class="text-start fw-bolder pt-5">Find us here!</h1>
+      <v-row>
+        <v-col class="mt-5 pt-5 border-top d-flex flex-column" md="6" cols="12">
+          <div class="d-flex">
+            <v-icon class="pt-3">mdi-map-marker</v-icon>
+            <h4 class="ms-5">
+              Ampayon, Butuan City, Agusan Del Norte, Philippines
+            </h4>
+          </div>
+
+          <!-- Add margin-top-auto to push this section to the bottom -->
+          <div>
+            <div class="d-flex mt-12 pt-5 align-items-center">
+              <v-icon>mdi-phone</v-icon>
+              <h6 class="ms-5 mt-2">09123456789</h6>
+            </div>
+            <div class="d-flex pt-5 align-items-center">
+              <v-icon>mdi-email</v-icon>
+              <h6 class="ms-5 mt-2">auto-solutions@gmail.com</h6>
+            </div>
+          </div>
+          <div class="d-flex pt-5 align-items-center">
+            <v-icon>mdi-information</v-icon>
+            <h6 class="ms-5 mt-2">We are open Monday-Friday</h6>
+          </div>
+        </v-col>
+
+        <v-col md="6" cols="12">
+          <div class="pb-2">
+            <v-container>
+              <v-sheet elevation="10">
+                <div id="map" class="z-3"></div>
+              </v-sheet>
+            </v-container>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
     <Footer />
   </v-app>
 </template>
@@ -132,11 +152,16 @@ const logout = async () => {
 };
 </script>
 
-<style>
+<style scope>
 #map {
-  height: 500px;
+  height: 400px;
+  width: 100%;
 }
+
 .v-container {
   transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+}
+.bgrent {
+  background-color: #141c22;
 }
 </style>
