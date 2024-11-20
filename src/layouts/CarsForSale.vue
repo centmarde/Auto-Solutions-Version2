@@ -31,12 +31,12 @@
     </v-row>
 
     <!-- Car List Carousel -->
-    <v-row v-else>
-      <v-carousel hide-delimiters cycle show-arrows autoplay>
+    <v-row v-else class="padding">
+      <v-carousel hide-delimiters cycle show-arrows autoplay height="350px">
         <v-carousel-item
           v-for="(chunk, index) in chunkedCars"
           :key="index"
-          class="carousel-item"
+          class="carousel-item border"
         >
           <v-row>
             <v-col
@@ -44,7 +44,7 @@
               :key="car.id"
               cols="12"
               md="3"
-              class="mb-4"
+              class="mb-4 elevation-8"
             >
               <v-card elevation="8" class="car-card">
                 <v-img
@@ -62,6 +62,7 @@
                   >
                     <v-btn class="mx-auto" outlined color="primary">
                       <span>More Information</span>
+
                       <v-icon>mdi-arrow-right</v-icon>
                     </v-btn>
                   </router-link>
@@ -109,10 +110,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.cars-for-sale {
-  padding: 20px;
-}
-
 .loading {
   font-size: 18px;
   color: #666;
@@ -126,16 +123,6 @@ onBeforeUnmount(() => {
   font-size: 18px;
 }
 
-.carousel-item {
-  height: 90%;
-  overflow: hidden;
-}
-
-.car-card {
-  height: 400px; /* Fixed height for uniform cards */
-  overflow: hidden; /* Prevent overflow of content */
-}
-
 .car-image {
   width: 100%;
   height: 250px; /* Adjust as necessary */
@@ -147,5 +134,11 @@ onBeforeUnmount(() => {
   font-optical-sizing: auto;
   font-weight: 692;
   font-style: italic;
+}
+.padding {
+  padding-bottom: 120px;
+}
+.elevation-8 {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 </style>
