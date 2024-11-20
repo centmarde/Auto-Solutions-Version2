@@ -13,7 +13,7 @@
       class="d-flex justify-content-center align-content-center flex-column h-50 position-fixed"
     >
       <!-- First Link (Dashboard) -->
-      <div class="mt-5 position-relative bot">
+      <div class="mt-10 position-relative bot">
         <v-icon>mdi-view-dashboard</v-icon>
         <router-link
           to="/Admin"
