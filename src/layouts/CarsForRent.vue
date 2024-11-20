@@ -37,7 +37,7 @@
               :key="car.id"
               cols="12"
               md="3"
-              class="mb-4"
+              class="mb-4 border"
             >
               <v-card elevation="8" class="car-card">
                 <v-img
