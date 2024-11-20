@@ -24,12 +24,19 @@
     </v-row>
 
     <!-- Car List Carousel -->
-    <v-row v-else>
-      <v-carousel hide-delimiters cycle show-arrows autoplay>
+    <v-row v-else class="padding">
+      <v-carousel
+        hide-delimiters
+        cycle
+        show-arrows
+        autoplay
+        class="carouselsize"
+        height="350px"
+      >
         <v-carousel-item
           v-for="(chunk, index) in chunkedCars"
           :key="index"
-          class="carousel-item"
+          class="carousel-item border"
         >
           <v-row>
             <v-col
@@ -37,7 +44,7 @@
               :key="car.id"
               cols="12"
               md="3"
-              class="mb-4 border"
+              class="mb-4"
             >
               <v-card elevation="8" class="car-card">
                 <v-img
@@ -161,7 +168,7 @@ export default {
 }
 
 .carousel-item {
-  height: 90%;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -181,5 +188,8 @@ export default {
   font-optical-sizing: auto;
   font-weight: 692;
   font-style: italic;
+}
+.padding {
+  padding-bottom: 120px;
 }
 </style>

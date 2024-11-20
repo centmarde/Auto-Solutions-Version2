@@ -162,6 +162,6 @@ const logout = async () => {
   transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
 }
 .bgrent {
-  background-color: #141c22;
+  background-color: #0f161c;
 }
 </style>
