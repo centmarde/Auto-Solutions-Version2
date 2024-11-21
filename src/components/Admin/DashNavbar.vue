@@ -3,10 +3,8 @@
     class="navbar navbar-expand-lg fixed-top"
     :class="{ 'navbar-dark': isDark, 'navbar-light': !isDark }"
     :style="{
-      backgroundColor: isDark
-        ? 'rgba(52, 52, 52, 0.8)'
-        : 'rgba(200, 200, 200, 0.8)',
-      color: isDark ? '#fff' : '#333',
+      backgroundColor: isDark ? '#242424' : '#242424',
+      color: isDark ? '#333333' : '#333333',
     }"
   >
     <div class="container-fluid">
@@ -18,7 +16,9 @@
           class="logopic"
           height="50"
         />
-        <h3 id="gidor" class="ms-2 mb-0">Admin Section</h3>
+        <h3 id="gidor" class="ms-2 mb-0" style="color: #ffffff">
+          Admin Section
+        </h3>
       </a>
 
       <!-- Hamburger Menu Button -->
@@ -207,7 +207,8 @@ onMounted(() => {
 
 #gidor {
   font-size: 1.2rem;
-  font-family: "Merriweather", serif;
+  font-family: "Tipperary", sans-serif;
+  color: #ffffff; /* Always light text */
 }
 
 /* Media queries for responsive design */

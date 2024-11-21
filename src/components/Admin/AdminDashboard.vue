@@ -113,16 +113,33 @@ const initializeBarChart = () => {
     : "rgba(0, 0, 0, 0.8)";
 
   const data = {
-    labels: ["For Sale", "For Rent"],
+    labels: [
+      "For Sale", // Label for cars for sale
+      "For Rent", // Label for cars for rent
+      "Car Purchased", // Label for cars purchased
+      "Car Rented", // Label for cars rented
+    ],
     datasets: [
       {
-        label: "Total Cars",
-        data: [carCount.value, totalCarsForRent.value],
-        backgroundColor: [
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
+        label: "Hide Graph",
+        data: [
+          carCount.value, // For Sale
+          totalCarsForRent.value, // For Rent
+          purchasedCount.value, // Car Purchased
+          rentedCount.value, // Car Rented],
         ],
-        borderColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
+        backgroundColor: [
+          "rgba(75, 192, 192, 0.2)", // For Sale
+          "rgba(153, 102, 255, 0.2)", // For Rent
+          "rgba(255, 159, 64, 0.2)", // Car Purchased
+          "rgba(54, 162, 235, 0.2)", // Car Rented
+        ],
+        borderColor: [
+          "rgba(75, 192, 192, 1)", // For Sale
+          "rgba(153, 102, 255, 1)", // For Rent
+          "rgba(255, 159, 64, 1)", // Car Purchased
+          "rgba(54, 162, 235, 1)", // Car Rented
+        ],
         borderWidth: 1,
       },
     ],
