@@ -34,6 +34,7 @@ import GarageContents from "@/components/GarageContents.vue";
 import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
+import LoanedCars from "@/pages/adminPages/LoanedCars.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
 import LoanReview from "@/pages/adminPages/LoanReview.vue";
 import HandlingPage from "@/components/NavigationBar/HandlingPage.vue";
@@ -154,6 +155,11 @@ const routes = setupLayouts([
     meta: { requiresAuth: true },
   },
   {
+    path: "/LoanedCars",
+    component: LoanedCars,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/AdminReview",
     component: AdminReview,
     meta: { requiresAuth: true },
@@ -262,6 +268,7 @@ router.beforeEach((to, from, next) => {
       to.path.startsWith("/CarInRent") ||
       to.path.startsWith("/ClientView") ||
       to.path.startsWith("/CarBeenPurchased") ||
+      to.path.startsWith("/LoanedCars") ||
       to.path.startsWith("/CarInSale") ||
       to.path.startsWith("/Clients")) &&
     userRole !== true

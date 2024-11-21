@@ -28,6 +28,13 @@
           link="/Rented"
           :num="rentedCount"
         />
+        <!-- New Card for Loaned Cars -->
+        <Card
+          class="col-6"
+          title="Loaned Cars"
+          link="/LoanedCars"
+          :num="loanedCount"
+        />
       </div>
     </div>
   </div>
@@ -48,6 +55,7 @@ const carCount = ref(0);
 const totalCarsForRent = ref(0);
 const purchasedCount = ref(0);
 const rentedCount = ref(0);
+const loanedCount = ref(0); // New ref for loaned cars
 
 const fetchCarCount = async () => {
   try {
@@ -67,13 +75,25 @@ const fetchCarCount = async () => {
 
 const fetchRentedCarsCount = async () => {
   try {
-    const { data, error } = await supabase.from("rented_cars").select("id"); // Adjust this if there's a different column structure
+    const { data, error } = await supabase.from("rented_cars").select("id");
 
     if (error) throw error;
 
     rentedCount.value = data.length;
   } catch (err) {
     console.error("Error fetching rented car count:", err.message);
+  }
+};
+
+const fetchLoanedCarsCount = async () => {
+  try {
+    const { data, error } = await supabase.from("loaned_cars").select("id"); // Fetch loaned cars
+
+    if (error) throw error;
+
+    loanedCount.value = data.length;
+  } catch (err) {
+    console.error("Error fetching loaned car count:", err.message);
   }
 };
 
@@ -118,6 +138,7 @@ const initializeBarChart = () => {
       "For Rent", // Label for cars for rent
       "Car Purchased", // Label for cars purchased
       "Car Rented", // Label for cars rented
+      "Loaned Cars", // Label for loaned cars
     ],
     datasets: [
       {
@@ -126,19 +147,22 @@ const initializeBarChart = () => {
           carCount.value, // For Sale
           totalCarsForRent.value, // For Rent
           purchasedCount.value, // Car Purchased
-          rentedCount.value, // Car Rented],
+          rentedCount.value, // Car Rented
+          loanedCount.value, // Loaned Cars
         ],
         backgroundColor: [
           "rgba(75, 192, 192, 0.2)", // For Sale
           "rgba(153, 102, 255, 0.2)", // For Rent
           "rgba(255, 159, 64, 0.2)", // Car Purchased
           "rgba(54, 162, 235, 0.2)", // Car Rented
+          "rgba(255, 99, 132, 0.2)", // Loaned Cars (New color)
         ],
         borderColor: [
           "rgba(75, 192, 192, 1)", // For Sale
           "rgba(153, 102, 255, 1)", // For Rent
           "rgba(255, 159, 64, 1)", // Car Purchased
           "rgba(54, 162, 235, 1)", // Car Rented
+          "rgba(255, 99, 132, 1)", // Loaned Cars (New border color)
         ],
         borderWidth: 1,
       },
@@ -194,6 +218,7 @@ onMounted(async () => {
   await fetchtotalCarsForRent();
   await fetchtotalCarsPurchased();
   await fetchRentedCarsCount();
+  await fetchLoanedCarsCount(); // Fetch loaned cars data
   initializeBarChart();
 });
 
