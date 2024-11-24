@@ -12,25 +12,52 @@
 
     <v-container>
       <v-row>
-        <v-col cols="12" md="6" lg="3">
+        <v-col cols="12" sm="6" md="6" lg="3">
           <v-card elevation="8">
-            <SellCarInside />
+            <CarAction
+              title="POST A CAR"
+              subtitle=""
+              image="https://www.cars.com/images/sell/sale-dealer-woman-brand-colors.png"
+              altText="Loan Image"
+              redirectTo="/SellContents"
+              imgWidth="185px"
+            />
           </v-card>
         </v-col>
-        <v-col cols="12" md="6" lg="3">
+        <v-col cols="12" md="6" sm="6" lg="3">
           <v-card elevation="8">
-            <CarRental />
+            <CarAction
+              title="RENT A CAR"
+              subtitle=""
+              image="https://cdn-icons-png.flaticon.com/512/8566/8566110.png"
+              altText="Loan Image"
+              redirectTo="/RentContents"
+              imgWidth="100px"
+            />
           </v-card>
         </v-col>
 
-        <v-col cols="12" md="6" lg="3">
+        <v-col cols="12" md="6" sm="6" lg="3">
           <v-card elevation="8">
-            <Garage />
+            <CarAction
+              title="GARAGE"
+              subtitle=""
+              image="https://www.cars.com/images/garage-landing/garage-hero.webp"
+              altText="Loan Image"
+              redirectTo="/Garage"
+            />
           </v-card>
         </v-col>
-        <v-col cols="12" md="6" lg="3">
+        <v-col cols="12" md="6" sm="6" lg="3">
           <v-card elevation="8">
-            <LoanCarOuter />
+            <CarAction
+              title="LOAN A CAR"
+              subtitle=""
+              image="https://pngpix.com/images/hd/stylized-money-icon-vector-b7kfg9iwozjig9ie.jpg"
+              altText="Loan Image"
+              redirectTo="/LoanCarBase"
+              imgWidth="129px"
+            />
           </v-card>
         </v-col>
       </v-row>
@@ -107,15 +134,14 @@ import { doLogout } from "../lib/supaBase";
 import Nav from "../layouts/InsideNavbar.vue";
 import FeaturedCar from "../layouts/FeaturedCar.vue";
 import CarsForSale from "../layouts/CarsForSale.vue";
-import CarRental from "../layouts/CarRental.vue";
 import Footer from "../layouts/Footer.vue";
-import SellCarInside from "@/layouts/SellCarInside.vue";
 import CarsForRent from "../layouts/CarsForRent.vue";
-import Garage from "../layouts/GarageOuter.vue";
+
 import Compare from "../layouts/Compare.vue";
 import Ai from "../layouts/Ai.vue";
 import LoanCarOuter from "@/layouts/LoanCarOuter.vue";
 import { useTheme } from "vuetify";
+import CarAction from "@/layouts/CardLayout.vue";
 
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);
