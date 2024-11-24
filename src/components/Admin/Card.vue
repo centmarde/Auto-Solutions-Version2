@@ -1,93 +1,107 @@
 <template>
-  <div 
-    class="p-5 height width rounded-3"
-    :class="{'navbar-dark': isDark, 'navbar-light': !isDark}"
-    :style="{ backgroundColor: isDark ? 'rgba(52, 52, 52, 0.8)' : 'rgba(200, 200, 200, 0.8)', color: isDark ? '#fff' : '#333' }"
+  <v-card
+    class="mx-auto hoverable"
+    max-width="344"
+    elevation="8"
+    :style="{
+      backgroundColor: cardBackgroundColor,
+      borderColor: cardBorderColor,
+    }"
   >
-    <h1 id="font" class="fw-bold">{{title}}:</h1>
-    <h5 id="font">{{num}}</h5>
-    <div class="border-top border-1 pt-2">
+    <v-card-text>
+      <div>{{ title }}</div>
+      <p class="text-h4 font-weight-black">{{ num }}</p>
 
-      <RouterLink :to="link">  
-        <v-btn
-          color="primary"
-          
-          class="btnn32"
-        >
-          View
-          <v-icon right>
-            mdi-arrow-right
-          </v-icon>
+      <!-- Conditionally display details based on the title -->
+      <p v-if="title == 'Total Cars for Sale'">
+        These are the cars currently available for sale.
+      </p>
+      <p v-if="title == 'Total Cars for Rent'">
+        These cars are available for rent.
+      </p>
+      <p v-if="title == 'Car Purchased'">These cars have been purchased.</p>
+      <p v-if="title == 'Car Rented'">These cars have been rented.</p>
+    </v-card-text>
+
+    <v-card-actions>
+      <!-- Button that navigates to the link -->
+      <RouterLink :to="link">
+        <v-btn color="teal-accent-4" variant="text">
+          {{ send }}
+          <v-icon right>mdi-arrow-right</v-icon>
         </v-btn>
       </RouterLink>
-    </div>
-  </div>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script setup>
-import { defineProps, ref, onMounted } from 'vue';
-import { RouterLink } from 'vue-router';
-import { useTheme } from 'vuetify';  
-
-// Get theme from localStorage and set it when the component mounts
-onMounted(() => {
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  theme.global.name.value = savedTheme;
-  isDark.value = savedTheme === 'dark';
-});
-
-const theme = useTheme();
-const isDark = ref(theme.global.current.value.dark); 
-
-// Theme toggle function
-const toggleTheme = () => {
-  const newTheme = isDark.value ? 'light' : 'dark';
-  theme.global.name.value = newTheme;
-  isDark.value = newTheme === 'dark';
-  localStorage.setItem('theme', newTheme); 
-};
+import { defineProps, computed } from "vue";
+import { RouterLink } from "vue-router";
 
 // Define props for title, num, send, and link
-defineProps({
+const props = defineProps({
   title: {
     type: String,
-    default: 'No title'
+    default: "No title",
   },
   num: {
-    type: Number, 
+    type: Number,
     default: 0,
-    validator: value => Number.isInteger(value) 
+    validator: (value) => Number.isInteger(value),
   },
   send: {
-    type: String, 
-    default: 'Get Started'
+    type: String,
+    default: "Learn More",
   },
   link: {
-    type: String, 
-    default: 'notfound'
+    type: String,
+    default: "/notfound",
+  },
+  cardType: {
+    type: String,
+    default: "default", // To distinguish card types
   },
 });
+
+// Define card colors based on type
+const cardColors = {
+  "Total Cars for Sale": {
+    backgroundColor: "rgba(75, 192, 192, 0.2)",
+    borderColor: "rgba(75, 192, 192, 1)",
+  },
+  "Total Cars for Rent": {
+    backgroundColor: "rgba(153, 102, 255, 0.2)",
+    borderColor: "rgba(153, 102, 255, 1)",
+  },
+  "Car Purchased": {
+    backgroundColor: "rgba(255, 159, 64, 0.2)",
+    borderColor: "rgba(255, 159, 64, 1)",
+  },
+  "Car Rented": {
+    backgroundColor: "rgba(54, 162, 235, 0.2)",
+    borderColor: "rgba(54, 162, 235, 1)",
+  },
+  "Loaned Cars": {
+    backgroundColor: "rgba(75, 192, 192, 0.2)",
+    borderColor: "rgba(75, 192, 192, 1)",
+  },
+};
+
+// Computed properties for background and border colors based on the title
+const cardBackgroundColor = computed(
+  () => cardColors[props.title]?.backgroundColor || "white"
+);
+const cardBorderColor = computed(
+  () => cardColors[props.title]?.borderColor || "transparent"
+);
 </script>
 
-<style>
-.height {
-  height: 200px;
-}
-.width {
-  width: 450px;
-}
-#font {
-  font-size: 2rem;
-  font-family: "Merriweather", serif; 
-}
-
-/* Media query for screens with a width of 500px or less */
-@media (max-width: 500px) {
-  .width {
-    width: 300px;
-  }
-  .height {
-    height: 250px;
-  }
+<style scoped>
+/* Add hover effect for further lift */
+.hoverable:hover {
+  transform: translateY(-4px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
 }
 </style>

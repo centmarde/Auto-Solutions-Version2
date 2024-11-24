@@ -1,5 +1,5 @@
 <template>
-  <br><br><br>
+  <br /><br /><br />
   <InsideNavbar />
   <v-container fluid>
     <v-row>
@@ -9,7 +9,8 @@
       <v-col lg="8" md="8" sm="12" cols="12">
         <v-card class="chat-card">
           <v-card-title class="chat-title">
-            Chat with {{ isSupplier ? buyerName : supplierName }} about {{ carBrand }} {{ carModel }}
+            Chat with {{ isSupplier ? buyerName : supplierName }} about
+            {{ carBrand }} {{ carModel }}
           </v-card-title>
           <v-card-text class="chat-messages">
             <v-list>
@@ -18,20 +19,34 @@
                   <v-list-item
                     v-for="(message, index) in messages"
                     :key="index"
-                    :class="{'buyer-message': message.senderName === userName, 'supplier-message': message.senderName !== userName}"
+                    :class="{
+                      'buyer-message': message.senderName === userName,
+                      'supplier-message': message.senderName !== userName,
+                    }"
                   >
                     <v-list-item-content>
                       <v-list-item>
                         <v-list-item-icon>
-                          <v-icon>{{ message.senderName === buyerName ? 'mdi mdi-face-agent' : 'mdi-account-circle' }}</v-icon>
+                          <v-icon>{{
+                            message.senderName === buyerName
+                              ? "mdi mdi-face-agent"
+                              : "mdi-account-circle"
+                          }}</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
                           <v-list-item-title>
-                            <span class="font-weight-bold">{{ message.senderName }}:</span>
+                            <span class="font-weight-bold"
+                              >{{ message.senderName }}:</span
+                            >
                           </v-list-item-title>
                           <span class="message-text">{{ message.text }}</span>
-                          <v-list-item-subtitle class="timestamp" style="text-align: right; margin-top: 4px;">
-                            {{ new Date(message.created_at).toLocaleTimeString() }}
+                          <v-list-item-subtitle
+                            class="timestamp"
+                            style="text-align: right; margin-top: 4px"
+                          >
+                            {{
+                              new Date(message.created_at).toLocaleTimeString()
+                            }}
                           </v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
@@ -59,22 +74,24 @@
 </template>
 
 <script>
-import { supabase } from '@/lib/supaBase';
-import Inbox from '@/layouts/Inbox.vue';
+import { supabase } from "@/lib/supaBase";
+import Inbox from "@/layouts/Inbox.vue";
 
 export default {
   data() {
     return {
       isFetching: false,
       chatId: null,
-      supplierName: '',
-      buyerName: '',
-      carBrand: '',
-      carModel: '',
-      input: '',
+      supplierName: "",
+      buyerName: "",
+      carBrand: "",
+      carModel: "",
+      input: "",
       messages: [],
-      userName: '',
+      userName: "",
       isSupplier: false,
+      allConversations: [], // Holds all fetched conversations
+      selectedConversationId: null, // Currently selected conversation ID
     };
   },
 
@@ -84,47 +101,59 @@ export default {
 
     const sellerId = this.$route.query.seller_id;
     const carId = this.$route.query.car_id;
-    const loggedInUserId = localStorage.getItem('user_id');
+    const loggedInUserId = localStorage.getItem("user_id");
 
     if (sellerId && loggedInUserId) {
       try {
+        // Fetch car details
         const { data: carData, error: carError } = await supabase
-          .from('cars')
-          .select('brand, model')
-          .eq('id', carId)
+          .from("cars")
+          .select("brand, model")
+          .eq("id", carId)
           .single();
 
         if (carError) throw carError;
         this.carBrand = carData.brand;
         this.carModel = carData.model;
 
-        const { data: conversationData, error: conversationError } = await supabase
-          .from('conversations')
-          .select('id, buyer_id, supplier_id')
-          .eq('car_id', carId)
-          .or(`supplier_id.eq.${loggedInUserId},buyer_id.eq.${loggedInUserId}`)
-          .maybeSingle();
+        // Fetch all conversations
+        const { data: conversationData, error: conversationError } =
+          await supabase
+            .from("conversations")
+            .select("id, buyer_id, supplier_id, created_at")
+            .eq("car_id", carId)
+            .or(
+              `supplier_id.eq.${loggedInUserId},buyer_id.eq.${loggedInUserId}`
+            );
 
         if (conversationError) throw conversationError;
 
-        if (conversationData) {
-          this.chatId = conversationData.id;
-          this.isSupplier = conversationData.supplier_id == loggedInUserId;
-         
+        if (conversationData && conversationData.length > 0) {
+          // Save all conversations for selection
+          this.allConversations = conversationData;
 
+          // Default to the latest conversation
+          const latestConversation = conversationData.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          )[0];
+          this.selectedConversationId = latestConversation.id;
+          this.chatId = latestConversation.id;
+          this.isSupplier = latestConversation.supplier_id === loggedInUserId;
+
+          // Fetch names for buyer and supplier
           const { data: buyerData, error: buyerError } = await supabase
-            .from('users')
-            .select('user_name')
-            .eq('id', conversationData.buyer_id)
+            .from("users")
+            .select("user_name")
+            .eq("id", latestConversation.buyer_id)
             .single();
 
           if (buyerError) throw buyerError;
           this.buyerName = buyerData.user_name;
 
           const { data: supplierData, error: supplierError } = await supabase
-            .from('users')
-            .select('user_name')
-            .eq('id', conversationData.supplier_id)
+            .from("users")
+            .select("user_name")
+            .eq("id", latestConversation.supplier_id)
             .single();
 
           if (supplierError) throw supplierError;
@@ -132,9 +161,11 @@ export default {
 
           await this.fetchMessages();
           this.setupRealtimeSubscription();
+        } else {
+          console.warn("No conversation found for the given criteria.");
         }
       } catch (err) {
-        console.error('Error during chat setup:', err);
+        console.error("Error during chat setup:", err);
       } finally {
         this.isFetching = false;
       }
@@ -145,62 +176,84 @@ export default {
     async fetchMessages() {
       try {
         const { data: messagesData, error: messagesError } = await supabase
-          .from('messages')
-          .select('message, user_id, created_at')
-          .eq('conversation_id', this.chatId)
-          .order('created_at', { ascending: true });
+          .from("messages")
+          .select("message, user_id, created_at")
+          .eq("conversation_id", this.chatId)
+          .order("created_at", { ascending: true });
 
         if (messagesError) throw messagesError;
 
-        this.messages = await Promise.all(messagesData.map(async (message) => {
-          const senderId = message.user_id;
+        this.messages = await Promise.all(
+          messagesData.map(async (message) => {
+            const senderId = message.user_id;
 
-          const { data: senderData, error: senderError } = await supabase
-            .from('users')
-            .select('user_name')
-            .eq('id', senderId)
-            .single();
+            const { data: senderData, error: senderError } = await supabase
+              .from("users")
+              .select("user_name")
+              .eq("id", senderId)
+              .single();
 
-          if (senderError) throw senderError;
+            if (senderError) throw senderError;
 
-          return {
-            senderName: senderData.user_name,
-            text: message.message,
-            created_at: message.created_at,
-          };
-        }));
+            return {
+              senderName: senderData.user_name,
+              text: message.message,
+              created_at: message.created_at,
+            };
+          })
+        );
       } catch (err) {
-        console.error('Error fetching messages:', err);
+        console.error("Error fetching messages:", err);
       }
     },
 
     async sendMessage() {
       if (this.input.trim() && this.chatId) {
         try {
-          const loggedInUserId = localStorage.getItem('user_id');
+          const loggedInUserId = localStorage.getItem("user_id");
 
-          const { data, error: messageError } = await supabase
-            .from('messages')
-            .insert([{ conversation_id: this.chatId, message: this.input, user_id: loggedInUserId }]);
+          const { error: messageError } = await supabase
+            .from("messages")
+            .insert([
+              {
+                conversation_id: this.chatId,
+                message: this.input,
+                user_id: loggedInUserId,
+              },
+            ]);
 
           if (messageError) throw messageError;
 
-          this.messages.push({ senderName: this.userName, text: this.input, created_at: new Date().toISOString() });
-          this.input = '';
+          this.messages.push({
+            senderName: this.userName,
+            text: this.input,
+            created_at: new Date().toISOString(),
+          });
+          this.input = "";
         } catch (err) {
-          console.error('Error sending message:', err);
+          console.error("Error sending message:", err);
         }
       }
     },
 
+    async onConversationChange() {
+      // Change the current conversation and reload messages
+      this.chatId = this.selectedConversationId;
+      await this.fetchMessages();
+    },
+
     setupRealtimeSubscription() {
       const channel = supabase
-        .channel('public:messages')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, (payload) => {
-          if (payload.new.conversation_id === this.chatId) {
-            this.fetchMessages(); 
+        .channel("public:messages")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "messages" },
+          (payload) => {
+            if (payload.new.conversation_id === this.chatId) {
+              this.fetchMessages();
+            }
           }
-        })
+        )
         .subscribe();
     },
   },
@@ -208,7 +261,7 @@ export default {
 </script>
 
 <script setup>
-import InsideNavbar from '@/layouts/InsideNavbar.vue';
+import InsideNavbar from "@/layouts/InsideNavbar.vue";
 </script>
 
 <style scoped>

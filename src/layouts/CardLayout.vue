@@ -1,31 +1,30 @@
 <template>
-  <v-card elevation="10" id="garage-card" class="pa-10">
+  <v-card class="paddings fixed-height" elevation="10">
     <v-row>
-      <v-col cols="12" lg="12" md="12" sm="5">
-        <v-card-title>
-          <h3 id="title" class="text-center">GARAGE</h3>
-        </v-card-title>
+      <v-col cols="12">
+        <h3 id="title" class="text-center">{{ title }}</h3>
+        <v-row class="d-flex justify-content-center">
+          <span class="text-center">{{ subtitle }}</span>
+        </v-row>
       </v-col>
 
-      <v-col cols="12" lg="12" md="12" sm="5">
+      <v-col cols="12">
         <v-img
-          class="d-block mx-auto"
-          src="https://www.cars.com/images/garage-landing/garage-hero.webp"
-          alt="Garage Image"
-          width="8.5rem"
-          style="left: 15%"
+          :src="image"
+          :alt="altText"
+          :style="{ width: imgWidth }"
+          class="position-relative"
+          id="sts4"
         ></v-img>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col class="d-flex justify-center my-2">
-        <router-link to="/Garage" style="text-decoration: none;">
-          <v-btn @click="handleSubmit" color="primary" class="btnn32">
-            Get Started
-            <v-icon right>mdi-arrow-right</v-icon>
-          </v-btn>
-        </router-link>
+      <v-col class="d-flex justify-center my-1">
+        <v-btn @click="handleSubmit" color="primary" class="btnn32">
+          {{ buttonText }}
+          <v-icon right>mdi-arrow-right</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
   </v-card>
@@ -33,21 +32,42 @@
 
 <script>
 export default {
-  data() {
-    return {
-      isSubmitting: false,
-    };
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    subtitle: {
+      type: String,
+      default: "",
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    altText: {
+      type: String,
+      required: true,
+    },
+    imgWidth: {
+      type: String,
+      default: "8rem",
+    },
+    buttonText: {
+      type: String,
+      default: "Get Started",
+    },
+    redirectTo: {
+      type: String,
+      required: true,
+    },
   },
   methods: {
     handleSubmit() {
-      // Check if user is logged in
       const isLoggedIn = localStorage.getItem("access_token") !== null;
-
       if (isLoggedIn) {
-        // If logged in, redirect to rent contents page
-        this.$router.push("/RentContents");
+        this.$router.push(this.redirectTo);
       } else {
-        // If not logged in, redirect to login page
         this.$router.push("/login");
       }
     },
@@ -56,24 +76,24 @@ export default {
 </script>
 
 <style scoped>
-#garage-card {
-  overflow: hidden;
+.paddings {
+  padding: 25px;
+}
+.fixed-height {
+  height: 300px;
 }
 
 #title {
   font-family: "Merriweather", serif;
 }
 
-/* Image styling for responsive design */
-@media (max-width: 800px) and (min-width: 350px) {
-  .sts4 {
-    top: 20%;
-    left: 10%;
-    margin-bottom: 2rem;
-  }
+#sts4 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-bottom: 2rem;
 }
 
-/* Button styling for "Get Started" */
 .btnn32 {
   position: relative;
   transition: all 0.3s ease-in-out;
@@ -85,7 +105,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #ffff;
   gap: 10px;
   font-weight: bold;
   border: 3px solid #ffffff4d;
