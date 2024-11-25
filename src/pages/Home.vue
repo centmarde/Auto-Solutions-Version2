@@ -79,7 +79,7 @@
     </v-sheet>
 
     <v-container
-      :class="isDark ? 'bgrent' : 'bg-grey-lighten-1'"
+      :class="isDark ? 'bgrent' : 'bg-blue-grey-lighten-4'"
       elevation="8"
       fluid
     >
@@ -91,7 +91,7 @@
         <v-col class="mt-5 pt-5 border-top d-flex flex-column" md="6" cols="12">
           <div class="d-flex">
             <v-icon class="pt-3">mdi-map-marker</v-icon>
-            <h4 class="ms-5">
+            <h4 class="ms-5 fw-bold">
               Ampayon, Butuan City, Agusan Del Norte, Philippines
             </h4>
           </div>
@@ -100,16 +100,16 @@
           <div>
             <div class="d-flex mt-12 pt-5 align-items-center">
               <v-icon>mdi-phone</v-icon>
-              <h6 class="ms-5 mt-2">09123456789</h6>
+              <h6 class="ms-5 mt-2 fw-bold">09123456789</h6>
             </div>
             <div class="d-flex pt-5 align-items-center">
               <v-icon>mdi-email</v-icon>
-              <h6 class="ms-5 mt-2">auto-solutions@gmail.com</h6>
+              <h6 class="ms-5 mt-2 fw-bold">auto-solutions@gmail.com</h6>
             </div>
           </div>
           <div class="d-flex pt-5 align-items-center">
             <v-icon>mdi-information</v-icon>
-            <h6 class="ms-5 mt-2">We are open Monday-Friday</h6>
+            <h6 class="ms-5 mt-2 fw-bold">We are open Monday-Friday</h6>
           </div>
         </v-col>
 
