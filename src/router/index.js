@@ -226,7 +226,7 @@ router.beforeEach((to, from, next) => {
   console.log(userRole);
   const publicPages = ["/", "/login", "/register"];
   const protectedPages = [
-    "/Home",
+    "/home",
     "/car/:id",
     "/SellContents",
     "/Admin",
