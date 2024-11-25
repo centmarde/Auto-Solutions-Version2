@@ -1,6 +1,6 @@
 <template>
   <div>
-    <InquiresNavbar />
+    <InsideNavbar />
     <br /><br /><br /><br />
     <v-container fluid>
       <v-card class="p-3 vh-80 d-flex flex-column">
@@ -70,6 +70,7 @@
 <script setup>
 import InquiresNavbar from "../../layouts/InquiresNavbar.vue";
 import InsideInquires from "@/layouts/InsideInquires/InsideInquires.vue";
+import InsideNavbar from "@/layouts/InsideNavbar.vue";
 </script>
 
 <style>
