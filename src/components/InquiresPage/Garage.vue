@@ -1,7 +1,7 @@
 <template>
   <div>
     <InquiresNavbar />
-    <br><br><br>
+    <br /><br /><br />
     <v-container fluid>
       <v-card class="p-3 vh-80 d-flex flex-column">
         <v-row class="fill-height">
@@ -35,7 +35,7 @@
                 <router-link to="/CarListing" class="d-block">
                   <v-btn block color="primary">
                     <v-icon left>mdi-format-list-bulleted</v-icon>
-                    My Listings
+                    Uploaded Car
                   </v-btn>
                 </router-link>
               </v-col>
@@ -68,8 +68,8 @@
 </template>
 
 <script setup>
-import InquiresNavbar from '../../layouts/InquiresNavbar.vue';
-import InsideGarage from '../../layouts/InsideInquires/InsideGarage.vue';
+import InquiresNavbar from "../../layouts/InquiresNavbar.vue";
+import InsideGarage from "../../layouts/InsideInquires/InsideGarage.vue";
 </script>
 
 <style>
