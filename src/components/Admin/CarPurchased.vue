@@ -104,14 +104,17 @@ const selectedCar = ref(null);
 
 // Fetch only cars from purchased_cars table with related details from cars and transactions tables
 const fetchCars = async () => {
-  // Query purchased_cars table and join with cars and transactions details
-  const { data: purchasedCarsData, error } = await supabase.from(
-    "purchased_cars"
-  ).select(`
+  // Query purchased_cars table and join with cars and transactions details, filtering by is_paid = true
+  const { data: purchasedCarsData, error } = await supabase
+    .from("purchased_cars")
+    .select(
+      `
       car_id,
       cars (id, model, img, price),
       transactions (buyer_id, seller_id)
-    `);
+    `
+    )
+    .eq("is_paid", true); // This filters only cars with is_paid = true
 
   if (error) {
     console.error("Error fetching purchased cars:", error);

@@ -44,6 +44,7 @@ import Mypurchased from "@/components/InquiresPage/Mypurchased.vue";
 import Featured from "@/pages/Featured.vue";
 import MainComponent from "@/components/NavigationBar/MainComponent.vue";
 import Rented from "@/pages/adminPages/RentedCars.vue";
+import Unpaid from "@/components/Admin/Unpaid.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -194,6 +195,11 @@ const routes = setupLayouts([
     component: Rented,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/NotPaid",
+    component: Unpaid,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
@@ -248,6 +254,7 @@ router.beforeEach((to, from, next) => {
     "/LoanCarBase",
     "/PurchasedCars",
     "/Rented",
+    "/NotPaid",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
