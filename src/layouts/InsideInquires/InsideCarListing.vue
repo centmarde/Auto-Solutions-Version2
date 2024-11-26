@@ -13,7 +13,6 @@
               height="180px"
             ></v-img>
           </v-col>
-
           <v-col cols="8">
             <v-card-title> {{ car.brand }} {{ car.model }} </v-card-title>
             <v-card-text>
@@ -33,8 +32,8 @@
               </p>
 
               <!-- Transaction Status Message -->
-              <p v-if="isCarInTransaction(car.id)" class="transaction-status">
-                Your car is in transaction
+              <p v-if="carStatusMessage(car.id)" class="transaction-status">
+                {{ carStatusMessage(car.id) }}
               </p>
               <!-- Pending or Approved Indicator -->
               <v-chip
@@ -51,9 +50,9 @@
                 <v-icon left>mdi-delete</v-icon>
                 Delete
               </v-btn>
-              <v-btn color="blue" @click.stop="openEditModal(car)">
-                <v-icon left>mdi-pencil</v-icon>
-                Edit
+              <v-btn color="blue" @click.stop="viewCar(car)">
+                <v-icon left>mdi-eye</v-icon>
+                View
               </v-btn>
             </v-card-actions>
           </v-col>
@@ -61,6 +60,38 @@
       </v-card>
     </v-col>
   </v-row>
+
+  <!-- Modal to View Car Details -->
+  <v-dialog v-model="viewModal" max-width="600px">
+    <v-card>
+      <v-card-title>{{ viewedCar.brand }} {{ viewedCar.model }}</v-card-title>
+      <v-card-text>
+        <v-img :src="viewedCar.img" alt="Car Image" height="300px"></v-img>
+        <p>{{ viewedCar.description }}</p>
+        <p class="car-status">
+          {{
+            viewedCar.forSale && viewedCar.forRent
+              ? "For Sale and Open for Rent"
+              : viewedCar.forSale
+              ? "For Sale"
+              : viewedCar.forRent
+              ? "Open for Rent"
+              : ""
+          }}
+        </p>
+        <p v-if="carStatusMessage(viewedCar.id)" class="transaction-status">
+          {{ carStatusMessage(viewedCar.id) }}
+        </p>
+
+        <!-- Display Price and Years Owned -->
+        <p><strong>Price:</strong> ${{ viewedCar.price }}</p>
+        <p><strong>Years Owned:</strong> {{ viewedCar.years_owned }}</p>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="blue" @click="viewModal = false">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -71,17 +102,20 @@ export default {
     return {
       userCars: [],
       transactionsCarIds: [],
+      rentedCarIds: [],
+      purchasedCarIds: [],
       loading: true,
       error: null,
       selectedCarId: null,
-      editModal: false,
-      editedCar: {},
-      valid: false,
+      viewModal: false,
+      viewedCar: {},
     };
   },
   async created() {
     await this.fetchUserCars();
     await this.fetchTransactionCarIds();
+    await this.fetchRentedCarIds();
+    await this.fetchPurchasedCarIds();
   },
   methods: {
     async fetchUserCars() {
@@ -91,7 +125,7 @@ export default {
       try {
         const { data, error } = await supabase
           .from("cars")
-          .select("*")
+          .select("*") // Make sure to select all necessary fields including price and years_owned
           .eq("user_id", loggedInUserId);
 
         if (error) throw error;
@@ -116,36 +150,49 @@ export default {
         this.error = err.message;
       }
     },
-    isCarInTransaction(carId) {
-      return this.transactionsCarIds.includes(carId); // Check if car ID exists in transactions
+    async fetchRentedCarIds() {
+      try {
+        const { data, error } = await supabase
+          .from("rented_cars")
+          .select("car_id");
+
+        if (error) throw error;
+
+        this.rentedCarIds = data.map((rentedCar) => rentedCar.car_id);
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
+    async fetchPurchasedCarIds() {
+      try {
+        const { data, error } = await supabase
+          .from("purchased_cars")
+          .select("car_id");
+
+        if (error) throw error;
+
+        this.purchasedCarIds = data.map((purchasedCar) => purchasedCar.car_id);
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
+    carStatusMessage(carId) {
+      if (this.rentedCarIds.includes(carId)) {
+        return "Your car is rented";
+      } else if (this.purchasedCarIds.includes(carId)) {
+        return "Your car has been purchased";
+      } else if (this.transactionsCarIds.includes(carId)) {
+        return "Your car is in transaction";
+      } else {
+        return null;
+      }
     },
     handleCardClick(carId) {
       this.selectedCarId = carId;
     },
-    openEditModal(car) {
-      this.editedCar = { ...car }; // Clone the car object to edit
-      this.editModal = true; // Show the modal
-    },
-    async updateCar() {
-      const { id, ...updatedData } = this.editedCar;
-
-      try {
-        const { error } = await supabase
-          .from("cars")
-          .update(updatedData)
-          .eq("id", id);
-        if (error) throw error;
-
-        const index = this.userCars.findIndex((car) => car.id === id);
-        if (index !== -1) {
-          this.userCars[index] = { ...this.userCars[index], ...updatedData };
-        }
-
-        this.editModal = false;
-        alert(`Car Updated Successfully!`);
-      } catch (err) {
-        this.error = err.message;
-      }
+    viewCar(car) {
+      this.viewedCar = { ...car }; // Clone the car object to view, including price and years_owned
+      this.viewModal = true; // Show the modal
     },
     async deleteCar(carId) {
       const confirmDelete = confirm(
@@ -158,7 +205,7 @@ export default {
         if (error) throw error;
 
         this.userCars = this.userCars.filter((car) => car.id !== carId);
-        alert(`Car Deleted Successfully!`);
+        alert("Car Deleted Successfully!");
       } catch (err) {
         this.error = err.message;
       }
