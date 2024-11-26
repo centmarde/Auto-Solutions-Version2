@@ -39,14 +39,7 @@
                   </v-btn>
                 </router-link>
               </v-col>
-              <v-col cols="6" sm="6" md="12">
-                <router-link to="/PurchasedCars" class="d-block">
-                  <v-btn block color="primary">
-                    <v-icon left>mdi mdi-currency-usd</v-icon>
-                    My Purchased
-                  </v-btn>
-                </router-link>
-              </v-col>
+
               <v-col cols="6" sm="6" md="12">
                 <router-link to="/Home" class="d-block">
                   <v-btn block color="primary">
