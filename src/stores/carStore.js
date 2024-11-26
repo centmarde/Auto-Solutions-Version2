@@ -4,6 +4,7 @@ import { supabase } from "../lib/supaBase";
 export const useCarStore = defineStore("carStore", {
   state: () => ({
     cars: [],
+    purchasedCount: 0, // New state property to hold the count of cars not purchased
     loading: false,
     error: null,
   }),
@@ -42,7 +43,7 @@ export const useCarStore = defineStore("carStore", {
       }
     },
 
-    // New function to fetch cars not in the purchased_cars table
+    // New function to fetch cars not in the purchased_cars table and count them
     async fetchCarsNotInPurchased() {
       this.loading = true;
       const loggedInUserId = this.getLoggedInUserId(); // Use a helper method to get user ID
@@ -66,6 +67,7 @@ export const useCarStore = defineStore("carStore", {
         if (purchasedCarIds.length === 0) {
           // If there are no purchased cars, fetch all the cars for sale
           this.fetchCars();
+          this.purchasedCount = this.cars.length; // Set purchasedCount to the length of all available cars
           return;
         }
 
@@ -94,6 +96,7 @@ export const useCarStore = defineStore("carStore", {
         if (error) throw error;
 
         this.cars = this.shuffleArray(data); // Store the fetched cars in Pinia state
+        this.purchasedCount = this.cars.length; // Set purchasedCount to the length of available cars
       } catch (err) {
         this.error =
           err.message ||

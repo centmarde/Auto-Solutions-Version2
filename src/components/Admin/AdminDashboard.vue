@@ -59,11 +59,22 @@ const loanedCount = ref(0); // New ref for loaned cars
 
 const fetchCarCount = async () => {
   try {
+    // Fetch the car IDs from the purchased_cars table
+    const { data: purchasedCars, error: purchasedError } = await supabase
+      .from("purchased_cars")
+      .select("car_id"); // Assuming car_id is the column that references the car in the cars table
+
+    if (purchasedError) throw purchasedError;
+
+    const purchasedCarIds = purchasedCars.map((car) => car.car_id); // Extracting the car_ids from the purchased_cars data
+
+    // Fetch cars for sale excluding those already purchased
     const { data, error } = await supabase
       .from("cars")
       .select("id")
       .eq("for_sale", true)
-      .eq("is_pending", false);
+      .eq("is_pending", false)
+      .not("id", "in", `(${purchasedCarIds.join(",")})`); // Excluding purchased cars
 
     if (error) throw error;
 
