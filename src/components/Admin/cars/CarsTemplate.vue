@@ -1,12 +1,14 @@
 <template>
-
-
-   <!-- Dialog for enlarged image -->
-      <v-dialog id="front" v-model="dialog" max-width="600px">
-      <v-card>
-        <v-img :src="selectedImage" class="enlarged-image" aspect-ratio="16/9"></v-img>
-      </v-card>
-    </v-dialog>
+  <!-- Dialog for enlarged image -->
+  <v-dialog id="front" v-model="dialog" max-width="600px">
+    <v-card>
+      <v-img
+        :src="selectedImage"
+        class="enlarged-image"
+        aspect-ratio="16/9"
+      ></v-img>
+    </v-card>
+  </v-dialog>
   <v-container class="p-5 mts">
     <h1 class="text-center fw-bolder">{{ title }}</h1>
 
@@ -40,8 +42,12 @@
           <td>{{ car.for_sale }}</td>
           <td>{{ car.for_rent }}</td>
           <td>
-            <v-btn class="mx-2" color="error" @click="confirmDelete(car.id)">Delete</v-btn>
-            <v-btn class="mx-2" color="success" @click="confirmApprove(car.id)">Approve</v-btn>
+            <v-btn class="mx-2" color="error" @click="confirmDelete(car.id)"
+              >Delete</v-btn
+            >
+            <v-btn class="mx-2" color="success" @click="confirmApprove(car.id)"
+              >Approve</v-btn
+            >
           </td>
         </tr>
       </tbody>
@@ -55,23 +61,21 @@
       @input="fetchCars"
       class="mt-4"
     ></v-pagination>
-
-
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { supabase } from '../../../lib/supaBase';
+import { ref, onMounted, computed } from "vue";
+import { supabase } from "../../../lib/supaBase";
 
 const cars = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = 5; 
+const itemsPerPage = 5;
 
 const props = defineProps({
   title: {
     type: String,
-    default: 'Title',
+    default: "Title",
   },
   isadmin: {
     type: Boolean,
@@ -81,17 +85,17 @@ const props = defineProps({
 
 // State for dialog and selected image
 const dialog = ref(false);
-const selectedImage = ref('');
+const selectedImage = ref("");
 
 // Fetch cars from the database
 const fetchCars = async () => {
   const { data, error } = await supabase
-    .from('cars')
-    .select('*')
-    .eq('is_pending', true);
+    .from("cars")
+    .select("*")
+    .eq("is_pending", true);
 
   if (error) {
-    console.error('Error fetching cars:', error);
+    console.error("Error fetching cars:", error);
   } else {
     cars.value = data;
   }
@@ -108,19 +112,41 @@ const pageCount = computed(() => {
   return Math.ceil(cars.value.length / itemsPerPage);
 });
 
-// Confirm deletion
 const confirmDelete = async (id) => {
   const confirm = window.confirm("Are you sure you want to delete this car?");
   if (confirm) {
-    const { error } = await supabase
-      .from('cars')
+    // First, delete the related conversations
+    const { error: conversationError } = await supabase
+      .from("conversations")
       .delete()
-      .eq('id', id);
+      .eq("car_id", id); // Assuming the foreign key is `car_id`
 
-    if (error) {
-      console.error('Error deleting car:', error);
+    if (conversationError) {
+      console.error("Error deleting related conversations:", conversationError);
+      return;
+    }
+
+    // Second, delete the related loan_cars records
+    const { error: loanCarError } = await supabase
+      .from("loan_cars")
+      .delete()
+      .eq("car_id", id); // Assuming the foreign key is `car_id`
+
+    if (loanCarError) {
+      console.error("Error deleting related loan cars:", loanCarError);
+      return;
+    }
+
+    // Then, delete the car
+    const { error: carError } = await supabase
+      .from("cars")
+      .delete()
+      .eq("id", id);
+
+    if (carError) {
+      console.error("Error deleting car:", carError);
     } else {
-      cars.value = cars.value.filter(car => car.id !== id);
+      cars.value = cars.value.filter((car) => car.id !== id);
     }
   }
 };
@@ -130,14 +156,14 @@ const confirmApprove = async (id) => {
   const confirm = window.confirm("Are you sure you want to approve this car?");
   if (confirm) {
     const { error } = await supabase
-      .from('cars')
+      .from("cars")
       .update({ is_pending: false })
-      .eq('id', id);
+      .eq("id", id);
 
     if (error) {
-      console.error('Error approving car:', error);
+      console.error("Error approving car:", error);
     } else {
-      cars.value = cars.value.filter(car => car.id !== id);
+      cars.value = cars.value.filter((car) => car.id !== id);
     }
   }
 };
@@ -168,5 +194,4 @@ onMounted(() => {
 .car-image:hover {
   transform: scale(1.05);
 }
-
 </style>
