@@ -9,6 +9,7 @@
           title="Total Cars for Sale"
           link="/CarInSale"
           :num="carCount"
+          send="View Car Sale list History "
         />
         <Card
           class="col-6"
@@ -110,20 +111,30 @@ const fetchLoanedCarsCount = async () => {
     console.error("Error fetching loaned car count:", err.message);
   }
 };
-
 const fetchtotalCarsForRent = async () => {
   try {
+    // Fetch the car IDs from the rented_cars table
+    const { data: rentedCars, error: rentedError } = await supabase
+      .from("rented_cars")
+      .select("cars_id"); // Ensure 'car_id' matches the column name in the rented_cars table
+
+    if (rentedError) throw rentedError;
+
+    const rentedCarIds = rentedCars.map((cars) => cars.cars_id); // Extracting the car_ids from the rented_cars data
+
+    // Fetch cars for rent excluding those already rented
     const { data, error } = await supabase
       .from("cars")
       .select("id")
       .eq("for_rent", true)
-      .eq("is_pending", false);
+      .eq("is_pending", false)
+      .not("id", "in", `(${rentedCarIds.join(",")})`); // Excluding rented cars
 
     if (error) throw error;
 
     totalCarsForRent.value = data.length;
   } catch (err) {
-    console.error("Error fetching car count:", err.message);
+    console.error("Error fetching cars for rent count:", err.message);
   }
 };
 
