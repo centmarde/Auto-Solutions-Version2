@@ -69,6 +69,9 @@
               class="enlarged-image"
               aspect-ratio="16/9"
             ></v-img>
+            <v-btn @click="dialog = false" icon>
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-card>
         </v-dialog>
       </v-container>
@@ -77,6 +80,7 @@
 </template>
 
 <script setup>
+import AdminSlots from "./AdminSlots.vue";
 import { ref, onMounted, computed } from "vue";
 import { supabase } from "../../lib/supaBase";
 
@@ -97,32 +101,22 @@ const selectedImage = ref("");
 
 // Fetch cars from rented_cars and purchased_cars where is_paid is false
 const fetchCars = async () => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
   const { data: rentedCarsData, error: rentedError } = await supabase
     .from("rented_cars")
     .select(
-      `
-      id,
-      date_start,
-      date_end,
-      total_days,
-      is_paid,
-      total_amount,
-      cars (model, img),
-      transactions (buyer_id)
-    `
+      `id, date_start, date_end, total_days, is_paid, total_amount, cars (model, img), transactions (buyer_id)`
     )
-    .eq("is_paid", false);
+    .eq("is_paid", false)
+    .range(startIndex, endIndex); // Fetch only a range of data
 
   const { data: purchasedCarsData, error: purchasedError } = await supabase
     .from("purchased_cars")
-    .select(
-      `
-      car_id,
-      cars (model, img, price),
-      transactions (buyer_id)
-    `
-    )
-    .eq("is_paid", false);
+    .select(`car_id, cars (model, img, price), transactions (buyer_id)`)
+    .eq("is_paid", false)
+    .range(startIndex, endIndex); // Fetch only a range of data
 
   if (rentedError || purchasedError) {
     console.error("Error fetching unpaid cars:", rentedError || purchasedError);
@@ -185,7 +179,6 @@ const markAsPaid = async (car) => {
 
   let response = null;
 
-  // Update is_paid status to true based on the source
   if (source === "purchased") {
     response = await supabase
       .from("purchased_cars")
