@@ -75,7 +75,10 @@ const fetchCarCount = async () => {
 
 const fetchRentedCarsCount = async () => {
   try {
-    const { data, error } = await supabase.from("rented_cars").select("id");
+    const { data, error } = await supabase
+      .from("rented_cars")
+      .select("id")
+      .eq("is_paid", true);
 
     if (error) throw error;
 
@@ -115,13 +118,16 @@ const fetchtotalCarsForRent = async () => {
 
 const fetchtotalCarsPurchased = async () => {
   try {
-    const { data, error } = await supabase.from("purchased_cars").select("*");
+    const { data, error } = await supabase
+      .from("purchased_cars")
+      .select("id") // Only select the ID column (or other columns you need)
+      .eq("is_paid", true); // Add condition for is_paid being true
 
     if (error) throw error;
 
     purchasedCount.value = data.length;
   } catch (err) {
-    console.error("Error fetching car count:", err.message);
+    console.error("Error fetching purchased car count:", err.message);
   }
 };
 

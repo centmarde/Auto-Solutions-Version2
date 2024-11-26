@@ -37,9 +37,16 @@
               <td>{{ car.is_paid ? "Yes" : "No" }}</td>
               <td>{{ car.total_amount }}</td>
               <td class="text-center">
-                <v-btn color="error" @click="confirmDelete(car.id)"
-                  >Delete</v-btn
+                <!-- Paid Button -->
+                <v-btn
+                  color="success"
+                  @click="markAsPaid(car)"
+                  :disabled="car.is_paid"
                 >
+                  Paid
+                </v-btn>
+                <!-- Delete Button -->
+                <v-btn color="error" @click="confirmDelete(car)">Delete</v-btn>
               </td>
             </tr>
           </tbody>
@@ -70,7 +77,6 @@
 </template>
 
 <script setup>
-import AdminSlots from "@/components/Admin/AdminSlots.vue";
 import { ref, onMounted, computed } from "vue";
 import { supabase } from "../../lib/supaBase";
 
@@ -135,6 +141,7 @@ const fetchCars = async () => {
       is_paid: item.is_paid,
       total_amount: item.total_amount,
       user_id: item.transactions.buyer_id,
+      source: "rented", // Mark if the car is from rented_cars
     })),
     ...purchasedCarsData.map((item) => ({
       id: item.car_id,
@@ -142,10 +149,11 @@ const fetchCars = async () => {
       img: item.cars.img,
       date_start: item.date_start,
       date_end: item.date_end,
-      total_days: item.total_days, // Optional, may not exist in purchased_cars
+      total_days: item.total_days,
       is_paid: item.is_paid,
-      total_amount: item.cars.price, // Assuming price is the total amount for purchased cars
+      total_amount: item.cars.price,
       user_id: item.transactions.buyer_id,
+      source: "purchased",
     })),
   ];
 
@@ -170,11 +178,65 @@ const openImage = (img) => {
   dialog.value = true;
 };
 
-// Confirm and delete a car record (functionality to be implemented)
-const confirmDelete = async (carId) => {
+// Mark car as paid
+const markAsPaid = async (car) => {
+  const carId = car.id;
+  const source = car.source;
+
+  let response = null;
+
+  // Update is_paid status to true based on the source
+  if (source === "purchased") {
+    response = await supabase
+      .from("purchased_cars")
+      .update({ is_paid: true })
+      .eq("car_id", carId);
+  } else if (source === "rented") {
+    response = await supabase
+      .from("rented_cars")
+      .update({ is_paid: true })
+      .eq("id", carId);
+  }
+
+  if (response?.error) {
+    console.error("Error marking car as paid:", response.error);
+  } else {
+    alert("Car marked as paid.");
+    await fetchCars(); // Refresh the list after updating
+  }
+};
+
+// Confirm and delete a car record
+const confirmDelete = async (car) => {
   if (confirm("Are you sure you want to delete this record?")) {
-    // Delete logic for unpaid car
-    console.log("Deleting car with ID:", carId);
+    let carId = car.id;
+    let source = car.source;
+
+    if (source === "purchased") {
+      const { error } = await supabase
+        .from("purchased_cars")
+        .delete()
+        .eq("car_id", carId);
+
+      if (error) {
+        console.error("Error deleting car from purchased_cars:", error);
+      } else {
+        alert("Car deleted successfully from purchased_cars.");
+        await fetchCars(); // Refresh the list after deletion
+      }
+    } else if (source === "rented") {
+      const { error } = await supabase
+        .from("rented_cars")
+        .delete()
+        .eq("id", carId);
+
+      if (error) {
+        console.error("Error deleting car from rented_cars:", error);
+      } else {
+        alert("Car deleted successfully from rented_cars.");
+        await fetchCars(); // Refresh the list after deletion
+      }
+    }
   }
 };
 

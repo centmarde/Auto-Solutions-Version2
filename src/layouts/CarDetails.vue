@@ -6,14 +6,23 @@
           <v-row no-gutters>
             <v-col cols="12" md="7">
               <!-- Image takes up more space -->
-              <v-img v-if="car.img" :src="car.img" alt="Car Image" class="card-img"></v-img>
+              <v-img
+                v-if="car.img"
+                :src="car.img"
+                alt="Car Image"
+                class="card-img"
+              ></v-img>
             </v-col>
             <v-col cols="12" md="5">
               <!-- Details take up less space -->
               <v-card-text>
                 <h1 class="card-title">{{ car.brand }} {{ car.model }}</h1>
                 <v-list dense>
-                  <v-list-item v-for="(value, key) in carDetails" :key="key" class="car-detail-item">
+                  <v-list-item
+                    v-for="(value, key) in carDetails"
+                    :key="key"
+                    class="car-detail-item"
+                  >
                     <v-list-item-content>
                       <strong>{{ key }}:</strong> {{ value }}
                     </v-list-item-content>
@@ -31,8 +40,14 @@
                 </v-list>
                 <v-divider></v-divider>
                 <!-- Chat with supplier -->
-                <v-row v-if="user.user_name" class="car-detail-item d-flex justify-end">
-                  <div class="chat-container" @click="chatWithSupplier(user.id, car.id)">
+                <v-row
+                  v-if="user.user_name"
+                  class="car-detail-item d-flex justify-end"
+                >
+                  <div
+                    class="chat-container"
+                    @click="chatWithSupplier(user.id, car.id)"
+                  >
                     <v-icon left>mdi-chat</v-icon>
                     <span class="chat-text">
                       Chat with {{ user.user_name }}
@@ -44,10 +59,12 @@
                 </v-row>
                 <v-divider></v-divider>
               </v-card-text>
-              <v-col class="bm-3 text-center mx-auto mb-4 d-flex justify-center">
-                <router-link style="text-decoration: none;" to="/Home" exact>
-                  <v-btn  class="lofi2 mx-3" outlined color="primary">
-                    <span >Exit</span>
+              <v-col
+                class="bm-3 text-center mx-auto mb-4 d-flex justify-center"
+              >
+                <router-link style="text-decoration: none" to="/Home" exact>
+                  <v-btn class="lofi2 mx-3" outlined color="primary">
+                    <span>Exit</span>
                     <v-icon>mdi-arrow-right</v-icon>
                   </v-btn>
                 </router-link>
@@ -68,9 +85,13 @@
       <v-card>
         <v-card-title class="headline">Are you sure?</v-card-title>
         <v-card-text>
-          You are about to express interest in this car. Please be aware of the following:
+          You are about to express interest in this car. Please be aware of the
+          following:
           <ul>
-            <li>This is not a final purchase or final rent, <br> but try to contact the supplier of the mentioned car.</li>
+            <li>
+              This is not a final purchase or final rent, <br />
+              but try to contact the supplier of the mentioned car.
+            </li>
             <li>Make sure to review the car's details before proceeding.</li>
             <li>By proceeding, you agree to our terms and conditions.</li>
             <li>Any false information may lead to disqualification.</li>
@@ -79,8 +100,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="isDialogVisible = false">Cancel</v-btn>
-          <v-btn color="blue darken-1" text @click="confirmTransaction">Continue</v-btn>
+          <v-btn color="blue darken-1" text @click="isDialogVisible = false"
+            >Cancel</v-btn
+          >
+          <v-btn color="blue darken-1" text @click="confirmTransaction"
+            >Continue</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -88,18 +113,18 @@
 </template>
 
 <script>
-import { supabase } from '../lib/supaBase';
-import gsap from 'gsap';
+import { supabase } from "../lib/supaBase";
+import gsap from "gsap";
 
 export default {
-  name: 'CarDetails',
+  name: "CarDetails",
   data() {
     return {
       car: {},
       user: {},
-      isSubmitting: false, 
+      isSubmitting: false,
       isDialogVisible: false, // For confirmation dialog
-      buyerId: localStorage.getItem("user_id"), 
+      buyerId: localStorage.getItem("user_id"),
     };
   },
   computed: {
@@ -123,7 +148,7 @@ export default {
     await this.fetchCarDetails(carId);
 
     // GSAP animation
-    gsap.from('.car-detail-item', {
+    gsap.from(".car-detail-item", {
       opacity: 0,
       y: 20,
       duration: 0.5,
@@ -134,9 +159,9 @@ export default {
     async fetchCarDetails(id) {
       try {
         const { data, error } = await supabase
-          .from('cars')
-          .select('*, users(*)')
-          .eq('id', id)
+          .from("cars")
+          .select("*, users(*)")
+          .eq("id", id)
           .single();
 
         if (error) throw error;
@@ -144,10 +169,10 @@ export default {
         this.car = data;
         this.user = data.users;
       } catch (err) {
-        console.error('Error fetching car details:', err.message);
+        console.error("Error fetching car details:", err.message);
       }
     },
-    
+
     // Open the confirmation dialog
     openConfirmationDialog() {
       this.isDialogVisible = true;
@@ -162,14 +187,14 @@ export default {
       try {
         // Check for existing transaction
         const { data: existingTransaction } = await supabase
-          .from('transactions')
-          .select('*')
-          .eq('car_id', this.car.id)
-          .eq('buyer_id', this.buyerId)
+          .from("transactions")
+          .select("*")
+          .eq("car_id", this.car.id)
+          .eq("buyer_id", this.buyerId)
           .single();
 
         if (existingTransaction) {
-          alert('Transaction already exists for this car!');
+          alert("This Car is in Transaction!");
           return;
         }
 
@@ -177,62 +202,74 @@ export default {
         const seller_ids = this.user.id;
 
         // Insert transaction
-        const { error } = await supabase
-          .from('transactions')
-          .insert([
-            {
-              buyer_id: buyer_ids,
-              seller_id: seller_ids,
-              car_id: car_ids,
-            },
-          ]);
+        const { error } = await supabase.from("transactions").insert([
+          {
+            buyer_id: buyer_ids,
+            seller_id: seller_ids,
+            car_id: car_ids,
+          },
+        ]);
 
         if (error) throw error;
 
-        alert('Transaction inserted successfully!');
-        this.$router.push('/Inquires');
+        alert("Transaction inserted successfully!");
+        this.$router.push("/Inquires");
       } catch (err) {
-        console.error('Error inserting transaction:', err.message);
+        console.error("Error inserting transaction:", err.message);
       } finally {
         this.isSubmitting = false;
       }
     },
-    
+
     // Chat with supplier method
     async chatWithSupplier(sellerId, carId) {
       try {
-        const loggedInUserId = localStorage.getItem('user_id');
+        const loggedInUserId = localStorage.getItem("user_id");
         if (!loggedInUserId) {
-          throw new Error('User is not logged in');
+          throw new Error("User is not logged in");
         }
 
         const isBuyer = loggedInUserId !== sellerId;
 
-        const { data: conversationData, error: conversationError } = await supabase
-          .from('conversations')
-          .select('id')
-          .eq('buyer_id', isBuyer ? loggedInUserId : sellerId)
-          .eq('supplier_id', isBuyer ? sellerId : loggedInUserId)
-          .eq('car_id', carId);
+        const { data: conversationData, error: conversationError } =
+          await supabase
+            .from("conversations")
+            .select("id")
+            .eq("buyer_id", isBuyer ? loggedInUserId : sellerId)
+            .eq("supplier_id", isBuyer ? sellerId : loggedInUserId)
+            .eq("car_id", carId);
 
         if (conversationError) throw conversationError;
 
         if (conversationData && conversationData.length > 0) {
           const chatId = conversationData[0].id;
-          this.$router.push({ path: '/Chat', query: { chat_id: chatId, seller_id: sellerId, car_id: carId } });
+          this.$router.push({
+            path: "/Chat",
+            query: { chat_id: chatId, seller_id: sellerId, car_id: carId },
+          });
         } else {
-          const { data: newConversationData, error: newConversationError } = await supabase
-            .from('conversations')
-            .insert([{ buyer_id: isBuyer ? loggedInUserId : null, supplier_id: sellerId, car_id: carId }])
-            .select();
+          const { data: newConversationData, error: newConversationError } =
+            await supabase
+              .from("conversations")
+              .insert([
+                {
+                  buyer_id: isBuyer ? loggedInUserId : null,
+                  supplier_id: sellerId,
+                  car_id: carId,
+                },
+              ])
+              .select();
 
           if (newConversationError) throw newConversationError;
 
           const newChatId = newConversationData[0].id;
-          this.$router.push({ path: '/Chat', query: { chat_id: newChatId, seller_id: sellerId, car_id: carId } });
+          this.$router.push({
+            path: "/Chat",
+            query: { chat_id: newChatId, seller_id: sellerId, car_id: carId },
+          });
         }
       } catch (err) {
-        console.error('Error starting chat:', err);
+        console.error("Error starting chat:", err);
       }
     },
   },
@@ -290,7 +327,7 @@ ul.list-unstyled {
 }
 
 .chat-text {
-  color: #EEEEEE;
+  color: #eeeeee;
   text-decoration: underline;
   margin-left: 5px;
   font-weight: bold;
@@ -322,7 +359,7 @@ ul.list-unstyled {
   text-decoration: none;
 }
 .lofi {
-  background-color:rgb(97, 40, 255);
+  background-color: rgb(97, 40, 255);
   color: white;
 }
 

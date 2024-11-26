@@ -102,7 +102,6 @@ const selectedImage = ref("");
 const disapproveDialog = ref(false);
 const selectedCar = ref(null);
 
-// Fetch only cars from purchased_cars table with related details from cars and transactions tables
 const fetchCars = async () => {
   // Query purchased_cars table and join with cars and transactions details, filtering by is_paid = true
   const { data: purchasedCarsData, error } = await supabase
