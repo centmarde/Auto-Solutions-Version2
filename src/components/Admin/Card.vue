@@ -52,7 +52,7 @@ const props = defineProps({
   },
   send: {
     type: String,
-    default: "Learn More",
+    default: "View",
   },
   link: {
     type: String,
