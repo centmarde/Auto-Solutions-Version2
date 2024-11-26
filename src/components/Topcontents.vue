@@ -25,10 +25,11 @@
             style="background-color: #151515; z-index: 3"
           >
             <h5 class="text-center trs">
-              Here at Auto Solutions, we offer a wide selection of Toyota sports
-              cars and car parts suited for you. As a trusted manufacturer for
-              Toyota, our line of quality, durable, and reliable vehicles will
-              address your needs and more!
+              Here at Auto Solutions, we offer a wide selection of cars suited
+              for you. As a trusted service provider, we allow clients to upload
+              their cars for selling or renting. Other clients can browse our
+              platform to rent or buy cars. Our line of quality, durable, and
+              reliable vehicles will address your needs and more!
             </h5>
           </v-col>
           <v-col
@@ -39,27 +40,14 @@
             style="background-color: #151515; z-index: 3"
           >
             <v-row class="logo-container trsx">
+              <v-col> </v-col>
               <v-col>
                 <v-img
                   src="https://seeklogo.com/images/T/toyota-logo-3A02221675-seeklogo.com.png"
-                  alt="Toyota"
-                  class="img-fluid"
-                />
-              </v-col>
-              <v-col>
-                <v-img
-                  src="https://seeklogo.com/images/N/Nissan-logo-4B3C580C8A-seeklogo.com.png"
-                  alt="Nissan"
-                  class="img-fluid"
-                />
-              </v-col>
-              <v-col>
-                <v-img
-                  src="https://pngimg.com/d/honda_PNG102932.png"
                   alt="Honda"
                   class="img-fluid"
-                />
-              </v-col>
+              /></v-col>
+              <v-col> </v-col>
             </v-row>
           </v-col>
         </v-row>
