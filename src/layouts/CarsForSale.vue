@@ -99,7 +99,7 @@ const chunkedCars = computed(() => {
 
 // Lifecycle hooks
 onMounted(async () => {
-  await carStore.fetchCars(); // Fetch cars from Pinia store
+  await carStore.fetchCarsNotInPurchased(); // Fetch cars from Pinia store
   updateChunkSize(); // Set initial chunk size
   window.addEventListener("resize", updateChunkSize); // Listen for window resize
 });
