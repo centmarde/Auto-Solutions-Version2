@@ -15,15 +15,21 @@
           </v-col>
 
           <v-col cols="8">
-            <v-card-title>
-              {{ car.brand }} {{ car.model }}
-            </v-card-title>
+            <v-card-title> {{ car.brand }} {{ car.model }} </v-card-title>
             <v-card-text>
               <p class="truncate-text single-line">
                 {{ car.description }}
               </p>
               <p class="car-status">
-                {{ car.forSale && car.forRent ? 'For Sale and Open for Rent' : car.forSale ? 'For Sale' : car.forRent ? 'Open for Rent' : '' }}
+                {{
+                  car.forSale && car.forRent
+                    ? "For Sale and Open for Rent"
+                    : car.forSale
+                    ? "For Sale"
+                    : car.forRent
+                    ? "Open for Rent"
+                    : ""
+                }}
               </p>
 
               <!-- Transaction Status Message -->
@@ -37,7 +43,7 @@
                 small
                 class="status-chip"
               >
-                {{ car.is_pending ? 'Pending' : 'Approved' }}
+                {{ car.is_pending ? "Pending" : "Approved" }}
               </v-chip>
             </v-card-text>
             <v-card-actions class="d-flex justify-content-end">
@@ -58,7 +64,7 @@
 </template>
 
 <script>
-import { supabase } from '../../lib/supaBase';
+import { supabase } from "../../lib/supaBase";
 
 export default {
   data() {
@@ -80,13 +86,13 @@ export default {
   methods: {
     async fetchUserCars() {
       this.loading = true;
-      const loggedInUserId = localStorage.getItem('user_id');
+      const loggedInUserId = localStorage.getItem("user_id");
 
       try {
         const { data, error } = await supabase
-          .from('cars')
-          .select('*')
-          .eq('user_id', loggedInUserId); 
+          .from("cars")
+          .select("*")
+          .eq("user_id", loggedInUserId);
 
         if (error) throw error;
 
@@ -100,12 +106,12 @@ export default {
     async fetchTransactionCarIds() {
       try {
         const { data, error } = await supabase
-          .from('transactions')
-          .select('car_id'); 
+          .from("transactions")
+          .select("car_id");
 
         if (error) throw error;
 
-        this.transactionsCarIds = data.map(transaction => transaction.car_id);
+        this.transactionsCarIds = data.map((transaction) => transaction.car_id);
       } catch (err) {
         this.error = err.message;
       }
@@ -114,40 +120,45 @@ export default {
       return this.transactionsCarIds.includes(carId); // Check if car ID exists in transactions
     },
     handleCardClick(carId) {
-      this.selectedCarId = carId; 
+      this.selectedCarId = carId;
     },
     openEditModal(car) {
       this.editedCar = { ...car }; // Clone the car object to edit
       this.editModal = true; // Show the modal
     },
     async updateCar() {
-      const { id, ...updatedData } = this.editedCar; 
+      const { id, ...updatedData } = this.editedCar;
 
       try {
-        const { error } = await supabase.from('cars').update(updatedData).eq('id', id); 
+        const { error } = await supabase
+          .from("cars")
+          .update(updatedData)
+          .eq("id", id);
         if (error) throw error;
 
-        const index = this.userCars.findIndex(car => car.id === id);
+        const index = this.userCars.findIndex((car) => car.id === id);
         if (index !== -1) {
           this.userCars[index] = { ...this.userCars[index], ...updatedData };
         }
 
-        this.editModal = false; 
+        this.editModal = false;
         alert(`Car Updated Successfully!`);
       } catch (err) {
         this.error = err.message;
       }
     },
     async deleteCar(carId) {
-      const confirmDelete = confirm("Are you sure you want to delete this car?");
-      if (!confirmDelete) return; 
+      const confirmDelete = confirm(
+        "Are you sure you want to delete this car?"
+      );
+      if (!confirmDelete) return;
 
       try {
-        const { error } = await supabase.from('cars').delete().eq('id', carId); 
+        const { error } = await supabase.from("cars").delete().eq("id", carId);
         if (error) throw error;
 
-        this.userCars = this.userCars.filter(car => car.id !== carId);
-        alert(`Car Deleted Successfully!`); 
+        this.userCars = this.userCars.filter((car) => car.id !== carId);
+        alert(`Car Deleted Successfully!`);
       } catch (err) {
         this.error = err.message;
       }
@@ -165,7 +176,7 @@ export default {
 .truncate-text {
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .single-line {
@@ -186,9 +197,9 @@ export default {
 }
 
 .car-status {
-  font-weight: bold; 
+  font-weight: bold;
 }
-.transaction-status{
+.transaction-status {
   background-color: #ffcccb; /* Light red background color */
   color: #800000; /* Darker text for contrast */
   padding: 8px;

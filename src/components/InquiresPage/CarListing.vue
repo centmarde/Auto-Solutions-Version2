@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import InquiresNavbar from "../../layouts/InquiresNavbar.vue";
+import InquiresNavbar from "@/layouts/InsideNavbar.vue";
 import InsideCarListing from "@/layouts/InsideInquires/InsideCarListing.vue";
 </script>
 

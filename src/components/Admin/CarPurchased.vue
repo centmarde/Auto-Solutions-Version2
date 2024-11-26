@@ -28,9 +28,6 @@
           </td>
           <td>{{ car.price }}</td>
           <td class="text-center">
-            <v-btn color="error" @click="confirmDelete(car.car_id)"
-              >Delete</v-btn
-            >
             <v-btn color="warning" @click="openDisapproveDialog(car)"
               >Disapprove</v-btn
             >
