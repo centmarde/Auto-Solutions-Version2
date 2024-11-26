@@ -1,8 +1,8 @@
 <template>
-    <div>
-      <InquiresNavbar />
-      <br><br><br><br>
-      <v-container fluid>
+  <div>
+    <InquiresNavbar />
+    <br /><br /><br /><br />
+    <v-container fluid>
       <v-card class="p-3 vh-80 d-flex flex-column">
         <v-row class="fill-height">
           <v-col cols="12" md="4">
@@ -35,7 +35,7 @@
                 <router-link to="/CarListing" class="d-block">
                   <v-btn block color="primary">
                     <v-icon left>mdi-format-list-bulleted</v-icon>
-                    My Listings
+                    Uploaded Car
                   </v-btn>
                 </router-link>
               </v-col>
@@ -59,30 +59,29 @@
           </v-col>
 
           <v-col cols="12" md="8" class="scrollable-col">
-           <InsideMyPurchased/>
+            <InsideMyPurchased />
           </v-col>
         </v-row>
       </v-card>
     </v-container>
-    </div>
-  </template>
-  
-  <script setup>
-  import InquiresNavbar from '../../layouts/InquiresNavbar.vue';
-  import InsideMyPurchased from '@/layouts/InsideInquires/InsideMyPurchased.vue';
-  </script>
-  
-  <style>
-  .vh-80 {
-    height:80vh;
-  }
-  
-  .scrollable-col {
-    overflow-y: auto;
-    max-height: 100%;
-  }
-  .d-block{
-    text-decoration: none;
-  }
-  </style>
-  
+  </div>
+</template>
+
+<script setup>
+import InquiresNavbar from "../../layouts/InquiresNavbar.vue";
+import InsideMyPurchased from "@/layouts/InsideInquires/InsideMyPurchased.vue";
+</script>
+
+<style>
+.vh-80 {
+  height: 80vh;
+}
+
+.scrollable-col {
+  overflow-y: auto;
+  max-height: 100%;
+}
+.d-block {
+  text-decoration: none;
+}
+</style>

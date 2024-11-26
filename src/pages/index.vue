@@ -17,7 +17,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" lg="6" md="6" sm="12">
+            <v-col cols="12" lg="6" md="6" sm="12" id="sellcar23">
               <Sellcar />
             </v-col>
             <v-col cols="12" lg="6" md="6" sm="12">
@@ -29,7 +29,7 @@
               <Carsearch />
             </v-col>
           </v-row>
-          <br><br>
+          <br /><br />
           <Footer />
         </v-container>
 
@@ -46,28 +46,27 @@
   </v-app>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue';
-import Navbar from '@/components/Navbar.vue';
-import Topcontents from '@/components/Topcontents.vue';
-import Carsearch from '@/layouts/Carsearch.vue';
-import Footer from '@/layouts/Footer.vue';
-import Popularcars from '@/layouts/Popularcars.vue';
-import Researchcar from '@/layouts/Researchcar.vue';
-import Sellcar from '@/layouts/Sellcar.vue';
-import Yourgarage from '@/layouts/Yourgarage.vue';
-import IntroLoader from '@/layouts/Loader.vue';
-import Scroller from '@/layouts/ScrollAwareness.vue';
-import ScrollAwareness from '@/layouts/ScrollAwareness.vue';
+import { ref, onMounted } from "vue";
+import Navbar from "@/components/Navbar.vue";
+import Topcontents from "@/components/Topcontents.vue";
+import Carsearch from "@/layouts/Carsearch.vue";
+import Footer from "@/layouts/Footer.vue";
+import Popularcars from "@/layouts/Popularcars.vue";
+import Researchcar from "@/layouts/Researchcar.vue";
+import Sellcar from "@/layouts/Sellcar.vue";
+import Yourgarage from "@/layouts/Yourgarage.vue";
+import IntroLoader from "@/layouts/Loader.vue";
+import Scroller from "@/layouts/ScrollAwareness.vue";
+import ScrollAwareness from "@/layouts/ScrollAwareness.vue";
 
-const loaded = ref(false);  // Controls the main content loading
-const topContentLoaded = ref(false);  // Controls the immediate loading of Topcontents
-const isLoading = ref(true);  // Controls the visibility of IntroLoader
+const loaded = ref(false); // Controls the main content loading
+const topContentLoaded = ref(false); // Controls the immediate loading of Topcontents
+const isLoading = ref(true); // Controls the visibility of IntroLoader
 
 const skipLoader = () => {
-  isLoading.value = false;  // Hide loader
-  loaded.value = true;  // Show rest of content immediately when skipping
+  isLoading.value = false; // Hide loader
+  loaded.value = true; // Show rest of content immediately when skipping
 };
 
 onMounted(() => {
@@ -76,14 +75,11 @@ onMounted(() => {
 
   // Keep IntroLoader for 10 seconds before showing rest of the content
   setTimeout(() => {
-    isLoading.value = false;  // Hide loader after 10 seconds
-    loaded.value = true;  // Load the rest of the components
-  }, 10000);  // 10 seconds loader duration
+    isLoading.value = false; // Hide loader after 10 seconds
+    loaded.value = true; // Load the rest of the components
+  }, 10000); // 10 seconds loader duration
 });
 </script>
-
-
-
 
 <style scoped>
 #ygar {

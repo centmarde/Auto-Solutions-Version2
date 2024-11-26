@@ -8,31 +8,46 @@
           </v-row>
         </v-container>
       </section>
-      <h1 id="dino">Auto-Solutions </h1>
-     
+      <h1 id="dino">Auto-Solutions</h1>
+
       <section class="gradient"></section>
 
-      <div class="end-lottie" ></div>
+      <div class="end-lottie"></div>
 
-      <v-container fluid class="text-center" style="padding: 0;">
-        <v-row >
+      <v-container fluid class="text-center" style="padding: 0">
+        <v-row>
           <div></div>
-          <v-col cols="12" lg="8" md="12" sm="12" style="background-color: #151515; z-index: 3;" >
-            <h5  class="text-center trs">
-              Here at Auto Solutions, we offer a wide selection of Toyota sports cars and car parts suited for you. As a trusted manufacturer for Toyota, our line of quality, durable, and reliable vehicles will address your needs and more!
+          <v-col
+            cols="12"
+            lg="8"
+            md="12"
+            sm="12"
+            style="background-color: #151515; z-index: 3"
+          >
+            <h5 class="text-center trs">
+              Here at Auto Solutions, we offer a wide selection of cars suited
+              for you. As a trusted service provider, we allow clients to upload
+              their cars for selling or renting. Other clients can browse our
+              platform to rent or buy cars. Our line of quality, durable, and
+              reliable vehicles will address your needs and more!
             </h5>
           </v-col>
-          <v-col cols="12" lg="4" md="12" sm="12" style="background-color: #151515; z-index: 3;">
+          <v-col
+            cols="12"
+            lg="4"
+            md="12"
+            sm="12"
+            style="background-color: #151515; z-index: 3"
+          >
             <v-row class="logo-container trsx">
+              <v-col> </v-col>
               <v-col>
-                <v-img src="https://seeklogo.com/images/T/toyota-logo-3A02221675-seeklogo.com.png" alt="Toyota" class="img-fluid" />
-              </v-col>
-              <v-col>
-                <v-img src="https://seeklogo.com/images/N/Nissan-logo-4B3C580C8A-seeklogo.com.png" alt="Nissan" class="img-fluid" />
-              </v-col>
-              <v-col>
-                <v-img src="https://pngimg.com/d/honda_PNG102932.png" alt="Honda" class="img-fluid" />
-              </v-col>
+                <v-img
+                  src="https://seeklogo.com/images/T/toyota-logo-3A02221675-seeklogo.com.png"
+                  alt="Honda"
+                  class="img-fluid"
+              /></v-col>
+              <v-col> </v-col>
             </v-row>
           </v-col>
         </v-row>
@@ -42,11 +57,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useAnimationStore } from '../stores/animationStore.js';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import lottie from 'lottie-web';
+import { onMounted, ref } from "vue";
+import { useAnimationStore } from "../stores/animationStore.js";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import lottie from "lottie-web";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -58,26 +73,29 @@ onMounted(async () => {
   }
 
   const lottieContainers = document.querySelectorAll(".animation");
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        LottieScrollTrigger({
-          trigger: entry.target,
-          start: "top top",
-          endTrigger: ".end-lottie",
-          end: `bottom center += ${entry.target.offsetHeight}`,
-          renderer: "svg",
-          target: entry.target,
-          animationData: animationStore.animationData,
-          scrub: 0.5,
-          fps: 60,
-        });
-        observer.unobserve(entry.target); // Stop observing after loading
-      }
-    });
-  }, { threshold: 0.1 });
+  const observer = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          LottieScrollTrigger({
+            trigger: entry.target,
+            start: "top top",
+            endTrigger: ".end-lottie",
+            end: `bottom center += ${entry.target.offsetHeight}`,
+            renderer: "svg",
+            target: entry.target,
+            animationData: animationStore.animationData,
+            scrub: 0.5,
+            fps: 60,
+          });
+          observer.unobserve(entry.target); // Stop observing after loading
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
 
-  lottieContainers.forEach(container => {
+  lottieContainers.forEach((container) => {
     observer.observe(container);
   });
 });
@@ -154,17 +172,12 @@ function LottieScrollTrigger(vars) {
 }
 </script>
 
-
-
-
 <style scoped>
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
- /*  height: 100vh; */
-  
+  /*  height: 100vh; */
 }
 
 #index {
@@ -186,12 +199,15 @@ function LottieScrollTrigger(vars) {
   width: 100vw;
   height: 300vh;
   position: relative;
-  background: linear-gradient(180deg, rgba(21, 21, 21, 0) 0%, rgba(21, 21, 21, 1) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(21, 21, 21, 0) 0%,
+    rgba(21, 21, 21, 1) 100%
+  );
   z-index: 4;
- 
 }
 
-.animation{
+.animation {
   height: 100vh;
   padding: 0;
 }
@@ -203,19 +219,18 @@ function LottieScrollTrigger(vars) {
   }
 }
 
-.trs{
-  color: #EEEEEE;
+.trs {
+  color: #eeeeee;
   font-family: "Merriweather", serif;
   padding: 2rem;
 }
 
-.logo-container{
+.logo-container {
   padding: 2rem;
- 
 }
 
 #dino {
-  color: #EEEEEE;
+  color: #90a4ae;
   position: absolute;
   top: 35%;
   left: 50%;
@@ -223,19 +238,19 @@ function LottieScrollTrigger(vars) {
   transform: translate(-50%, -50%);
   font-family: "Merriweather", serif;
   font-size: 6rem;
+  font-weight: bold;
 }
 @media (max-width: 1300px) and (min-width: 576px) {
   #dino {
     font-size: 6.5vw;
-    top: 50%; 
+    top: 50%;
   }
 }
-
 
 @media (max-width: 576px) {
   #dino {
     font-size: 6vw;
-    top: 45%; 
+    top: 45%;
   }
 }
 </style>

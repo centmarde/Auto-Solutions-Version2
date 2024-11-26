@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="car in paginatedCars" :key="car.id">
+        <tr v-for="car in paginatedCars" :key="car.car_id">
           <td>{{ car.car_id }}</td>
           <td>{{ car.buyer_id }}</td>
           <td>{{ car.seller_id }}</td>
@@ -28,8 +28,9 @@
           </td>
           <td>{{ car.price }}</td>
           <td class="text-center">
-            <v-btn color="error" @click="confirmDelete(car.id)">Delete</v-btn>
-            <v-btn color="warning" @click="confirmDisapprove(car.id)">Disapprove</v-btn>
+            <v-btn color="warning" @click="openDisapproveDialog(car)"
+              >Disapprove</v-btn
+            >
           </td>
         </tr>
       </tbody>
@@ -47,20 +48,45 @@
     <!-- Dialog for enlarged image -->
     <v-dialog v-model="dialog" max-width="600px">
       <v-card>
-        <v-img :src="selectedImage" class="enlarged-image" aspect-ratio="16/9"></v-img>
+        <v-img
+          :src="selectedImage"
+          class="enlarged-image"
+          aspect-ratio="16/9"
+        ></v-img>
+      </v-card>
+    </v-dialog>
+
+    <!-- Confirmation Dialog for Disapproving a Car -->
+    <v-dialog v-model="disapproveDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="headline">Confirm Disapproval</v-card-title>
+        <v-card-text>
+          Are you sure you want to disapprove this car ({{
+            selectedCar?.model
+          }})? It will be permanently removed from purchased cars.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="disapproveDialog = false"
+            >Cancel</v-btn
+          >
+          <v-btn color="red darken-1" text @click="confirmDisapprove"
+            >Disapprove</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { supabase } from '../../lib/supaBase';
+import { ref, onMounted, computed } from "vue";
+import { supabase } from "../../lib/supaBase";
 
 const props = defineProps({
   title: {
     type: String,
-    default: 'Purchased Cars',
+    default: "Purchased Cars",
   },
 });
 
@@ -70,27 +96,34 @@ const itemsPerPage = 5;
 
 // State for dialog and selected image
 const dialog = ref(false);
-const selectedImage = ref('');
+const selectedImage = ref("");
 
-// Fetch only cars from purchased_cars table with related details from cars and transactions tables
+// State for disapprove confirmation dialog
+const disapproveDialog = ref(false);
+const selectedCar = ref(null);
+
 const fetchCars = async () => {
-  // Query purchased_cars table and join with cars and transactions details
+  // Query purchased_cars table and join with cars and transactions details, filtering by is_paid = true
   const { data: purchasedCarsData, error } = await supabase
-    .from('purchased_cars')
-    .select(`
+    .from("purchased_cars")
+    .select(
+      `
       car_id,
       cars (id, model, img, price),
       transactions (buyer_id, seller_id)
-    `);
+    `
+    )
+    .eq("is_paid", true); // This filters only cars with is_paid = true
 
   if (error) {
-    console.error('Error fetching purchased cars:', error);
+    console.error("Error fetching purchased cars:", error);
     return;
   }
 
   // Map the fetched data to include car and transaction details
-  cars.value = purchasedCarsData.map(item => ({
+  cars.value = purchasedCarsData.map((item) => ({
     car_id: item.car_id,
+    model: item.cars.model,
     img: item.cars.img,
     price: item.cars.price,
     buyer_id: item.transactions.buyer_id,
@@ -115,6 +148,43 @@ const openImage = (img) => {
   dialog.value = true;
 };
 
+// Open disapprove confirmation dialog
+const openDisapproveDialog = (car) => {
+  selectedCar.value = car;
+  disapproveDialog.value = true;
+};
+
+// Confirm disapprove and remove car from purchased_cars table
+const confirmDisapprove = async () => {
+  if (!selectedCar.value) return;
+
+  const carId = selectedCar.value.car_id;
+
+  // Delete the car from purchased_cars table
+  const { error } = await supabase
+    .from("purchased_cars")
+    .delete()
+    .eq("car_id", carId);
+
+  if (error) {
+    console.error("Error disapproving car:", error);
+    return;
+  }
+
+  // Remove the car from the local state
+  cars.value = cars.value.filter((car) => car.car_id !== carId);
+
+  // Close the dialog
+  disapproveDialog.value = false;
+  selectedCar.value = null;
+};
+
+// Confirm delete function (to be implemented)
+const confirmDelete = (carId) => {
+  // Logic for deleting a car
+  console.log("Delete car with ID:", carId);
+};
+
 onMounted(async () => {
   await fetchCars();
 });
@@ -134,5 +204,10 @@ onMounted(async () => {
 
 .car-image:hover {
   transform: scale(1.05);
+}
+
+.enlarged-image {
+  width: 100%;
+  height: auto;
 }
 </style>

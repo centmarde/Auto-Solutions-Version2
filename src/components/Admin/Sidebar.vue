@@ -7,11 +7,13 @@
     }"
   >
     <div
-      class="d-flex justify-content-center align-content-center flex-column h-50 position-fixed"
+      class="d-flex justify-content-center align-items-center flex-column position-fixed top-5"
+      style="height: 60vh"
     >
+      >
       <!-- First Link (Dashboard) -->
-      <div class="mt-10 position-relative bot">
-        <v-icon>mdi-view-dashboard</v-icon>
+      <div class="mt-10 position-relative lefts">
+        <v-icon class="mb-3">mdi-view-dashboard</v-icon>
         <router-link
           to="/Admin"
           class="btn wes fw-bold mt-1"
@@ -28,7 +30,7 @@
 
       <!-- Second Link (View As Client) -->
       <div class="position-relative bot">
-        <i class="fa-solid fa-user fa-lg"></i>
+        <i class="mb-3 fa-solid fa-user fa-lg"></i>
         <router-link
           to="/Home"
           class="btn wes fw-bold mt-1"
@@ -44,7 +46,7 @@
       </div>
 
       <div class="position-relative bot">
-        <v-icon>mdi mdi-car-clock</v-icon>
+        <v-icon class="mb-4">mdi mdi-car-clock</v-icon>
         <router-link
           to="/AdminReview"
           class="btn wes fw-bold mt-1"
@@ -60,7 +62,7 @@
       </div>
 
       <div class="position-relative bot">
-        <v-icon>mdi mdi-car-back</v-icon>
+        <v-icon class="mb-3">mdi mdi-car-back</v-icon>
         <router-link
           to="/LoanReview"
           class="btn wes fw-bold mt-1"
@@ -77,7 +79,7 @@
 
       <!-- Third Link (Admin members) -->
       <div class="position-relative bot">
-        <i class="fa-solid fa-toolbox fa-lg"></i>
+        <v-icon class="mb-5">mdi-account-cog</v-icon>
         <router-link
           to="/AdminMembers"
           class="btn wes fw-bold mt-1"
@@ -105,6 +107,23 @@
           }"
         >
           <p class="mt-4 fw-bold fst">Client Members</p>
+          <v-divider></v-divider>
+        </router-link>
+      </div>
+
+      <!-- Fifth Link (Unpaid Cars) -->
+      <div class="position-relative bot">
+        <v-icon class="lefts2">mdi-alert-circle</v-icon>
+        <router-link
+          to="/NotPaid"
+          class="btn wes fw-bold mt-1"
+          :class="{
+            'text-white': isDark,
+            'text-dark': !isDark,
+            underline: isActiveRoute('/NotPaid').value,
+          }"
+        >
+          <p class="mt-4 fw-bold fst">Unpaid Cars</p>
         </router-link>
       </div>
 
@@ -172,6 +191,9 @@ const handleLogout = async () => {
 </script>
 
 <style scoped>
+.tops {
+  top: 50px;
+}
 .display {
   overflow-x: hidden;
 }
@@ -192,6 +214,12 @@ const handleLogout = async () => {
 }
 .text-dark {
   color: #333333 !important;
+}
+.lefts {
+  margin-left: -65px;
+}
+.lefts2 {
+  margin-left: -23px;
 }
 
 @media (max-width: 992px) {

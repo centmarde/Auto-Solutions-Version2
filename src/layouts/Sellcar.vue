@@ -1,7 +1,7 @@
 <template>
-    <v-container id="sellcar23" class="my-5">
-        <v-card class="pa-10">  <v-row>
-        
+  <v-container class="my-5">
+    <v-card class="pa-10">
+      <v-row>
         <v-col cols="12" lg="6" md="6" sm="12">
           <h3 id="title">SELL YOUR CAR</h3>
           <v-row class="d-flex align-center">
@@ -12,12 +12,13 @@
               max-width="100"
             ></v-img>
             <span>
-              Get an offer online and quickly complete the transaction with a local dealer.
+              Get an offer online and quickly complete the transaction with a
+              local dealer.
             </span>
           </v-row>
-  
+
           <v-divider></v-divider>
-  
+
           <v-row class="d-flex align-center">
             <v-img
               class="erd3 me-2"
@@ -26,32 +27,36 @@
               max-width="100"
             ></v-img>
             <span>
-              List your car for free. Set your own price and easily showcase your car on Auto-Solutions.
+              List your car for free. Set your own price and easily showcase
+              your car on Auto-Solutions.
             </span>
           </v-row>
         </v-col>
-  
+
         <v-col cols="12" lg="6" md="6" sm="12" class="d-flex justify-center">
           <v-img
             src="https://www.cars.com/images/sell/sale-dealer-woman-brand-colors.png"
-            style="width: 15rem;"
+            style="width: 15rem"
             class="mt-4"
           ></v-img>
         </v-col>
       </v-row>
-  
+
       <v-row class="d-flex justify-center my-2">
-        <v-btn @click="handleSubmit" class="btnn32" color="primary" elevation="2">
+        <v-btn
+          @click="handleSubmit"
+          class="btnn32"
+          color="primary"
+          elevation="2"
+        >
           Get Started
-          <v-icon right>
-            mdi-arrow-right
-          </v-icon>
+          <v-icon right> mdi-arrow-right </v-icon>
         </v-btn>
-      </v-row></v-card>
-    
-    </v-container>
-  </template>
-  
+      </v-row></v-card
+    >
+  </v-container>
+</template>
+
 <script>
 export default {
   data() {
@@ -73,9 +78,6 @@ export default {
       }
     },
   },
-
-
-
 };
 </script>
 
@@ -159,10 +161,12 @@ export default {
   position: absolute;
   width: 100px;
   height: 100%;
-  background-image: linear-gradient(120deg,
-      rgba(255, 255, 255, 0) 30%,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0) 70%);
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0) 70%
+  );
   top: 0;
   left: -100px;
   opacity: 0.6;
