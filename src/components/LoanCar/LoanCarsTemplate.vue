@@ -151,21 +151,53 @@ const confirmDelete = async (id) => {
   }
 };
 
-// Confirm approval
 const confirmApprove = async (id) => {
   const confirm = window.confirm(
     "Are you sure you want to approve this loan request?"
   );
   if (confirm) {
-    const { error } = await supabase
-      .from("loan_cars")
-      .update({ is_approved: true })
-      .eq("id", id);
+    try {
+      // Get the loan details from the loans array
+      const loanToApprove = loans.value.find((loan) => loan.id === id);
 
-    if (error) {
-      console.error("Error approving loan request:", error);
-    } else {
+      if (!loanToApprove) {
+        throw new Error("Loan not found");
+      }
+
+      // Insert the loan details into the approved_loans table
+      const { error: insertError } = await supabase
+        .from("approved_loans")
+        .insert([
+          {
+            loan_id: loanToApprove.id, // Loan ID
+            model: loanToApprove.model, // Car model
+            brand: loanToApprove.brand, // Car brand
+            car_image: loanToApprove.car_image, // Car image
+            loan_duration: loanToApprove.loan_duration, // Loan duration
+            monthly_income: loanToApprove.monthly_income, // Monthly income
+            user_id: loanToApprove.user_id, // User ID
+            car_id: loanToApprove.car_id, // Car ID
+          },
+        ]);
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      // Delete the loan from the loan_cars table
+      const { error: deleteError } = await supabase
+        .from("loan_cars")
+        .delete()
+        .eq("id", id);
+
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      // Remove the approved loan from the current loans list in the UI
       loans.value = loans.value.filter((loan) => loan.id !== id);
+    } catch (error) {
+      console.error("Error approving loan:", error);
     }
   }
 };
