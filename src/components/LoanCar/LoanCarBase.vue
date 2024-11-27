@@ -124,6 +124,10 @@ export default {
         income: null,
       },
       carOptions: [],
+      snackbar: {
+        show: false,
+        message: "",
+      },
     };
   },
   methods: {
@@ -159,8 +163,14 @@ export default {
     },
     async submitLoanRequest() {
       if (this.validateForm()) {
+        const userId = localStorage.getItem("user_id"); // Retrieve user ID from localStorage
+
+        if (!userId) {
+          console.error("User is not logged in");
+          return;
+        }
+
         try {
-          // Insert loan request data into Supabase
           const { error } = await supabase.from("loan_cars").insert([
             {
               car_id: this.loanRequest.selectedCar.id,
@@ -168,19 +178,22 @@ export default {
               brand: this.loanRequest.selectedCar.brand,
               loan_duration: this.loanRequest.duration,
               monthly_income: this.loanRequest.income,
+              user_id: userId, // Add the user_id to the insert object
             },
           ]);
 
           if (error) throw error;
 
-          // Add to local loanRequests array for display in the table (optional)
           this.loanRequests.push({ ...this.loanRequest });
 
-          // Reset form
           this.loanRequest = { selectedCar: null, duration: "", income: "" };
 
-          // Optionally save to local storage
           this.saveLoanRequests();
+
+          this.snackbar = {
+            show: true,
+            message: "Your loan request has been successfully submitted!",
+          };
         } catch (error) {
           console.error("Error submitting loan request:", error);
         }
@@ -212,7 +225,6 @@ export default {
       }
     },
   },
-
   mounted() {
     this.loadLoanRequests();
     this.fetchCarOptions();
