@@ -102,7 +102,7 @@ const fetchRentedCarsCount = async () => {
 
 const fetchLoanedCarsCount = async () => {
   try {
-    const { data, error } = await supabase.from("loaned_cars").select("id"); // Fetch loaned cars
+    const { data, error } = await supabase.from("approved_loans").select("id"); // Fetch loaned cars
 
     if (error) throw error;
 
