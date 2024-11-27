@@ -21,6 +21,7 @@
       </p>
       <p v-if="title == 'Car Purchased'">These cars have been purchased.</p>
       <p v-if="title == 'Car Rented'">These cars have been rented.</p>
+      <p v-if="title == 'Loaned Cars'">These cars are currently on loan.</p>
     </v-card-text>
 
     <v-card-actions>
@@ -52,7 +53,7 @@ const props = defineProps({
   },
   send: {
     type: String,
-    default: "Learn More",
+    default: "View",
   },
   link: {
     type: String,
@@ -95,6 +96,14 @@ const cardBackgroundColor = computed(
 const cardBorderColor = computed(
   () => cardColors[props.title]?.borderColor || "transparent"
 );
+
+// Dynamic link based on the card title
+const link = computed(() => {
+  if (props.title === "Loaned Cars") {
+    return "/LoaningCars"; // The route for the Loaning Cars page
+  }
+  return props.link; // Default link if not Loaned Cars
+});
 </script>
 
 <style scoped>

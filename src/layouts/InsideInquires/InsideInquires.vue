@@ -185,25 +185,96 @@ export default {
     await this.fetchCars();
   },
   methods: {
-    openCancelDialog(carId) {
+    openCancelDialog(carId, transactionId) {
+      console.log("Car ID:", carId);
+      console.log("Transaction ID:", transactionId);
+
+      // Check if the transactionId is valid here
+      const transaction = this.carsWithTransactions.find(
+        (item) => item.car.id === carId
+      )?.transaction; // Find the transaction by car ID
+      console.log("Transaction object:", transaction);
+
+      if (transaction) {
+        this.transactionIdToCancel = transaction.id; // Set the transaction ID to cancel
+      }
+
       this.isCancelDialogVisible = true;
       this.carIdToCancel = carId;
     },
-    async confirmCancel() {
+    async deleteTransaction(transactionId) {
       try {
-        const { error } = await supabase
+        // Step 1: Delete from purchased_cars
+        const { error: purchasedError } = await supabase
+          .from("purchased_cars")
+          .delete()
+          .eq("transaction_id", transactionId);
+
+        if (purchasedError) {
+          console.error(
+            "Error deleting from purchased_cars:",
+            purchasedError.message
+          );
+          throw new Error("Failed to delete purchased car record.");
+        }
+
+        // Step 2: Delete from rented_cars if not in purchased_cars
+        const { data: rentedCars } = await supabase
+          .from("rented_cars")
+          .select("transaction_id")
+          .eq("transaction_id", transactionId);
+
+        if (rentedCars.length > 0) {
+          const { error: rentedError } = await supabase
+            .from("rented_cars")
+            .delete()
+            .eq("transaction_id", transactionId);
+
+          if (rentedError) {
+            console.error(
+              "Error deleting from rented_cars:",
+              rentedError.message
+            );
+            throw new Error("Failed to delete rented car record.");
+          }
+        }
+
+        // Step 3: Now delete the transaction
+        const { error: transactionError } = await supabase
           .from("transactions")
           .delete()
-          .eq("car_id", this.carIdToCancel);
+          .eq("id", transactionId);
 
-        if (error) throw error;
+        if (transactionError) {
+          console.error(
+            "Error deleting transaction:",
+            transactionError.message
+          );
+          throw new Error("Failed to delete transaction.");
+        }
 
-        this.carsWithTransactions = this.carsWithTransactions.filter(
-          (item) => item.car.id !== this.carIdToCancel
-        );
-        this.isCancelDialogVisible = false;
-      } catch (err) {
-        this.error = err.message;
+        console.log("Transaction and related records deleted successfully.");
+      } catch (error) {
+        console.error("Error in deleting transaction:", error.message);
+      }
+    },
+    async confirmCancel() {
+      console.log(
+        "Confirming cancellation for transaction ID: ",
+        this.transactionIdToCancel
+      );
+
+      if (this.transactionIdToCancel) {
+        try {
+          await this.deleteTransaction(this.transactionIdToCancel); // Proceed with cancellation
+          this.isCancelDialogVisible = false; // Close the dialog
+          await this.fetchCars(); // Reload the cars list
+        } catch (error) {
+          console.error("Cancellation failed:", error.message);
+          this.error = "Failed to cancel transaction. Please try again.";
+        }
+      } else {
+        console.log("No transaction ID to cancel.");
       }
     },
     async fetchCars() {
@@ -217,6 +288,7 @@ export default {
           this.loading = false;
           return;
         }
+
         const { data, error } = await supabase
           .from("transactions")
           .select(`*, cars (*), user:buyer_id (*), purchased_cars (*)`)
@@ -225,10 +297,13 @@ export default {
 
         if (error) throw error;
 
+        // Log the data structure
+        console.log("Fetched transactions:", data);
+
         this.carsWithTransactions = data
           .map((transaction) => ({
             car: transaction.cars,
-            transaction: transaction,
+            transaction: transaction, // This is where the transaction object should be
             purchased_cars: transaction.purchased_cars,
           }))
           .filter((item) => item.car !== null);
@@ -247,6 +322,7 @@ export default {
         this.isPaymentChoiceDialogVisible = true;
       }
     },
+
     choosePayment(type) {
       this.paymentType = type;
       this.isPaymentChoiceDialogVisible = false;
@@ -256,6 +332,7 @@ export default {
         this.handleInPersonPayment();
       }
     },
+
     async handleOnlinePayment() {
       const { car, transaction } = this.currentTransaction;
       const amountInCentavos = car.price * 100;
@@ -312,6 +389,7 @@ export default {
         this.error = err.message;
       }
     },
+
     async handleInPersonPayment() {
       const { car, transaction } = this.currentTransaction;
 
@@ -339,11 +417,13 @@ export default {
         this.error = err.message;
       }
     },
+
     openPaymentLink() {
       window.open(this.paymentLink, "_blank");
       this.isPaymentDialogVisible = false;
       location.reload();
     },
+
     isTransactionPurchased(transactionId) {
       return this.carsWithTransactions.some(
         (item) =>
