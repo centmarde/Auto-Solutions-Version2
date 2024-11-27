@@ -7,7 +7,10 @@
         {{ error }}
         <v-btn color="primary" text @click="fetchCars">Retry</v-btn>
       </v-alert>
-      <v-alert v-else-if="!loading && !error && carsWithTransactions.length === 0" type="warning">
+      <v-alert
+        v-else-if="!loading && !error && carsWithTransactions.length === 0"
+        type="warning"
+      >
         No cars available for sale.
       </v-alert>
     </v-col>
@@ -36,21 +39,32 @@
           </v-col>
 
           <v-col cols="8">
-            <v-card-title>{{ item.car.brand }} {{ item.car.model }}</v-card-title>
+            <v-card-title
+              >{{ item.car.brand }} {{ item.car.model }}</v-card-title
+            >
             <v-card-text>
               <p class="truncate-text">{{ item.car.description }}</p>
               <p>
-                <small class="text-body-secondary">Added at: {{ item.transaction.created_at }}</small>
+                <small class="text-body-secondary"
+                  >Added at: {{ item.transaction.created_at }}</small
+                >
               </p>
             </v-card-text>
 
             <!-- Check if the transaction is purchased -->
             <div v-if="isTransactionPurchased(item.transaction.id)">
-              <v-alert v-if="item.purchased_cars[0].is_paid" type="success" dense outlined>
-                The car has been paid. Please proceed to the store to complete the process.
+              <v-alert
+                v-if="item.purchased_cars[0].is_paid"
+                type="success"
+                dense
+                outlined
+              >
+                The car has been paid. Please proceed to the store to complete
+                the process.
               </v-alert>
               <v-alert v-else type="warning" dense outlined>
-                You have 3 days to pay for the purchased car, or the reservation will be cancelled.
+                You have 3 days to pay for the purchased car, or the reservation
+                will be cancelled.
               </v-alert>
             </div>
 
@@ -59,7 +73,10 @@
                 <v-icon left>mdi-cancel</v-icon>
                 Cancel
               </v-btn>
-              <v-btn color="green" @click="finalizePurchase(item.transaction.id)">
+              <v-btn
+                color="green"
+                @click="finalizePurchase(item.transaction.id)"
+              >
                 <v-icon left>mdi-check</v-icon>
                 Purchase
               </v-btn>
@@ -76,11 +93,17 @@
       <v-card-title class="headline">Select Payment Method</v-card-title>
       <v-card-text>
         <p>Please select your payment option:</p>
-        <v-btn color="green" text @click="choosePayment('online')">Pay Online</v-btn>
-        <v-btn color="blue" text @click="choosePayment('in-person')">Pay In Person</v-btn>
+        <v-btn color="green" text @click="choosePayment('online')"
+          >Pay Online</v-btn
+        >
+        <v-btn color="blue" text @click="choosePayment('in-person')"
+          >Pay In Person</v-btn
+        >
       </v-card-text>
       <v-card-actions>
-        <v-btn color="blue" text @click="isPaymentChoiceDialogVisible = false">Cancel</v-btn>
+        <v-btn color="blue" text @click="isPaymentChoiceDialogVisible = false"
+          >Cancel</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -90,15 +113,30 @@
     <v-card>
       <v-card-title class="headline">Proceed to Payment</v-card-title>
       <v-card-text>
-        <p>You are about to be redirected to the PayMongo page to finalize your purchase.</p>
+        <p>
+          You are about to be redirected to the PayMongo page to finalize your
+          purchase.
+        </p>
         <v-row justify="center">
           <v-col cols="12" md="4">
-            <v-img src="../../assets/images/paymongo.png" alt="paymongo" width="100%"></v-img>
+            <v-img
+              src="../../assets/images/paymongo.png"
+              alt="paymongo"
+              width="100%"
+            ></v-img>
           </v-col>
         </v-row>
         <div class="d-flex justify-content-end mt-2">
-          <v-btn color="green" class="mx-2" text @click="openPaymentLink">Go to Payment</v-btn>
-          <v-btn color="blue darken-1" class="mx-2" text @click="isPaymentDialogVisible = false">Cancel</v-btn>
+          <v-btn color="green" class="mx-2" text @click="openPaymentLink"
+            >Go to Payment</v-btn
+          >
+          <v-btn
+            color="blue darken-1"
+            class="mx-2"
+            text
+            @click="isPaymentDialogVisible = false"
+            >Cancel</v-btn
+          >
         </div>
       </v-card-text>
     </v-card>
@@ -108,11 +146,17 @@
   <v-dialog v-model="isCancelDialogVisible" max-width="500px">
     <v-card>
       <v-card-title class="headline">Cancel Transaction</v-card-title>
-      <v-card-text>Are you sure you want to cancel this transaction?</v-card-text>
+      <v-card-text
+        >Are you sure you want to cancel this transaction?</v-card-text
+      >
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="isCancelDialogVisible = false">Back</v-btn>
-        <v-btn color="red" text @click="confirmCancel">Confirm Cancellation</v-btn>
+        <v-btn color="blue darken-1" text @click="isCancelDialogVisible = false"
+          >Back</v-btn
+        >
+        <v-btn color="red" text @click="confirmCancel"
+          >Confirm Cancellation</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -168,6 +212,11 @@ export default {
       const loggedInUserId = localStorage.getItem("user_id");
 
       try {
+        if (!loggedInUserId) {
+          this.error = "Network error, please Login again";
+          this.loading = false;
+          return;
+        }
         const { data, error } = await supabase
           .from("transactions")
           .select(`*, cars (*), user:buyer_id (*), purchased_cars (*)`)
@@ -176,11 +225,13 @@ export default {
 
         if (error) throw error;
 
-        this.carsWithTransactions = data.map((transaction) => ({
-          car: transaction.cars,
-          transaction: transaction,
-          purchased_cars: transaction.purchased_cars,
-        })).filter((item) => item.car !== null);
+        this.carsWithTransactions = data
+          .map((transaction) => ({
+            car: transaction.cars,
+            transaction: transaction,
+            purchased_cars: transaction.purchased_cars,
+          }))
+          .filter((item) => item.car !== null);
       } catch (err) {
         this.error = err.message;
       } finally {
@@ -228,7 +279,10 @@ export default {
       };
 
       try {
-        const response = await fetch("https://api.paymongo.com/v1/links", options);
+        const response = await fetch(
+          "https://api.paymongo.com/v1/links",
+          options
+        );
         const result = await response.json();
 
         if (response.ok) {

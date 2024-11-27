@@ -229,6 +229,11 @@ router.beforeEach((to, from, next) => {
   const hasVisitedDashboard =
     JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
+  if (!isLoggedIn && to.meta.requiresAuth) {
+    localStorage.setItem("error", "User not logged in"); // Store error message
+    return next("/login"); // Redirect to login page if not logged in
+  }
+
   console.log(userRole);
   const publicPages = ["/", "/login", "/register"];
   const protectedPages = [
@@ -256,6 +261,11 @@ router.beforeEach((to, from, next) => {
     "/Rented",
     "/NotPaid",
   ];
+
+  if (protectedPages.includes(to.path) && !isLoggedIn) {
+    localStorage.setItem("error", "User not logged in"); // Store error message
+    return next("/login"); // Redirect to login page
+  }
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
     return next("/");

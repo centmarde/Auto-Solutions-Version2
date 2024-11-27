@@ -123,6 +123,12 @@ export default {
       const loggedInUserId = localStorage.getItem("user_id");
 
       try {
+        if (!loggedInUserId) {
+          this.error = "Network error, please Login again";
+          this.loading = false;
+          return;
+        }
+
         const { data, error } = await supabase
           .from("cars")
           .select("*") // Make sure to select all necessary fields including price and years_owned
