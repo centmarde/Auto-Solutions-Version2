@@ -21,6 +21,8 @@
           <th class="text-left">Car Image</th>
           <th class="text-left">Loan Duration</th>
           <th class="text-left">Monthly Income</th>
+          <th class="text-left">User ID</th>
+          <!-- New column for user_id -->
           <th class="text-left">Actions</th>
         </tr>
       </thead>
@@ -45,6 +47,8 @@
               })
             }}
           </td>
+          <td>{{ loan.user_id }}</td>
+          <!-- Displaying user_id -->
           <td>
             <v-btn class="mx-2" color="error" @click="confirmDelete(loan.id)">
               Delete
@@ -94,10 +98,12 @@ const selectedImage = ref("");
 // Fetch loan requests from the database
 const fetchLoans = async () => {
   try {
-    // Fetch loan cars along with the related car details
+    // Fetch loan cars along with the related car details, including user_id
     const { data: loanData, error: loanError } = await supabase
       .from("loan_cars")
-      .select("id, model, brand, loan_duration, monthly_income, car_id");
+      .select(
+        "id, model, brand, loan_duration, monthly_income, car_id, user_id"
+      );
 
     if (loanError) throw loanError;
 
@@ -108,10 +114,10 @@ const fetchLoans = async () => {
 
     if (carError) throw carError;
 
-    // Map car image to the respective loan
+    // Map car image and user_id to the respective loan
     loans.value = loanData.map((loan) => {
       const car = carData.find((car) => car.id === loan.car_id);
-      return { ...loan, car_image: car?.img || "" };
+      return { ...loan, car_image: car?.img || "", user_id: loan.user_id };
     });
   } catch (error) {
     console.error("Error fetching loan requests or car data:", error);
