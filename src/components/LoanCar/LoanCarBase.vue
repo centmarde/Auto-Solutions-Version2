@@ -22,7 +22,7 @@
     </v-card-text>
 
     <div class="loan-car-form">
-      <form @submit.prevent="submitLoanRequest">
+      <form @submit.prevent="showConfirmationDialog">
         <!-- Carousel to select a car -->
         <div class="form-group">
           <label class="centered-label">Select a Car:</label>
@@ -104,6 +104,32 @@
       />
     </div>
   </v-card>
+
+  <!-- Confirmation Dialog -->
+  <v-dialog v-model="confirmationDialog" max-width="500">
+    <v-card>
+      <v-card-title class="headline"> Are you sure? </v-card-title>
+      <v-card-text>
+        You are about to express interest in this car loan. Please be aware of
+        the following:
+        <ul>
+          <li>This is not a final purchase or approval of the loan.</li>
+          <li>Our team will review your request and get in touch with you.</li>
+          <li>
+            Ensure all information provided is accurate before proceeding.
+          </li>
+          <li>By proceeding, you agree to our terms and conditions.</li>
+          <li>Any false information may lead to disqualification.</li>
+        </ul>
+        Do you wish to continue?
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn text @click="confirmationDialog = false">Cancel</v-btn>
+        <v-btn color="primary" @click="confirmSubmitLoanRequest">Confirm</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -124,6 +150,7 @@ export default {
         income: null,
       },
       carOptions: [],
+      confirmationDialog: false, // Tracks confirmation dialog visibility
       snackbar: {
         show: false,
         message: "",
@@ -160,6 +187,15 @@ export default {
       }
 
       return isValid;
+    },
+    showConfirmationDialog() {
+      if (this.validateForm()) {
+        this.confirmationDialog = true; // Show the dialog if the form is valid
+      }
+    },
+    async confirmSubmitLoanRequest() {
+      this.confirmationDialog = false; // Close the dialog
+      await this.submitLoanRequest(); // Submit the loan request
     },
     async submitLoanRequest() {
       if (this.validateForm()) {
