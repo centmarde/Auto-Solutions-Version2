@@ -10,11 +10,10 @@
   </router-link>
 
   <v-card class="mx-auto my-10 px-10" elevation="16" max-width="800">
-    <!-- Card Header -->
-    <v-card-title class="title">Loan a Car</v-card-title>
-    <v-card-subtitle class="subtitle">
-      Get a car loan quickly and easily
-    </v-card-subtitle>
+    <v-card-title class="title">Available Cars for Loan</v-card-title>
+    <v-card-subtitle class="subtitle"
+      >Get a car loan quickly and easily</v-card-subtitle
+    >
 
     <v-card-text>
       Please fill out the form below to submit a loan request. Our team will
@@ -23,7 +22,6 @@
 
     <div class="loan-car-form">
       <form @submit.prevent="showConfirmationDialog">
-        <!-- Carousel to select a car -->
         <div class="form-group">
           <label class="centered-label">Select a Car:</label>
           <v-carousel
@@ -46,9 +44,9 @@
               </v-sheet>
             </v-carousel-item>
           </v-carousel>
-          <span v-if="formErrors.selectedCar" class="error">
-            {{ formErrors.selectedCar }}
-          </span>
+          <span v-if="formErrors.selectedCar" class="error">{{
+            formErrors.selectedCar
+          }}</span>
           <div v-if="loanRequest.selectedCar" class="selected-car">
             Selected Car: {{ loanRequest.selectedCar.model }}
             {{ loanRequest.selectedCar.brand }}
@@ -61,7 +59,6 @@
           </div>
         </div>
 
-        <!-- Loan Duration -->
         <div class="form-group">
           <label class="centered-label" for="duration"
             >Loan Duration (months):</label
@@ -72,12 +69,11 @@
             class="outlined-input"
             :class="{ 'dark-mode': $vuetify.theme.dark }"
           />
-          <span v-if="formErrors.duration" class="error">
-            {{ formErrors.duration }}
-          </span>
+          <span v-if="formErrors.duration" class="error">{{
+            formErrors.duration
+          }}</span>
         </div>
 
-        <!-- Monthly Income -->
         <div class="form-group">
           <label class="centered-label" for="income">Monthly Income:</label>
           <input
@@ -86,9 +82,9 @@
             class="outlined-input"
             :class="{ 'dark-mode': $vuetify.theme.dark }"
           />
-          <span v-if="formErrors.income" class="error">
-            {{ formErrors.income }}
-          </span>
+          <span v-if="formErrors.income" class="error">{{
+            formErrors.income
+          }}</span>
         </div>
 
         <div class="form-group">
@@ -105,10 +101,9 @@
     </div>
   </v-card>
 
-  <!-- Confirmation Dialog -->
   <v-dialog v-model="confirmationDialog" max-width="500">
     <v-card>
-      <v-card-title class="headline"> Are you sure? </v-card-title>
+      <v-card-title class="headline">Are you sure?</v-card-title>
       <v-card-text>
         You are about to express interest in this car loan. Please be aware of
         the following:
@@ -150,7 +145,7 @@ export default {
         income: null,
       },
       carOptions: [],
-      confirmationDialog: false, // Tracks confirmation dialog visibility
+      confirmationDialog: false,
       snackbar: {
         show: false,
         message: "",
@@ -167,11 +162,7 @@ export default {
     },
     validateForm() {
       let isValid = true;
-      this.formErrors = {
-        selectedCar: null,
-        duration: null,
-        income: null,
-      };
+      this.formErrors = { selectedCar: null, duration: null, income: null };
 
       if (!this.loanRequest.selectedCar) {
         this.formErrors.selectedCar = "Please select a car.";
@@ -190,16 +181,16 @@ export default {
     },
     showConfirmationDialog() {
       if (this.validateForm()) {
-        this.confirmationDialog = true; // Show the dialog if the form is valid
+        this.confirmationDialog = true;
       }
     },
     async confirmSubmitLoanRequest() {
-      this.confirmationDialog = false; // Close the dialog
-      await this.submitLoanRequest(); // Submit the loan request
+      this.confirmationDialog = false;
+      await this.submitLoanRequest();
     },
     async submitLoanRequest() {
       if (this.validateForm()) {
-        const userId = localStorage.getItem("user_id"); // Retrieve user ID from localStorage
+        const userId = localStorage.getItem("user_id");
 
         if (!userId) {
           console.error("User is not logged in");
@@ -214,17 +205,16 @@ export default {
               brand: this.loanRequest.selectedCar.brand,
               loan_duration: this.loanRequest.duration,
               monthly_income: this.loanRequest.income,
-              user_id: userId, // Add the user_id to the insert object
+              user_id: userId,
             },
           ]);
 
           if (error) throw error;
 
           this.loanRequests.push({ ...this.loanRequest });
-
           this.loanRequest = { selectedCar: null, duration: "", income: "" };
-
           this.saveLoanRequests();
+          await this.fetchCarOptions();
 
           this.snackbar = {
             show: true,
@@ -250,12 +240,22 @@ export default {
     },
     async fetchCarOptions() {
       try {
-        const { data, error } = await supabase
+        const { data: allCars, error: carsError } = await supabase
           .from("cars")
           .select("id, model, brand, img");
 
-        if (error) throw error;
-        this.carOptions = data;
+        if (carsError) throw carsError;
+
+        const { data: loanedCars, error: loanedCarsError } = await supabase
+          .from("loan_cars")
+          .select("car_id");
+
+        if (loanedCarsError) throw loanedCarsError;
+
+        const loanedCarIds = loanedCars.map((loan) => loan.car_id);
+        this.carOptions = allCars.filter(
+          (car) => !loanedCarIds.includes(car.id)
+        );
       } catch (error) {
         console.error("Error fetching car options:", error);
       }
