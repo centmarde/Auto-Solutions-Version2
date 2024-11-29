@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { supabase } from "../../lib/supabase";
+import { supabase } from "@/lib/supaBase";
 
 export default {
   data() {
