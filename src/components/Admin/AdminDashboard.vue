@@ -16,6 +16,7 @@
           title="Total Cars for Rent"
           link="/CarInRent"
           :num="totalCarsForRent"
+          send="View all cars for rent"
         />
         <Card
           class="col-6"

@@ -154,7 +154,7 @@ export default {
       try {
         const { data, error } = await supabase
           .from("rented_cars")
-          .select("car_id");
+          .select("cars_id");
 
         if (error) throw error;
 

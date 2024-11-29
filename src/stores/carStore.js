@@ -14,7 +14,7 @@ export const useCarStore = defineStore("carStore", {
       const loggedInUserId = this.getLoggedInUserId(); // Use a helper method to get user ID
 
       if (!loggedInUserId) {
-        this.error = "User not logged in";
+        this.error = "Network error, please Login again";
         this.loading = false;
         return;
       }
@@ -49,7 +49,7 @@ export const useCarStore = defineStore("carStore", {
       const loggedInUserId = this.getLoggedInUserId(); // Use a helper method to get user ID
 
       if (!loggedInUserId) {
-        this.error = "User not logged in";
+        this.error = "Network error, please Login again";
         this.loading = false;
         return;
       }

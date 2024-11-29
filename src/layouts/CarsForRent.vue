@@ -110,6 +110,11 @@ export default {
       const loggedInUserId = localStorage.getItem("user_id"); // Get the logged-in user's ID
 
       try {
+        if (!loggedInUserId) {
+          this.error = "Network error, please Login again";
+          this.loading = false;
+          return;
+        }
         const { data, error } = await supabase
           .from("cars")
           .select(

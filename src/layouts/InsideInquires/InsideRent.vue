@@ -287,6 +287,11 @@ export default {
       try {
         const loggedInUserId = localStorage.getItem("user_id");
 
+        if (!loggedInUserId) {
+          this.error = "Network error, please Login again";
+          this.loading = false;
+          return;
+        }
         const { data, error } = await supabase
           .from("transactions")
           .select("*, cars (*), rented_cars (*), user:buyer_id (*)")

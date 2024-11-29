@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { supabase } from "../../lib/supaBase";
+import { supabase } from "../../lib/supabase";
 
 export default {
   data() {
@@ -139,6 +139,7 @@ export default {
         income: "",
       },
       loanRequests: [],
+      loanApplications: [], // Add loanApplications to the data
       formErrors: {
         selectedCar: null,
         duration: null,
@@ -150,6 +151,7 @@ export default {
         show: false,
         message: "",
       },
+      error: null, // Add error to the data
     };
   },
   methods: {
@@ -260,10 +262,26 @@ export default {
         console.error("Error fetching car options:", error);
       }
     },
+    async fetchLoanApplications() {
+      try {
+        const userId = localStorage.getItem("user_id");
+        const { data, error } = await supabase
+          .from("loan_cars")
+          .select("*")
+          .eq("user_id", userId);
+
+        if (error) throw error;
+        this.loanApplications = data;
+      } catch (error) {
+        console.error("Error fetching loan applications:", error);
+        this.error = error.message;
+      }
+    },
   },
   mounted() {
     this.loadLoanRequests();
     this.fetchCarOptions();
+    this.fetchLoanApplications(); // Fetch loan applications on mount
   },
 };
 </script>
