@@ -23,6 +23,7 @@
           <th class="text-left">Monthly Income</th>
           <th class="text-left">User ID</th>
           <th class="text-left">Car ID</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -48,6 +49,17 @@
           </td>
           <td>{{ loan.user_id }}</td>
           <td>{{ loan.car_id }}</td>
+          <td class="text-center">
+            <!-- Conditionally render button or completed text -->
+            <div v-if="loan.is_approved">
+              <span class="completed-text">The requirements are completed</span>
+            </div>
+            <div v-else>
+              <v-btn color="success" @click="markAsApproved(loan)">
+                Success
+              </v-btn>
+            </div>
+          </td>
         </tr>
       </tbody>
     </v-table>
@@ -85,19 +97,42 @@ const selectedImage = ref("");
 // Fetch approved loans from the database
 const fetchApprovedLoans = async () => {
   try {
-    // Fetch approved loans along with the related car details, including user_id
+    // Fetch loans including the `is_approved` column
     const { data: loanData, error: loanError } = await supabase
       .from("approved_loans")
       .select(
-        "id, loan_id, model, brand, loan_duration, monthly_income, car_image, user_id, car_id"
+        "id, loan_id, model, brand, loan_duration, monthly_income, car_image, user_id, car_id, is_approved"
       );
 
     if (loanError) throw loanError;
 
-    // Map approved loan details to display
+    // Update the loans in the local state
     approvedLoans.value = loanData;
   } catch (error) {
     console.error("Error fetching approved loans:", error);
+  }
+};
+
+// Method to mark a loan as approved
+const markAsApproved = async (loan) => {
+  try {
+    // Update the `is_approved` column in Supabase
+    const { error } = await supabase
+      .from("approved_loans")
+      .update({ is_approved: true })
+      .eq("id", loan.id);
+
+    if (error) throw error;
+
+    // Update the local state to reflect the change
+    const loanIndex = approvedLoans.value.findIndex(
+      (item) => item.id === loan.id
+    );
+    if (loanIndex !== -1) {
+      approvedLoans.value[loanIndex].is_approved = true;
+    }
+  } catch (error) {
+    console.error("Error updating loan status:", error);
   }
 };
 
@@ -137,5 +172,10 @@ onMounted(() => {
 
 .car-image:hover {
   transform: scale(1.05);
+}
+
+.completed-text {
+  color: green;
+  font-weight: bold;
 }
 </style>
