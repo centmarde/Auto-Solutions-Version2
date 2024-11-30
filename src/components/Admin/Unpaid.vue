@@ -16,6 +16,10 @@
               <th class="text-left">Total Days</th>
               <th class="text-left">Is Paid</th>
               <th class="text-left">Total Amount</th>
+              <th class="text-left">Car Type</th>
+              <!-- New column -->
+              <th class="text-left">Created At</th>
+              <!-- New column -->
               <th class="text-center">Actions</th>
             </tr>
           </thead>
@@ -31,11 +35,18 @@
                   @click="openImage(car.img)"
                 />
               </td>
-              <td>{{ car.date_start }}</td>
-              <td>{{ car.date_end }}</td>
-              <td>{{ car.total_days }}</td>
+              <td>{{ car.date_start || "-" }}</td>
+              <!-- Only show date_start if present -->
+              <td>{{ car.date_end || "-" }}</td>
+              <!-- Only show date_end if present -->
+              <td>{{ car.total_days || "-" }}</td>
+              <!-- Only show total_days if present -->
               <td>{{ car.is_paid ? "Yes" : "No" }}</td>
               <td>{{ car.total_amount }}</td>
+              <td>{{ car.source === "rented" ? "For Rent" : "For Sale" }}</td>
+              <!-- Rent/Sale -->
+              <td>{{ car.created_at }}</td>
+              <!-- Display created_at -->
               <td class="text-center">
                 <!-- Paid Button -->
                 <v-btn
@@ -107,16 +118,18 @@ const fetchCars = async () => {
   const { data: rentedCarsData, error: rentedError } = await supabase
     .from("rented_cars")
     .select(
-      `id, date_start, date_end, total_days, is_paid, total_amount, cars (model, img), transactions (buyer_id)`
+      `id, date_start, date_end, total_days, is_paid, total_amount, created_at, cars (model, img), transactions (buyer_id)`
     )
     .eq("is_paid", false)
-    .range(startIndex, endIndex); // Fetch only a range of data
+    .range(startIndex, endIndex);
 
   const { data: purchasedCarsData, error: purchasedError } = await supabase
     .from("purchased_cars")
-    .select(`car_id, cars (model, img, price), transactions (buyer_id)`)
+    .select(
+      `car_id, is_paid, cars (model, img, price), transactions (buyer_id), created_at`
+    )
     .eq("is_paid", false)
-    .range(startIndex, endIndex); // Fetch only a range of data
+    .range(startIndex, endIndex);
 
   if (rentedError || purchasedError) {
     console.error("Error fetching unpaid cars:", rentedError || purchasedError);
@@ -135,23 +148,24 @@ const fetchCars = async () => {
       is_paid: item.is_paid,
       total_amount: item.total_amount,
       user_id: item.transactions.buyer_id,
-      source: "rented", // Mark if the car is from rented_cars
+      source: "rented",
+      created_at: item.created_at, // Add created_at for rented cars
     })),
     ...purchasedCarsData.map((item) => ({
       id: item.car_id,
       model: item.cars.model,
       img: item.cars.img,
-      date_start: item.date_start,
-      date_end: item.date_end,
-      total_days: item.total_days,
+      date_start: null, // No start date for purchased cars
+      date_end: null, // No end date for purchased cars
+      total_days: null, // No total days for purchased cars
       is_paid: item.is_paid,
       total_amount: item.cars.price,
       user_id: item.transactions.buyer_id,
       source: "purchased",
+      created_at: item.created_at, // Add created_at for purchased cars
     })),
   ];
 
-  // Set combined cars data to the reactive cars array
   cars.value = combinedCars;
 };
 
