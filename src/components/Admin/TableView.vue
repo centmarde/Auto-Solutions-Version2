@@ -28,8 +28,8 @@
             <img
               :src="car.img"
               alt="Car Image"
-              class=" car-image "
-              style="cursor: pointer;"
+              class="car-image"
+              style="cursor: pointer"
               @click="openImage(car.img)"
             />
           </td>
@@ -43,8 +43,12 @@
           <td>{{ car.yearsowned }}</td>
           <td>{{ car.price }}</td>
           <td class="text-center">
-            <v-btn class="mx-2" color="error" @click="confirmDelete(car.id)">Delete</v-btn>
-            <v-btn class="mx-2" color="warning" @click="confirmDisapprove(car.id)">Disapprove</v-btn>
+            <v-btn
+              class="mx-2"
+              color="warning"
+              @click="confirmDisapprove(car.id)"
+              >Disapprove</v-btn
+            >
           </td>
         </tr>
       </tbody>
@@ -62,22 +66,24 @@
     <!-- Dialog for enlarged image -->
     <v-dialog v-model="dialog" max-width="600px">
       <v-card>
-        <v-img :src="selectedImage" class="enlarged-image" aspect-ratio="16/9"></v-img>
+        <v-img
+          :src="selectedImage"
+          class="enlarged-image"
+          aspect-ratio="16/9"
+        ></v-img>
       </v-card>
     </v-dialog>
   </v-container>
 </template>
 
-
-
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
-import { supabase } from '../../lib/supaBase';
+import { ref, onMounted, watch, computed } from "vue";
+import { supabase } from "../../lib/supaBase";
 
 const props = defineProps({
   title: {
     type: String,
-    default: 'Title',
+    default: "Title",
   },
   tableName: {
     type: String,
@@ -99,46 +105,47 @@ const props = defineProps({
 
 const cars = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = 5; 
+const itemsPerPage = 5;
 const totalCarsForSale = ref(0);
 const totalCarsForRent = ref(0);
 
 // State for dialog and selected image
 const dialog = ref(false);
-const selectedImage = ref('');
+const selectedImage = ref("");
 
 const fetchCars = async (table, forRent = false) => {
-  let query = supabase.from(table).select('*').eq('is_pending', false);
+  let query = supabase.from(table).select("*").eq("is_pending", false);
 
   if (forRent) {
-    query = query.eq('for_rent', true);
+    query = query.eq("for_rent", true);
   }
 
   // Check the rented_cars table if checkRented is true
   if (props.checkRented) {
-    const rentedCarsQuery = await supabase.from('rented_cars').select('cars_id');
+    const rentedCarsQuery = await supabase
+      .from("rented_cars")
+      .select("cars_id");
     if (rentedCarsQuery.error) {
-      console.error('Error fetching rented cars:', rentedCarsQuery.error);
+      console.error("Error fetching rented cars:", rentedCarsQuery.error);
       return;
     }
 
-    const rentedCarIds = rentedCarsQuery.data.map(car => car.cars_id);
-    query = query.in('id', rentedCarIds);
+    const rentedCarIds = rentedCarsQuery.data.map((car) => car.cars_id);
+    query = query.in("id", rentedCarIds);
   }
 
   const { data, error } = await query;
   if (error) {
-    console.error('Error fetching cars:', error);
+    console.error("Error fetching cars:", error);
   } else {
     cars.value = data;
     calculateTotals();
   }
 };
 
-
 const calculateTotals = () => {
-  totalCarsForSale.value = cars.value.filter(car => car.for_sale).length;
-  totalCarsForRent.value = cars.value.filter(car => car.for_rent).length;
+  totalCarsForSale.value = cars.value.filter((car) => car.for_sale).length;
+  totalCarsForRent.value = cars.value.filter((car) => car.for_rent).length;
 };
 
 // Paginated cars based on current page
@@ -153,11 +160,14 @@ const pageCount = computed(() => {
 });
 
 const deleteCar = async (carId) => {
-  const { error } = await supabase.from(props.tableName).delete().eq('id', carId);
+  const { error } = await supabase
+    .from(props.tableName)
+    .delete()
+    .eq("id", carId);
   if (error) {
-    console.error('Error deleting car:', error);
+    console.error("Error deleting car:", error);
   } else {
-    cars.value = cars.value.filter(car => car.id !== carId);
+    cars.value = cars.value.filter((car) => car.id !== carId);
     calculateTotals();
   }
 };
@@ -166,11 +176,11 @@ const disapproveCar = async (carId) => {
   const { error } = await supabase
     .from(props.tableName)
     .update({ is_pending: true })
-    .eq('id', carId);
+    .eq("id", carId);
   if (error) {
-    console.error('Error disapproving car:', error);
+    console.error("Error disapproving car:", error);
   } else {
-    alert('Car has been disapproved successfully.');
+    alert("Car has been disapproved successfully.");
     fetchCars(props.tableName, props.forRent);
   }
 };
@@ -178,7 +188,7 @@ const disapproveCar = async (carId) => {
 const confirmDelete = (carId) => {
   const confirmed = confirm("Are you sure you want to delete this car?");
   if (confirmed) {
-    deleteCar(carId);  
+    deleteCar(carId);
   }
 };
 
@@ -199,13 +209,13 @@ onMounted(async () => {
   await fetchCars(props.tableName, props.forRent);
 });
 
-watch(() => [props.tableName, props.forRent], async ([newTable, newForRent]) => {
-  await fetchCars(newTable, newForRent);
-});
+watch(
+  () => [props.tableName, props.forRent],
+  async ([newTable, newForRent]) => {
+    await fetchCars(newTable, newForRent);
+  }
+);
 </script>
-
-
-
 
 <style>
 .mts {

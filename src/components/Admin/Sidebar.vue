@@ -46,7 +46,7 @@
       </div>
 
       <div class="position-relative bot">
-        <v-icon class="mb-4">mdi mdi-car-clock</v-icon>
+        <v-icon class="mb-5">mdi mdi-car-clock</v-icon>
         <router-link
           to="/AdminReview"
           class="btn wes fw-bold mt-1"
@@ -96,7 +96,8 @@
 
       <!-- Fourth Link (Client members) -->
       <div class="position-relative bot">
-        <i class="fa-regular fa-money-bill-1 fa-lg"></i>
+        <v-icon class="mb-4">mdi-account-group</v-icon>
+
         <router-link
           to="/Clients"
           class="btn wes fw-bold mt-1"
@@ -181,8 +182,7 @@ const isActiveRoute = (path) => computed(() => route.path === path);
 const handleLogout = async () => {
   try {
     await supabaseLogout();
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("axios_id");
+
     router.push("/");
   } catch (error) {
     console.error("Logout failed:", error);

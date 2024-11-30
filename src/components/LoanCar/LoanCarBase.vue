@@ -10,11 +10,10 @@
   </router-link>
 
   <v-card class="mx-auto my-10 px-10" elevation="16" max-width="800">
-    <!-- Card Header -->
-    <v-card-title class="title">Loan a Car</v-card-title>
-    <v-card-subtitle class="subtitle">
-      Get a car loan quickly and easily
-    </v-card-subtitle>
+    <v-card-title class="title">Available Cars for Loan</v-card-title>
+    <v-card-subtitle class="subtitle"
+      >Get a car loan quickly and easily</v-card-subtitle
+    >
 
     <v-card-text>
       Please fill out the form below to submit a loan request. Our team will
@@ -22,8 +21,7 @@
     </v-card-text>
 
     <div class="loan-car-form">
-      <form @submit.prevent="submitLoanRequest">
-        <!-- Carousel to select a car -->
+      <form @submit.prevent="showConfirmationDialog">
         <div class="form-group">
           <label class="centered-label">Select a Car:</label>
           <v-carousel
@@ -46,9 +44,9 @@
               </v-sheet>
             </v-carousel-item>
           </v-carousel>
-          <span v-if="formErrors.selectedCar" class="error">
-            {{ formErrors.selectedCar }}
-          </span>
+          <span v-if="formErrors.selectedCar" class="error">{{
+            formErrors.selectedCar
+          }}</span>
           <div v-if="loanRequest.selectedCar" class="selected-car">
             Selected Car: {{ loanRequest.selectedCar.model }}
             {{ loanRequest.selectedCar.brand }}
@@ -61,7 +59,6 @@
           </div>
         </div>
 
-        <!-- Loan Duration -->
         <div class="form-group">
           <label class="centered-label" for="duration"
             >Loan Duration (months):</label
@@ -72,12 +69,11 @@
             class="outlined-input"
             :class="{ 'dark-mode': $vuetify.theme.dark }"
           />
-          <span v-if="formErrors.duration" class="error">
-            {{ formErrors.duration }}
-          </span>
+          <span v-if="formErrors.duration" class="error">{{
+            formErrors.duration
+          }}</span>
         </div>
 
-        <!-- Monthly Income -->
         <div class="form-group">
           <label class="centered-label" for="income">Monthly Income:</label>
           <input
@@ -86,9 +82,9 @@
             class="outlined-input"
             :class="{ 'dark-mode': $vuetify.theme.dark }"
           />
-          <span v-if="formErrors.income" class="error">
-            {{ formErrors.income }}
-          </span>
+          <span v-if="formErrors.income" class="error">{{
+            formErrors.income
+          }}</span>
         </div>
 
         <div class="form-group">
@@ -104,10 +100,35 @@
       />
     </div>
   </v-card>
+
+  <v-dialog v-model="confirmationDialog" max-width="500">
+    <v-card>
+      <v-card-title class="headline">Are you sure?</v-card-title>
+      <v-card-text>
+        You are about to express interest in this car loan. Please be aware of
+        the following:
+        <ul>
+          <li>This is not a final purchase or approval of the loan.</li>
+          <li>Our team will review your request and get in touch with you.</li>
+          <li>
+            Ensure all information provided is accurate before proceeding.
+          </li>
+          <li>By proceeding, you agree to our terms and conditions.</li>
+          <li>Any false information may lead to disqualification.</li>
+        </ul>
+        Do you wish to continue?
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn text @click="confirmationDialog = false">Cancel</v-btn>
+        <v-btn color="primary" @click="confirmSubmitLoanRequest">Confirm</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import { supabase } from "../../lib/supaBase";
+import { supabase } from "@/lib/supaBase";
 
 export default {
   data() {
@@ -118,12 +139,19 @@ export default {
         income: "",
       },
       loanRequests: [],
+      loanApplications: [], // Add loanApplications to the data
       formErrors: {
         selectedCar: null,
         duration: null,
         income: null,
       },
       carOptions: [],
+      confirmationDialog: false,
+      snackbar: {
+        show: false,
+        message: "",
+      },
+      error: null, // Add error to the data
     };
   },
   methods: {
@@ -136,11 +164,7 @@ export default {
     },
     validateForm() {
       let isValid = true;
-      this.formErrors = {
-        selectedCar: null,
-        duration: null,
-        income: null,
-      };
+      this.formErrors = { selectedCar: null, duration: null, income: null };
 
       if (!this.loanRequest.selectedCar) {
         this.formErrors.selectedCar = "Please select a car.";
@@ -157,10 +181,25 @@ export default {
 
       return isValid;
     },
+    showConfirmationDialog() {
+      if (this.validateForm()) {
+        this.confirmationDialog = true;
+      }
+    },
+    async confirmSubmitLoanRequest() {
+      this.confirmationDialog = false;
+      await this.submitLoanRequest();
+    },
     async submitLoanRequest() {
       if (this.validateForm()) {
+        const userId = localStorage.getItem("user_id");
+
+        if (!userId) {
+          console.error("User is not logged in");
+          return;
+        }
+
         try {
-          // Insert loan request data into Supabase
           const { error } = await supabase.from("loan_cars").insert([
             {
               car_id: this.loanRequest.selectedCar.id,
@@ -168,19 +207,21 @@ export default {
               brand: this.loanRequest.selectedCar.brand,
               loan_duration: this.loanRequest.duration,
               monthly_income: this.loanRequest.income,
+              user_id: userId,
             },
           ]);
 
           if (error) throw error;
 
-          // Add to local loanRequests array for display in the table (optional)
           this.loanRequests.push({ ...this.loanRequest });
-
-          // Reset form
           this.loanRequest = { selectedCar: null, duration: "", income: "" };
-
-          // Optionally save to local storage
           this.saveLoanRequests();
+          await this.fetchCarOptions();
+
+          this.snackbar = {
+            show: true,
+            message: "Your loan request has been successfully submitted!",
+          };
         } catch (error) {
           console.error("Error submitting loan request:", error);
         }
@@ -201,21 +242,52 @@ export default {
     },
     async fetchCarOptions() {
       try {
-        const { data, error } = await supabase
+        // Fetch all cars from the cars table where for_sale is true
+        const { data: allCars, error: carsError } = await supabase
           .from("cars")
-          .select("id, model, brand, img");
+          .select("id, model, brand, img, for_sale")
+          .eq("for_sale", true); // Only cars where for_sale is true
 
-        if (error) throw error;
-        this.carOptions = data;
+        if (carsError) throw carsError;
+
+        // Fetch the car_ids from the approved_loans table
+        const { data: approvedCars, error: approvedCarsError } = await supabase
+          .from("approved_loans")
+          .select("car_id");
+
+        if (approvedCarsError) throw approvedCarsError;
+
+        // Extract the car_ids that are already approved
+        const approvedCarIds = approvedCars.map((loan) => loan.car_id);
+
+        // Filter out the cars that are already approved
+        this.carOptions = allCars.filter(
+          (car) => !approvedCarIds.includes(car.id)
+        );
       } catch (error) {
         console.error("Error fetching car options:", error);
       }
     },
-  },
+    async fetchLoanApplications() {
+      try {
+        const userId = localStorage.getItem("user_id");
+        const { data, error } = await supabase
+          .from("loan_cars")
+          .select("*")
+          .eq("user_id", userId);
 
+        if (error) throw error;
+        this.loanApplications = data;
+      } catch (error) {
+        console.error("Error fetching loan applications:", error);
+        this.error = error.message;
+      }
+    },
+  },
   mounted() {
     this.loadLoanRequests();
     this.fetchCarOptions();
+    this.fetchLoanApplications(); // Fetch loan applications on mount
   },
 };
 </script>

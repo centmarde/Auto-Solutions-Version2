@@ -35,6 +35,7 @@ import ClientMember from "@/pages/adminPages/ClientMember.vue";
 import AdminMembers from "@/pages/adminPages/AdminMembers.vue";
 import CarBeenPurchased from "@/pages/adminPages/CarBeenPurchased.vue";
 import LoanedCars from "@/pages/adminPages/LoanedCars.vue";
+import LoaningCars from "@/pages/adminPages/LoaningCars.vue";
 import AdminReview from "@/pages/adminPages/AdminReview.vue";
 import LoanReview from "@/pages/adminPages/LoanReview.vue";
 import HandlingPage from "@/components/NavigationBar/HandlingPage.vue";
@@ -45,6 +46,7 @@ import Featured from "@/pages/Featured.vue";
 import MainComponent from "@/components/NavigationBar/MainComponent.vue";
 import Rented from "@/pages/adminPages/RentedCars.vue";
 import Unpaid from "@/components/Admin/Unpaid.vue";
+import InsideLoan from "@/components/LoanCar/LoanStatus.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -161,6 +163,11 @@ const routes = setupLayouts([
     meta: { requiresAuth: true },
   },
   {
+    path: "/LoaningCars",
+    component: LoaningCars,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/AdminReview",
     component: AdminReview,
     meta: { requiresAuth: true },
@@ -200,6 +207,11 @@ const routes = setupLayouts([
     component: Unpaid,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/Loan",
+    component: InsideLoan,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
@@ -229,6 +241,11 @@ router.beforeEach((to, from, next) => {
   const hasVisitedDashboard =
     JSON.parse(localStorage.getItem("hasVisitedDashboard")) || false;
 
+  if (!isLoggedIn && to.meta.requiresAuth) {
+    localStorage.setItem("error", "User not logged in"); // Store error message
+    return next("/login"); // Redirect to login page if not logged in
+  }
+
   console.log(userRole);
   const publicPages = ["/", "/login", "/register"];
   const protectedPages = [
@@ -255,7 +272,13 @@ router.beforeEach((to, from, next) => {
     "/PurchasedCars",
     "/Rented",
     "/NotPaid",
+    "/Loan",
   ];
+
+  if (protectedPages.includes(to.path) && !isLoggedIn) {
+    localStorage.setItem("error", "User not logged in"); // Store error message
+    return next("/login"); // Redirect to login page
+  }
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {
     return next("/");
@@ -275,7 +298,7 @@ router.beforeEach((to, from, next) => {
       to.path.startsWith("/CarInRent") ||
       to.path.startsWith("/ClientView") ||
       to.path.startsWith("/CarBeenPurchased") ||
-      to.path.startsWith("/LoanedCars") ||
+      to.path.startsWith("/LoaningCars") ||
       to.path.startsWith("/CarInSale") ||
       to.path.startsWith("/Clients")) &&
     userRole !== true

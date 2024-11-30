@@ -10,7 +10,7 @@
     </v-col>
 
     <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
-      <v-alert type="warning">No cars available for rent.</v-alert>
+      <v-alert type="warning">You haven't rented any Cars yet..</v-alert>
     </v-col>
   </v-row>
 
@@ -68,15 +68,23 @@
               </v-alert>
             </div>
 
-            <v-card-actions v-else class="d-flex justify-content-end">
+            <v-card-actions v-else class="d-flex justify-content-end flex-wrap">
               <!-- Cancel the transaction -->
-              <v-btn color="red" @click="openCancelDialog(item.transaction.id)">
+              <v-btn
+                color="red"
+                @click="openCancelDialog(item.transaction.id)"
+                class="mb-2"
+              >
                 <v-icon left>mdi-cancel</v-icon>
                 Cancel
               </v-btn>
 
               <!-- Finalize the rental process -->
-              <v-btn color="green" @click="finalizeRental(item.transaction.id)">
+              <v-btn
+                color="green"
+                @click="finalizeRental(item.transaction.id)"
+                class="mb-2"
+              >
                 <v-icon left>mdi-check</v-icon>
                 Rent
               </v-btn>
@@ -287,6 +295,11 @@ export default {
       try {
         const loggedInUserId = localStorage.getItem("user_id");
 
+        if (!loggedInUserId) {
+          this.error = "Network error, please Login again";
+          this.loading = false;
+          return;
+        }
         const { data, error } = await supabase
           .from("transactions")
           .select("*, cars (*), rented_cars (*), user:buyer_id (*)")

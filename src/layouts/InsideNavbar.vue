@@ -166,14 +166,15 @@ const fetchUserData = async () => {
 };
 
 // Logout handler
-const handleLogout = async () => {
+const handleLogout = async (event) => {
+  event.preventDefault(); // Prevent the default router-link behavior (navigation)
+
   try {
-    await supabaseLogout(); // Use the imported logout function
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("axios_id");
-    router.push("/");
+    await supabaseLogout(); // Call the logout function
+
+    router.push("/"); // Redirect to the home page
   } catch (error) {
-    console.error("Logout failed:", error);
+    console.error("Logout failed:", error); // Log any errors that occur during logout
   }
 };
 

@@ -9,12 +9,14 @@
           title="Total Cars for Sale"
           link="/CarInSale"
           :num="carCount"
+          send="View Car Sale list History "
         />
         <Card
           class="col-6"
           title="Total Cars for Rent"
           link="/CarInRent"
           :num="totalCarsForRent"
+          send="View all cars for rent"
         />
         <Card
           class="col-6"
@@ -59,11 +61,22 @@ const loanedCount = ref(0); // New ref for loaned cars
 
 const fetchCarCount = async () => {
   try {
+    // Fetch the car IDs from the purchased_cars table
+    const { data: purchasedCars, error: purchasedError } = await supabase
+      .from("purchased_cars")
+      .select("car_id"); // Assuming car_id is the column that references the car in the cars table
+
+    if (purchasedError) throw purchasedError;
+
+    const purchasedCarIds = purchasedCars.map((car) => car.car_id); // Extracting the car_ids from the purchased_cars data
+
+    // Fetch cars for sale excluding those already purchased
     const { data, error } = await supabase
       .from("cars")
       .select("id")
       .eq("for_sale", true)
-      .eq("is_pending", false);
+      .eq("is_pending", false)
+      .not("id", "in", `(${purchasedCarIds.join(",")})`); // Excluding purchased cars
 
     if (error) throw error;
 
@@ -90,7 +103,7 @@ const fetchRentedCarsCount = async () => {
 
 const fetchLoanedCarsCount = async () => {
   try {
-    const { data, error } = await supabase.from("loaned_cars").select("id"); // Fetch loaned cars
+    const { data, error } = await supabase.from("approved_loans").select("id"); // Fetch loaned cars
 
     if (error) throw error;
 
@@ -99,20 +112,30 @@ const fetchLoanedCarsCount = async () => {
     console.error("Error fetching loaned car count:", err.message);
   }
 };
-
 const fetchtotalCarsForRent = async () => {
   try {
+    // Fetch the car IDs from the rented_cars table
+    const { data: rentedCars, error: rentedError } = await supabase
+      .from("rented_cars")
+      .select("cars_id"); // Ensure 'car_id' matches the column name in the rented_cars table
+
+    if (rentedError) throw rentedError;
+
+    const rentedCarIds = rentedCars.map((cars) => cars.cars_id); // Extracting the car_ids from the rented_cars data
+
+    // Fetch cars for rent excluding those already rented
     const { data, error } = await supabase
       .from("cars")
       .select("id")
       .eq("for_rent", true)
-      .eq("is_pending", false);
+      .eq("is_pending", false)
+      .not("id", "in", `(${rentedCarIds.join(",")})`); // Excluding rented cars
 
     if (error) throw error;
 
     totalCarsForRent.value = data.length;
   } catch (err) {
-    console.error("Error fetching car count:", err.message);
+    console.error("Error fetching cars for rent count:", err.message);
   }
 };
 

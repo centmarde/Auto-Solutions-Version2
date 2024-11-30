@@ -132,19 +132,20 @@
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router"; // Import useRouter to programmatically navigate
 import { doLogout } from "../lib/supaBase";
 import Nav from "../layouts/InsideNavbar.vue";
 import FeaturedCar from "../layouts/FeaturedCar.vue";
 import CarsForSale from "../layouts/CarsForSale.vue";
 import Footer from "../layouts/Footer.vue";
 import CarsForRent from "../layouts/CarsForRent.vue";
-
 import Compare from "../layouts/Compare.vue";
 import Ai from "../layouts/Ai.vue";
 import LoanCarOuter from "@/layouts/LoanCarOuter.vue";
 import { useTheme } from "vuetify";
 import CarAction from "@/layouts/CardLayout.vue";
 
+const router = useRouter(); // Initialize the router
 const theme = useTheme();
 const isDark = ref(theme.global.current.value.dark);
 
@@ -155,6 +156,14 @@ watch(
     isDark.value = newTheme === "dark";
   }
 );
+
+// Check if the user is logged in
+const loggedInUserId = localStorage.getItem("access_token");
+
+if (!loggedInUserId) {
+  // If not logged in, redirect to login page
+  router.push("/login");
+}
 
 // Initialize the theme and map
 onMounted(() => {

@@ -47,7 +47,6 @@
                   </v-btn>
                 </router-link>
               </v-col>
-
               <v-col cols="6" sm="6" md="12">
                 <router-link to="/Home" class="d-block">
                   <v-btn block color="primary">
@@ -59,8 +58,10 @@
             </v-row>
           </v-col>
 
+          <!-- Main Content Column -->
           <v-col cols="12" md="8" class="scrollable-col">
-            <InsideRent />
+            <!-- Insert InsideLoan Component Here -->
+            <InsideLoan />
           </v-col>
         </v-row>
       </v-card>
@@ -69,8 +70,9 @@
 </template>
 
 <script setup>
+// Importing the subcomponents
 import InquiresNavbar from "@/layouts/InsideNavbar.vue";
-import InsideRent from "@/layouts/InsideInquires/InsideRent.vue";
+import InsideLoan from "./InsideLoan.vue"; // Make sure InsideLoan.vue is the correct component path
 </script>
 
 <style>
@@ -82,6 +84,7 @@ import InsideRent from "@/layouts/InsideInquires/InsideRent.vue";
   overflow-y: auto;
   max-height: 100%;
 }
+
 .d-block {
   text-decoration: none;
 }
