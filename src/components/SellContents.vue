@@ -287,6 +287,7 @@ export default {
     showDialog() {
       this.dialog = true;
     },
+
     async generateAISuggestions() {
       // Check if required fields are filled
       const requiredFields = [];
@@ -370,6 +371,23 @@ export default {
         alert("No additional suggestions needed. All fields are filled.");
       }
     },
+    // Added the validateNumericInputs method for input validation
+    validateNumericInputs() {
+      const numericFields = {
+        price: this.car.price,
+      };
+
+      for (const [key, value] of Object.entries(numericFields)) {
+        if (value !== null && isNaN(value)) {
+          alert(
+            `Invalid input for ${key}. Please enter a valid number (e.g., 123980.00 for price).`
+          );
+          return false;
+        }
+      }
+
+      return true;
+    },
 
     async submitCarDetails() {
       if (
@@ -380,6 +398,11 @@ export default {
       ) {
         alert("Please fill in all required fields!");
         return;
+      }
+
+      // Added call to validateNumericInputs before submission
+      if (!this.validateNumericInputs()) {
+        return; // Stop submission if validation fails
       }
 
       this.loading = true;
@@ -411,7 +434,14 @@ export default {
           .insert([carDetails])
           .select();
 
-        if (insertError) throw insertError;
+        if (insertError) {
+          // Specific handling for authorization errors
+          if (insertError.statusCode === "403") {
+            alert("Unauthorized: Please check your permissions.");
+          } else {
+            throw insertError;
+          }
+        }
 
         console.log("Car Details Submitted:", insertData);
 
@@ -448,7 +478,14 @@ export default {
             upsert: true,
           });
 
-        if (error) throw error;
+        if (error) {
+          // Specific handling for authorization errors
+          if (error.statusCode === "403") {
+            alert("Unauthorized: You do not have permission to upload images.");
+          } else {
+            throw error;
+          }
+        }
 
         const imageUrl = `https://xgjgtijbrkcwwsliqubk.supabase.co/storage/v1/object/public/cars/${fileName}`;
         console.log("Image uploaded successfully:", imageUrl);
@@ -459,7 +496,6 @@ export default {
         alert("Failed to upload image.");
       }
     },
-
     async fetchCarData() {
       try {
         const response1 = await axios.get(
