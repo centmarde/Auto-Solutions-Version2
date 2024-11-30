@@ -242,21 +242,27 @@ export default {
     },
     async fetchCarOptions() {
       try {
+        // Fetch all cars from the cars table where for_sale is true
         const { data: allCars, error: carsError } = await supabase
           .from("cars")
-          .select("id, model, brand, img");
+          .select("id, model, brand, img, for_sale")
+          .eq("for_sale", true); // Only cars where for_sale is true
 
         if (carsError) throw carsError;
 
-        const { data: loanedCars, error: loanedCarsError } = await supabase
-          .from("loan_cars")
+        // Fetch the car_ids from the approved_loans table
+        const { data: approvedCars, error: approvedCarsError } = await supabase
+          .from("approved_loans")
           .select("car_id");
 
-        if (loanedCarsError) throw loanedCarsError;
+        if (approvedCarsError) throw approvedCarsError;
 
-        const loanedCarIds = loanedCars.map((loan) => loan.car_id);
+        // Extract the car_ids that are already approved
+        const approvedCarIds = approvedCars.map((loan) => loan.car_id);
+
+        // Filter out the cars that are already approved
         this.carOptions = allCars.filter(
-          (car) => !loanedCarIds.includes(car.id)
+          (car) => !approvedCarIds.includes(car.id)
         );
       } catch (error) {
         console.error("Error fetching car options:", error);

@@ -58,8 +58,14 @@
                   type="info"
                   dense
                 >
-                  Your loan request has been approved! Please bring proof of
-                  income and 2 valid IDs to the physical store.
+                  {{ item.loanMessage }}
+                </v-alert>
+                <v-alert
+                  v-else-if="item.loanStatus === 'failed'"
+                  type="error"
+                  dense
+                >
+                  {{ item.loanMessage }}
                 </v-alert>
                 <v-alert v-else type="warning" dense>
                   Your loan request is pending.
@@ -113,7 +119,7 @@ export default {
         const { data: approvedLoans, error: approvedLoansError } =
           await supabase
             .from("approved_loans")
-            .select("car_id, is_approved")
+            .select("car_id, is_approved, is_failed") // Added is_failed
             .eq("user_id", loggedInUserId);
 
         if (approvedLoansError) throw approvedLoansError;
@@ -137,15 +143,25 @@ export default {
           const approvedLoan = approvedLoans.find(
             (approvedLoan) => approvedLoan.car_id === car.id
           );
-          const loanStatus = approvedLoan
-            ? approvedLoan.is_approved
-              ? "approved"
-              : "conditionallyApproved"
-            : loanCars.some((loanCar) => loanCar.car_id === car.id)
-            ? "pending"
-            : null;
+          let loanStatus = null;
+          let loanMessage = "";
 
-          return { car, loanStatus };
+          if (approvedLoan) {
+            if (approvedLoan.is_failed) {
+              loanStatus = "failed";
+              loanMessage = "You have failed to comply with the requirements";
+            } else if (approvedLoan.is_approved) {
+              loanStatus = "approved";
+            } else {
+              loanStatus = "conditionallyApproved";
+              loanMessage =
+                "Your loan request has been approved! Please bring proof of income and 2 valid IDs to the physical store.";
+            }
+          } else if (loanCars.some((loanCar) => loanCar.car_id === car.id)) {
+            loanStatus = "pending";
+          }
+
+          return { car, loanStatus, loanMessage };
         });
       } catch (err) {
         this.error = err.message;
@@ -156,7 +172,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .v-card-title {
   font-weight: bold;
