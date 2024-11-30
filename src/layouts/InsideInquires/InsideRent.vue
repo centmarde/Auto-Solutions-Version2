@@ -68,15 +68,23 @@
               </v-alert>
             </div>
 
-            <v-card-actions v-else class="d-flex justify-content-end">
+            <v-card-actions v-else class="d-flex justify-content-end flex-wrap">
               <!-- Cancel the transaction -->
-              <v-btn color="red" @click="openCancelDialog(item.transaction.id)">
+              <v-btn
+                color="red"
+                @click="openCancelDialog(item.transaction.id)"
+                class="mb-2"
+              >
                 <v-icon left>mdi-cancel</v-icon>
                 Cancel
               </v-btn>
 
               <!-- Finalize the rental process -->
-              <v-btn color="green" @click="finalizeRental(item.transaction.id)">
+              <v-btn
+                color="green"
+                @click="finalizeRental(item.transaction.id)"
+                class="mb-2"
+              >
                 <v-icon left>mdi-check</v-icon>
                 Rent
               </v-btn>

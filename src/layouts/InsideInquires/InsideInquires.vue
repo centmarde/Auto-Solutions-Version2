@@ -68,14 +68,19 @@
               </v-alert>
             </div>
 
-            <v-card-actions v-else class="d-flex justify-content-end">
-              <v-btn color="red" @click="openCancelDialog(item.car.id)">
+            <v-card-actions v-else class="d-flex justify-content-end flex-wrap">
+              <v-btn
+                color="red"
+                @click="openCancelDialog(item.car.id)"
+                class="mb-2"
+              >
                 <v-icon left>mdi-cancel</v-icon>
                 Cancel
               </v-btn>
               <v-btn
                 color="green"
                 @click="finalizePurchase(item.transaction.id)"
+                class="mb-2"
               >
                 <v-icon left>mdi-check</v-icon>
                 Purchase

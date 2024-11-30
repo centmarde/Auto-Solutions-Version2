@@ -45,12 +45,12 @@
                 {{ car.is_pending ? "Pending" : "Approved" }}
               </v-chip>
             </v-card-text>
-            <v-card-actions class="d-flex justify-content-end">
-              <v-btn color="red" @click.stop="deleteCar(car.id)">
+            <v-card-actions class="d-flex justify-content-end flex-wrap">
+              <v-btn color="red" @click.stop="deleteCar(car.id)" class="mb-2">
                 <v-icon left>mdi-delete</v-icon>
                 Delete
               </v-btn>
-              <v-btn color="blue" @click.stop="viewCar(car)">
+              <v-btn color="blue" @click.stop="viewCar(car)" class="mb-2">
                 <v-icon left>mdi-eye</v-icon>
                 View
               </v-btn>
