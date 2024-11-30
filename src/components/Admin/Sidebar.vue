@@ -182,8 +182,7 @@ const isActiveRoute = (path) => computed(() => route.path === path);
 const handleLogout = async () => {
   try {
     await supabaseLogout();
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("axios_id");
+
     router.push("/");
   } catch (error) {
     console.error("Logout failed:", error);

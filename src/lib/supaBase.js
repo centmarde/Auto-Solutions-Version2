@@ -1,23 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
+const supabaseLogout = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    throw new Error(error.message); // Throw the error if something goes wrong
+  }
+};
+
+// Main logout function
 async function doLogout() {
-  // Supabase Logout
-  // localStorage.clear();
-
-  const confirmed = window.confirm("are you you want to logout?");
-
-  let { error } = await supabase.auth.signOut();
-
+  const confirmed = window.confirm("Are you sure you want to logout?");
   if (!confirmed) {
-    return;
+    return; // Exit if the user cancels
   }
 
-  if (error == null) {
-    alert("Logout Successfully!");
+  try {
+    await supabaseLogout(); // Call the Supabase logout function
 
-    // Clear local Storage
+    // Clear local storage
     localStorage.clear();
-  } else {
-    alert("Logout Failed!", 15);
+
+    alert("Logout Successfully!");
+  } catch (error) {
+    alert("Logout Failed: " + error.message); // Handle any errors
   }
 }
 
