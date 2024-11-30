@@ -1,5 +1,5 @@
 <template>
-  <br><br><br>
+  <br /><br /><br />
   <v-container fluid>
     <Nav />
     <v-card>
@@ -21,40 +21,40 @@
     </v-card>
   </v-container>
   <v-container cols="12" md="4" class="d-flex justify-center">
-                  <a href="https://www.toyota.com/southeasttoyota/deals-incentives/financial-estimates-supra/?vehicles=supra" target="_blank" rel="noopener noreferrer" class="tr">
-                    <v-btn color="border" class="border">
-                      Interested
-                      <v-icon right>mdi-arrow-right</v-icon>
-                    </v-btn>
-                  </a>
-                </v-container>
+    <a
+      href="https://www.toyota.com/southeasttoyota/deals-incentives/financial-estimates-supra/?vehicles=supra"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="tr"
+    >
+      <v-btn color="border" class="border">
+        Interested
+        <v-icon right>mdi-arrow-right</v-icon>
+      </v-btn>
+    </a>
+  </v-container>
 </template>
 
 <script>
-import PerformancePage from './PerformancePage.vue';
-import HandlingPage from './HandlingPage.vue';
-import AnniversaryPage from './AnniversaryPage.vue';
-import Nav from '../../layouts/InsideNavbar.vue';
+import PerformancePage from "./PerformancePage.vue";
+import HandlingPage from "./HandlingPage.vue";
+import AnniversaryPage from "./AnniversaryPage.vue";
+import Nav from "../../layouts/InsideNavbar.vue";
 
 export default {
   components: {
     Nav,
     PerformancePage,
     HandlingPage,
-    AnniversaryPage
+    AnniversaryPage,
   },
   data() {
     return {
       activeTab: 0, // Default to Performance tab
-      components: [
-        PerformancePage,
-        HandlingPage,
-        AnniversaryPage
-      ]
+      components: [PerformancePage, HandlingPage, AnniversaryPage],
     };
-  }
+  },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

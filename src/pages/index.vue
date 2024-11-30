@@ -41,7 +41,10 @@
     <!-- Loader Overlay that hides Topcontents -->
     <div class="loader-overlay" :class="{ 'fade-out': !isLoading }">
       <IntroLoader v-if="isLoading" />
-      <v-btn class="skip-btn" @click="skipLoader">Skip</v-btn>
+      <!-- Only show the skip button if Topcontents has been loaded -->
+      <v-btn v-if="topContentLoaded" class="skip-btn" @click="skipLoader"
+        >Skip</v-btn
+      >
     </div>
   </v-app>
 </template>
