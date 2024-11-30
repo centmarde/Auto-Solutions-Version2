@@ -20,7 +20,7 @@
         <v-avatar
           size="100"
           class="mx-auto mb-2"
-          style="border: 3px solid #B71C1C; border-radius: 50%"
+          style="border: 3px solid #b71c1c; border-radius: 50%"
         >
           <v-img src="..//assets/profile/campado-prof.jpg"></v-img>
         </v-avatar>
@@ -107,7 +107,7 @@
 
         <!-- Position below Team Name -->
         <div class="team-position" style="margin-bottom: 5px; font-size: 1rem">
-          Backend Engineer
+          Front-End Developer
         </div>
 
         <!-- Short Caption below Position -->
@@ -115,9 +115,9 @@
           class="short-caption"
           style="margin-bottom: 10px; font-size: 0.875rem"
         >
-          "Dedicated to building robust server-side applications and APIs, I
-          focus on delivering high-performance solutions that drive efficiency
-          and scalability."
+          "Passionate about crafting seamless, high-performance front-end
+          experiences, I focus on delivering intuitive, scalable user interfaces
+          that enhance efficiency and drive engagement."
         </div>
 
         <!-- Social Icons -->
