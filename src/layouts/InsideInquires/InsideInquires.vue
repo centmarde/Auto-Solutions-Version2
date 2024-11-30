@@ -11,7 +11,7 @@
         v-else-if="!loading && !error && carsWithTransactions.length === 0"
         type="warning"
       >
-        No cars available for sale.
+        You haven't bought any Cars yet..
       </v-alert>
     </v-col>
   </v-row>

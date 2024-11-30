@@ -10,7 +10,7 @@
     </v-col>
 
     <v-col v-if="cars.length === 0 && !loading && !error" class="no-cars">
-      <v-alert type="warning">No cars available for rent.</v-alert>
+      <v-alert type="warning">You haven't rented any Cars yet..</v-alert>
     </v-col>
   </v-row>
 

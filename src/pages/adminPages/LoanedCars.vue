@@ -50,14 +50,22 @@
           <td>{{ loan.user_id }}</td>
           <td>{{ loan.car_id }}</td>
           <td class="text-center">
-            <!-- Conditionally render button or completed text -->
-            <div v-if="loan.is_approved">
-              <span class="completed-text">The requirements are completed</span>
+            <!-- Conditionally render Success and Failed buttons -->
+            <div v-if="loan.is_approved === false && loan.is_failed === false">
+              <v-btn color="success" @click="markAsApproved(loan)"
+                >Success</v-btn
+              >
+              <v-btn color="error" @click="markAsFailed(loan)">Failed</v-btn>
             </div>
-            <div v-else>
-              <v-btn color="success" @click="markAsApproved(loan)">
-                Success
-              </v-btn>
+
+            <!-- Failed Text -->
+            <div v-if="loan.is_failed">
+              <span class="failed-text">The requirements have failed</span>
+            </div>
+
+            <!-- Approved Text -->
+            <div v-else-if="loan.is_approved">
+              <span class="completed-text">The requirements are completed</span>
             </div>
           </td>
         </tr>
@@ -97,17 +105,20 @@ const selectedImage = ref("");
 // Fetch approved loans from the database
 const fetchApprovedLoans = async () => {
   try {
-    // Fetch loans including the `is_approved` column
     const { data: loanData, error: loanError } = await supabase
       .from("approved_loans")
       .select(
-        "id, loan_id, model, brand, loan_duration, monthly_income, car_image, user_id, car_id, is_approved"
+        "id, loan_id, model, brand, loan_duration, monthly_income, car_image, user_id, car_id, is_approved, is_failed"
       );
 
     if (loanError) throw loanError;
 
-    // Update the loans in the local state
-    approvedLoans.value = loanData;
+    // Ensure is_approved and is_failed are not undefined
+    approvedLoans.value = loanData.map((loan) => ({
+      ...loan,
+      is_approved: loan.is_approved !== undefined ? loan.is_approved : false,
+      is_failed: loan.is_failed !== undefined ? loan.is_failed : false,
+    }));
   } catch (error) {
     console.error("Error fetching approved loans:", error);
   }
@@ -116,23 +127,46 @@ const fetchApprovedLoans = async () => {
 // Method to mark a loan as approved
 const markAsApproved = async (loan) => {
   try {
-    // Update the `is_approved` column in Supabase
     const { error } = await supabase
       .from("approved_loans")
-      .update({ is_approved: true })
+      .update({ is_approved: true, is_failed: false }) // Mark as approved and ensure 'is_failed' is false
       .eq("id", loan.id);
 
     if (error) throw error;
 
-    // Update the local state to reflect the change
+    // Update the loan in the local state
     const loanIndex = approvedLoans.value.findIndex(
       (item) => item.id === loan.id
     );
     if (loanIndex !== -1) {
       approvedLoans.value[loanIndex].is_approved = true;
+      approvedLoans.value[loanIndex].is_failed = false;
     }
   } catch (error) {
     console.error("Error updating loan status:", error);
+  }
+};
+
+// Method to mark a loan as failed
+const markAsFailed = async (loan) => {
+  try {
+    const { error } = await supabase
+      .from("approved_loans")
+      .update({ is_failed: true, is_approved: false }) // Mark as failed and ensure 'is_approved' is false
+      .eq("id", loan.id);
+
+    if (error) throw error;
+
+    // Update the loan in the local state
+    const loanIndex = approvedLoans.value.findIndex(
+      (item) => item.id === loan.id
+    );
+    if (loanIndex !== -1) {
+      approvedLoans.value[loanIndex].is_failed = true;
+      approvedLoans.value[loanIndex].is_approved = false;
+    }
+  } catch (error) {
+    console.error("Error updating loan status to failed:", error);
   }
 };
 
@@ -176,6 +210,11 @@ onMounted(() => {
 
 .completed-text {
   color: green;
+  font-weight: bold;
+}
+
+.failed-text {
+  color: red;
   font-weight: bold;
 }
 </style>

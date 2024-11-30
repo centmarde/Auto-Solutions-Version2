@@ -51,8 +51,15 @@
                   type="success"
                   dense
                 >
-                  Your loan is approved! Please bring proof of income and 2
-                  valid IDs to the physical store.
+                  Loaned Car successfully
+                </v-alert>
+                <v-alert
+                  v-else-if="item.loanStatus === 'conditionallyApproved'"
+                  type="info"
+                  dense
+                >
+                  Your loan request has been approved! Please bring proof of
+                  income and 2 valid IDs to the physical store.
                 </v-alert>
                 <v-alert v-else type="warning" dense>
                   Your loan request is pending.
@@ -94,13 +101,6 @@ export default {
           return;
         }
 
-        // Fetch all cars from the cars table
-        const { data: cars, error: carsError } = await supabase
-          .from("cars")
-          .select("*");
-
-        if (carsError) throw carsError;
-
         // Fetch loan cars data from the loan_cars table
         const { data: loanCars, error: loanCarsError } = await supabase
           .from("loan_cars")
@@ -113,25 +113,40 @@ export default {
         const { data: approvedLoans, error: approvedLoansError } =
           await supabase
             .from("approved_loans")
-            .select("car_id")
+            .select("car_id, is_approved")
             .eq("user_id", loggedInUserId);
 
         if (approvedLoansError) throw approvedLoansError;
 
-        // Map cars data to add loan status based on loan_cars and approved_loans
-        this.loanCarsWithStatus = cars
-          .map((car) => {
-            const loanStatus = approvedLoans.some(
-              (approvedLoan) => approvedLoan.car_id === car.id
-            )
-              ? "approved"
-              : loanCars.some((loanCar) => loanCar.car_id === car.id)
-              ? "pending"
-              : null;
+        // Fetch only the cars that are either loaned or approved for the user
+        const loanCarIds = loanCars.map((loanCar) => loanCar.car_id);
+        const approvedLoanCarIds = approvedLoans.map(
+          (approvedLoan) => approvedLoan.car_id
+        );
+        const allCarIds = [...new Set([...loanCarIds, ...approvedLoanCarIds])];
 
-            return { car, loanStatus };
-          })
-          .filter((item) => item.loanStatus !== null); // Filter out cars with no loan status
+        const { data: cars, error: carsError } = await supabase
+          .from("cars")
+          .select("*")
+          .in("id", allCarIds);
+
+        if (carsError) throw carsError;
+
+        // Map cars data to add loan status based on loan_cars and approved_loans
+        this.loanCarsWithStatus = cars.map((car) => {
+          const approvedLoan = approvedLoans.find(
+            (approvedLoan) => approvedLoan.car_id === car.id
+          );
+          const loanStatus = approvedLoan
+            ? approvedLoan.is_approved
+              ? "approved"
+              : "conditionallyApproved"
+            : loanCars.some((loanCar) => loanCar.car_id === car.id)
+            ? "pending"
+            : null;
+
+          return { car, loanStatus };
+        });
       } catch (err) {
         this.error = err.message;
       } finally {
