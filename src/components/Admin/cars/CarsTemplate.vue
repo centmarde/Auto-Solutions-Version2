@@ -38,7 +38,7 @@
             />
           </td>
           <td>{{ car.brand }}</td>
-          <td>{{ car.price }}</td>
+          <td>{{ formatPrice(car.price) }}</td>
           <td>{{ car.for_sale }}</td>
           <td>{{ car.for_rent }}</td>
           <td>
@@ -101,6 +101,14 @@ const fetchCars = async () => {
   }
 };
 
+// Format price as PHP currency
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  }).format(price);
+};
+
 // Paginated cars based on current page
 const paginatedCars = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
@@ -119,7 +127,7 @@ const confirmDelete = async (id) => {
     const { error: conversationError } = await supabase
       .from("conversations")
       .delete()
-      .eq("car_id", id); // Assuming the foreign key is `car_id`
+      .eq("car_id", id);
 
     if (conversationError) {
       console.error("Error deleting related conversations:", conversationError);
@@ -130,7 +138,7 @@ const confirmDelete = async (id) => {
     const { error: loanCarError } = await supabase
       .from("loan_cars")
       .delete()
-      .eq("car_id", id); // Assuming the foreign key is `car_id`
+      .eq("car_id", id);
 
     if (loanCarError) {
       console.error("Error deleting related loan cars:", loanCarError);
