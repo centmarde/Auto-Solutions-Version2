@@ -22,17 +22,17 @@
           class="mx-auto mb-2"
           style="border: 3px solid #b71c1c; border-radius: 50%"
         >
-          <v-img src="..//assets/profile/campado-prof.jpg"></v-img>
+          <v-img src="..//assets/profile/galinato-prof.jpg"></v-img>
         </v-avatar>
 
         <!-- Team Name for Column 1 -->
         <div class="team-name" style="margin-bottom: 5px; font-size: 1.5rem">
-          CAMPADO, CENTMARDE
+          GALINATO, JETROSS AXLE
         </div>
 
         <!-- Position below Team Name -->
         <div class="team-position" style="margin-bottom: 5px; font-size: 1rem">
-          Full Stack Developer
+          Front-End Developer
         </div>
 
         <!-- Short Caption below Position -->
@@ -40,8 +40,9 @@
           class="short-caption"
           style="margin-bottom: 10px; font-size: 0.875rem"
         >
-          "Passionate about building web applications and enhancing user
-          experiences."
+          Front-end developer specializing in responsive web interfaces and
+          seamless user experiences using HTML, CSS, JavaScript, and frameworks
+          like React or Vue.
         </div>
 
         <!-- Social Icons -->
@@ -50,7 +51,7 @@
           <v-btn
             icon
             :class="{ 'hover-primary': true }"
-            :href="'https://github.com/Centmarde'"
+            :href="'https://github.com/Jetrossgalinato'"
             target="_blank"
             @click="setActiveLink('github1')"
           >
@@ -64,7 +65,7 @@
           <v-btn
             icon
             :class="{ 'hover-primary': true }"
-            :href="'https://web.facebook.com/centmarde.campado'"
+            :href="'https://web.facebook.com/neri.jetross.axle'"
             target="_blank"
             @click="setActiveLink('facebook1')"
           >
@@ -78,7 +79,7 @@
           <v-btn
             icon
             :class="{ 'hover-primary': true }"
-            :href="'https://www.linkedin.com/in/centmarde-campado-627a73283/'"
+            :href="'https://www.linkedin.com/in/jetross-galinato-70371733b/'"
             target="_blank"
             @click="setActiveLink('linkedin1')"
           >
