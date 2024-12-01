@@ -84,7 +84,7 @@
         </p>
 
         <!-- Display Price and Years Owned -->
-        <p><strong>Price:</strong> ${{ viewedCar.price }}</p>
+        <p><strong>Price:</strong> php{{ viewedCar.price }}</p>
         <p><strong>Years Owned:</strong> {{ viewedCar.years_owned }}</p>
       </v-card-text>
       <v-card-actions>
