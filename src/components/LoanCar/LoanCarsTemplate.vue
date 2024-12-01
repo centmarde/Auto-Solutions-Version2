@@ -22,7 +22,6 @@
           <th class="text-left">Loan Duration</th>
           <th class="text-left">Monthly Income</th>
           <th class="text-left">User ID</th>
-          <!-- New column for user_id -->
           <th class="text-left">Actions</th>
         </tr>
       </thead>
@@ -39,16 +38,8 @@
             />
           </td>
           <td>{{ loan.loan_duration }} months</td>
-          <td>
-            ${{
-              loan.monthly_income.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })
-            }}
-          </td>
+          <td>{{ formatPrice(loan.monthly_income) }}</td>
           <td>{{ loan.user_id }}</td>
-          <!-- Displaying user_id -->
           <td>
             <v-btn class="mx-2" color="error" @click="confirmDelete(loan.id)">
               Delete
@@ -65,7 +56,6 @@
       </tbody>
     </v-table>
 
-    <!-- Pagination -->
     <v-pagination
       v-model="currentPage"
       :length="pageCount"
@@ -95,10 +85,17 @@ const props = defineProps({
 const dialog = ref(false);
 const selectedImage = ref("");
 
+// Format price as PHP currency
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  }).format(price);
+};
+
 // Fetch loan requests from the database
 const fetchLoans = async () => {
   try {
-    // Fetch loan cars along with the related car details, including user_id
     const { data: loanData, error: loanError } = await supabase
       .from("loan_cars")
       .select(
@@ -107,17 +104,15 @@ const fetchLoans = async () => {
 
     if (loanError) throw loanError;
 
-    // Fetch car details (images) from the cars table
     const { data: carData, error: carError } = await supabase
       .from("cars")
       .select("id, img");
 
     if (carError) throw carError;
 
-    // Map car image and user_id to the respective loan
     loans.value = loanData.map((loan) => {
       const car = carData.find((car) => car.id === loan.car_id);
-      return { ...loan, car_image: car?.img || "", user_id: loan.user_id };
+      return { ...loan, car_image: car?.img || "" };
     });
   } catch (error) {
     console.error("Error fetching loan requests or car data:", error);
@@ -135,14 +130,12 @@ const pageCount = computed(() => {
   return Math.ceil(loans.value.length / itemsPerPage);
 });
 
-// Confirm deletion
 const confirmDelete = async (id) => {
   const confirm = window.confirm(
     "Are you sure you want to delete this loan request?"
   );
   if (confirm) {
     const { error } = await supabase.from("loan_cars").delete().eq("id", id);
-
     if (error) {
       console.error("Error deleting loan request:", error);
     } else {
@@ -157,44 +150,32 @@ const confirmApprove = async (id) => {
   );
   if (confirm) {
     try {
-      // Get the loan details from the loans array
       const loanToApprove = loans.value.find((loan) => loan.id === id);
 
-      if (!loanToApprove) {
-        throw new Error("Loan not found");
-      }
-
-      // Insert the loan details into the approved_loans table
       const { error: insertError } = await supabase
         .from("approved_loans")
         .insert([
           {
-            loan_id: loanToApprove.id, // Loan ID
-            model: loanToApprove.model, // Car model
-            brand: loanToApprove.brand, // Car brand
-            car_image: loanToApprove.car_image, // Car image
-            loan_duration: loanToApprove.loan_duration, // Loan duration
-            monthly_income: loanToApprove.monthly_income, // Monthly income
-            user_id: loanToApprove.user_id, // User ID
-            car_id: loanToApprove.car_id, // Car ID
+            loan_id: loanToApprove.id,
+            model: loanToApprove.model,
+            brand: loanToApprove.brand,
+            car_image: loanToApprove.car_image,
+            loan_duration: loanToApprove.loan_duration,
+            monthly_income: loanToApprove.monthly_income,
+            user_id: loanToApprove.user_id,
+            car_id: loanToApprove.car_id,
           },
         ]);
 
-      if (insertError) {
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
-      // Delete the loan from the loan_cars table
       const { error: deleteError } = await supabase
         .from("loan_cars")
         .delete()
         .eq("id", id);
 
-      if (deleteError) {
-        throw deleteError;
-      }
+      if (deleteError) throw deleteError;
 
-      // Remove the approved loan from the current loans list in the UI
       loans.value = loans.value.filter((loan) => loan.id !== id);
     } catch (error) {
       console.error("Error approving loan:", error);
@@ -202,7 +183,6 @@ const confirmApprove = async (id) => {
   }
 };
 
-// Open image in dialog
 const openImage = (img) => {
   selectedImage.value = img;
   dialog.value = true;
