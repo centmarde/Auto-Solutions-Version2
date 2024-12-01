@@ -48,8 +48,8 @@
                 dark
               >
                 <v-card-text>
-                  <div class="text-h5 font-weight-thin">
-                    Global Market Value Based on the Last 5 Recent Sales in USD
+                  <div class="text-h5 font-weight-thin text-white">
+                    Global Market Value Based on the Last 5 Recent Sales in PHP
                   </div>
                   <canvas :id="'chart-' + item.car.id"></canvas>
                 </v-card-text>
@@ -94,7 +94,7 @@
               </v-card-text>
 
               <v-img
-                src="https://www.cars.com/images/garage-landing/garage-hero.webp"
+                src="https://vehicledatabases.com/wp-content/uploads/2023/03/Staying-Up-to-Date-on-Car-Market-Value.jpg"
                 alt="Add a Car"
               ></v-img>
             </v-col>
@@ -168,7 +168,7 @@ export default {
             car.marketValue = marketValueData.map((value, index) => {
               return {
                 name: randomNames[index],
-                value: value,
+                value: value * 56.0, // Assuming 1 USD = 56 PHP for conversion
               };
             });
           })
@@ -315,22 +315,16 @@ export default {
 .shine-effect::before {
   content: "";
   position: absolute;
-  top: -100%;
-  left: -100%;
+  top: -50%;
+  left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.2) 25%,
-    rgba(255, 255, 255, 0) 75%
-  );
-  transform: rotate(-15deg);
-  transition: all 0.5s ease-in-out;
-  pointer-events: none;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
+  transition: transform 0.5s ease;
 }
 
 .shine-effect:hover::before {
-  top: 100%;
-  left: 100%;
+  transform: translateY(50%) rotate(45deg);
 }
 </style>
