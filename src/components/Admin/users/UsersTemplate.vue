@@ -1,10 +1,14 @@
 <template>
-      <!-- Dialog for enlarged image -->
-      <v-dialog v-model="dialog" max-width="600px" class="high-z-index">
-      <v-card>
-        <v-img :src="selectedImage" class="enlarged-image" aspect-ratio="16/9"></v-img>
-      </v-card>
-    </v-dialog>
+  <!-- Dialog for enlarged image -->
+  <v-dialog v-model="dialog" max-width="600px" class="high-z-index">
+    <v-card>
+      <v-img
+        :src="selectedImage"
+        class="enlarged-image"
+        aspect-ratio="16/9"
+      ></v-img>
+    </v-card>
+  </v-dialog>
   <v-container class="p-5 mts">
     <h1 class="text-center fw-bolder">{{ title }}</h1>
 
@@ -23,7 +27,9 @@
       <tbody>
         <tr v-for="(user, index) in paginatedUsers" :key="user.id">
           <td>{{ user.id }}</td>
-          <td>{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}</td>
+          <td>
+            {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}
+          </td>
           <td>
             <img
               :src="user.img"
@@ -36,7 +42,9 @@
           <td>{{ user.birth_date }}</td>
           <td>{{ user.gender }}</td>
           <td class="text-center">
-            <v-btn class="mx-2" color="error" @click="confirmDelete(user.id)">Delete</v-btn>
+            <v-btn class="mx-2 delete-button" @click="confirmDelete(user.id)"
+              >Delete</v-btn
+            >
           </td>
         </tr>
       </tbody>
@@ -50,19 +58,17 @@
       @input="fetchUsers"
       class="mt-4"
     ></v-pagination>
-
-
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { supabase } from '../../../lib/supaBase';
+import { ref, onMounted, computed } from "vue";
+import { supabase } from "../../../lib/supaBase";
 
 const props = defineProps({
   title: {
     type: String,
-    default: 'User List',
+    default: "User List",
   },
   isadmin: {
     type: Boolean,
@@ -76,17 +82,19 @@ const itemsPerPage = 5;
 
 // State for dialog and selected image
 const dialog = ref(false);
-const selectedImage = ref('');
+const selectedImage = ref("");
 
 // Fetch users from the database
 const fetchUsers = async () => {
   const { data, error } = await supabase
-    .from('users')
-    .select('id, first_name, middle_name, last_name, img, address, birth_date, gender')
-    .eq('is_admin', props.isadmin);
+    .from("users")
+    .select(
+      "id, first_name, middle_name, last_name, img, address, birth_date, gender"
+    )
+    .eq("is_admin", props.isadmin);
 
   if (error) {
-    console.error('Error fetching users:', error);
+    console.error("Error fetching users:", error);
   } else {
     users.value = data;
   }
@@ -113,11 +121,11 @@ const confirmDelete = (userId) => {
 
 // Delete the user from the database
 const deleteUser = async (userId) => {
-  const { error } = await supabase.from('users').delete().eq('id', userId);
+  const { error } = await supabase.from("users").delete().eq("id", userId);
   if (error) {
-    console.error('Error deleting user:', error);
+    console.error("Error deleting user:", error);
   } else {
-    users.value = users.value.filter(user => user.id !== userId);
+    users.value = users.value.filter((user) => user.id !== userId);
   }
 };
 
@@ -149,5 +157,10 @@ onMounted(fetchUsers);
 /* Ensure the dialog appears in front */
 .high-z-index .v-overlay__content {
   z-index: 2000 !important;
+}
+
+.delete-button {
+  background-color: #ff6962 !important;
+  color: white !important;
 }
 </style>
