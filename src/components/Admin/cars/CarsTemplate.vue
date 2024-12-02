@@ -42,10 +42,10 @@
           <td>{{ car.for_sale }}</td>
           <td>{{ car.for_rent }}</td>
           <td>
-            <v-btn class="mx-2" color="error" @click="confirmDelete(car.id)"
+            <v-btn class="mx-2 delete-button" @click="confirmDelete(car.id)"
               >Delete</v-btn
             >
-            <v-btn class="mx-2" color="success" @click="confirmApprove(car.id)"
+            <v-btn class="mx-2 approve-button" @click="confirmApprove(car.id)"
               >Approve</v-btn
             >
           </td>
@@ -201,5 +201,14 @@ onMounted(() => {
 
 .car-image:hover {
   transform: scale(1.05);
+}
+.delete-button {
+  background-color: #ff6962 !important;
+  color: white !important;
+}
+
+.approve-button {
+  background-color: #77dd76 !important;
+  color: white !important;
 }
 </style>
