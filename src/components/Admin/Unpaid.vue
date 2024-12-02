@@ -17,9 +17,7 @@
               <th class="text-left">Is Paid</th>
               <th class="text-left">Total Amount</th>
               <th class="text-left">Car Type</th>
-              <!-- New column -->
               <th class="text-left">Created At</th>
-              <!-- New column -->
               <th class="text-center">Actions</th>
             </tr>
           </thead>
@@ -36,28 +34,25 @@
                 />
               </td>
               <td>{{ car.date_start || "-" }}</td>
-              <!-- Only show date_start if present -->
               <td>{{ car.date_end || "-" }}</td>
-              <!-- Only show date_end if present -->
               <td>{{ car.total_days || "-" }}</td>
-              <!-- Only show total_days if present -->
               <td>{{ car.is_paid ? "Yes" : "No" }}</td>
               <td>{{ car.total_amount }}</td>
               <td>{{ car.source === "rented" ? "For Rent" : "For Sale" }}</td>
-              <!-- Rent/Sale -->
               <td>{{ car.created_at }}</td>
-              <!-- Display created_at -->
               <td class="text-center">
-                <!-- Paid Button -->
-                <v-btn
-                  color="success"
-                  @click="markAsPaid(car)"
-                  :disabled="car.is_paid"
-                >
-                  Paid
-                </v-btn>
-                <!-- Delete Button -->
-                <v-btn color="error" @click="confirmDelete(car)">Delete</v-btn>
+                <div class="button-group">
+                  <v-btn
+                    class="mx-2 approve-button"
+                    @click="markAsPaid(car)"
+                    :disabled="car.is_paid"
+                  >
+                    Paid
+                  </v-btn>
+                  <v-btn class="mx-2 delete-button" @click="confirmDelete(car)">
+                    Delete
+                  </v-btn>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -149,20 +144,20 @@ const fetchCars = async () => {
       total_amount: item.total_amount,
       user_id: item.transactions.buyer_id,
       source: "rented",
-      created_at: item.created_at, // Add created_at for rented cars
+      created_at: item.created_at,
     })),
     ...purchasedCarsData.map((item) => ({
       id: item.car_id,
       model: item.cars.model,
       img: item.cars.img,
-      date_start: null, // No start date for purchased cars
-      date_end: null, // No end date for purchased cars
-      total_days: null, // No total days for purchased cars
+      date_start: null,
+      date_end: null,
+      total_days: null,
       is_paid: item.is_paid,
       total_amount: item.cars.price,
       user_id: item.transactions.buyer_id,
       source: "purchased",
-      created_at: item.created_at, // Add created_at for purchased cars
+      created_at: item.created_at,
     })),
   ];
 
@@ -209,7 +204,7 @@ const markAsPaid = async (car) => {
     console.error("Error marking car as paid:", response.error);
   } else {
     alert("Car marked as paid.");
-    await fetchCars(); // Refresh the list after updating
+    await fetchCars();
   }
 };
 
@@ -229,7 +224,7 @@ const confirmDelete = async (car) => {
         console.error("Error deleting car from purchased_cars:", error);
       } else {
         alert("Car deleted successfully from purchased_cars.");
-        await fetchCars(); // Refresh the list after deletion
+        await fetchCars();
       }
     } else if (source === "rented") {
       const { error } = await supabase
@@ -241,7 +236,7 @@ const confirmDelete = async (car) => {
         console.error("Error deleting car from rented_cars:", error);
       } else {
         alert("Car deleted successfully from rented_cars.");
-        await fetchCars(); // Refresh the list after deletion
+        await fetchCars();
       }
     }
   }
@@ -271,5 +266,11 @@ onMounted(async () => {
 .enlarged-image {
   width: 100%;
   height: auto;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 }
 </style>

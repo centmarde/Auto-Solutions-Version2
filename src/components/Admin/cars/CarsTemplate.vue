@@ -22,7 +22,7 @@
           <th class="text-left">Price</th>
           <th class="text-left">For Sale</th>
           <th class="text-left">For Rent</th>
-          <th class="text-left">Actions</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -38,16 +38,18 @@
             />
           </td>
           <td>{{ car.brand }}</td>
-          <td>{{ car.price }}</td>
+          <td>{{ formatPrice(car.price) }}</td>
           <td>{{ car.for_sale }}</td>
           <td>{{ car.for_rent }}</td>
-          <td>
-            <v-btn class="mx-2" color="error" @click="confirmDelete(car.id)"
-              >Delete</v-btn
-            >
-            <v-btn class="mx-2" color="success" @click="confirmApprove(car.id)"
-              >Approve</v-btn
-            >
+          <td class="text-center">
+            <div class="button-group">
+              <v-btn class="mx-2 delete-button" @click="confirmDelete(car.id)"
+                >Delete</v-btn
+              >
+              <v-btn class="mx-2 approve-button" @click="confirmApprove(car.id)"
+                >Approve</v-btn
+              >
+            </div>
           </td>
         </tr>
       </tbody>
@@ -101,6 +103,14 @@ const fetchCars = async () => {
   }
 };
 
+// Format price as PHP currency
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  }).format(price);
+};
+
 // Paginated cars based on current page
 const paginatedCars = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
@@ -119,7 +129,7 @@ const confirmDelete = async (id) => {
     const { error: conversationError } = await supabase
       .from("conversations")
       .delete()
-      .eq("car_id", id); // Assuming the foreign key is `car_id`
+      .eq("car_id", id);
 
     if (conversationError) {
       console.error("Error deleting related conversations:", conversationError);
@@ -130,7 +140,7 @@ const confirmDelete = async (id) => {
     const { error: loanCarError } = await supabase
       .from("loan_cars")
       .delete()
-      .eq("car_id", id); // Assuming the foreign key is `car_id`
+      .eq("car_id", id);
 
     if (loanCarError) {
       console.error("Error deleting related loan cars:", loanCarError);
@@ -193,5 +203,19 @@ onMounted(() => {
 
 .car-image:hover {
   transform: scale(1.05);
+}
+.delete-button {
+  background-color: #ff6962 !important;
+  color: white !important;
+}
+
+.approve-button {
+  background-color: #77dd76 !important;
+  color: white !important;
+}
+.button-group {
+  display: flex;
+  gap: 8px; /* Adjust space between buttons */
+  justify-content: center; /* Center align buttons */
 }
 </style>

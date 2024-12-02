@@ -300,6 +300,12 @@ router.beforeEach((to, from, next) => {
       to.path.startsWith("/CarBeenPurchased") ||
       to.path.startsWith("/LoaningCars") ||
       to.path.startsWith("/CarInSale") ||
+      to.path.startsWith("/AdminReview") ||
+      to.path.startsWith("/LoanReview") ||
+      to.path.startsWith("/AdminMembers") ||
+      to.path.startsWith("/NotPaid") ||
+      to.path.startsWith("/Rented") ||
+      to.path.startsWith("/LoaningCars") ||
       to.path.startsWith("/Clients")) &&
     userRole !== true
   ) {
