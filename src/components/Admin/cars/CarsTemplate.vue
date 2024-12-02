@@ -22,7 +22,7 @@
           <th class="text-left">Price</th>
           <th class="text-left">For Sale</th>
           <th class="text-left">For Rent</th>
-          <th class="text-left">Actions</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -41,13 +41,15 @@
           <td>{{ formatPrice(car.price) }}</td>
           <td>{{ car.for_sale }}</td>
           <td>{{ car.for_rent }}</td>
-          <td>
-            <v-btn class="mx-2 delete-button" @click="confirmDelete(car.id)"
-              >Delete</v-btn
-            >
-            <v-btn class="mx-2 approve-button" @click="confirmApprove(car.id)"
-              >Approve</v-btn
-            >
+          <td class="text-center">
+            <div class="button-group">
+              <v-btn class="mx-2 delete-button" @click="confirmDelete(car.id)"
+                >Delete</v-btn
+              >
+              <v-btn class="mx-2 approve-button" @click="confirmApprove(car.id)"
+                >Approve</v-btn
+              >
+            </div>
           </td>
         </tr>
       </tbody>
@@ -210,5 +212,10 @@ onMounted(() => {
 .approve-button {
   background-color: #77dd76 !important;
   color: white !important;
+}
+.button-group {
+  display: flex;
+  gap: 8px; /* Adjust space between buttons */
+  justify-content: center; /* Center align buttons */
 }
 </style>
