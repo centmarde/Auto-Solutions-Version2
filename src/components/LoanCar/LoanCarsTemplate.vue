@@ -22,7 +22,7 @@
           <th class="text-left">Loan Duration</th>
           <th class="text-left">Monthly Income</th>
           <th class="text-left">User ID</th>
-          <th class="text-left">Actions</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -40,13 +40,18 @@
           <td>{{ loan.loan_duration }} months</td>
           <td>{{ formatPrice(loan.monthly_income) }}</td>
           <td>{{ loan.user_id }}</td>
-          <td>
-            <v-btn class="mx-2 delete-button" @click="confirmDelete(loan.id)">
-              Delete
-            </v-btn>
-            <v-btn class="mx-2 approve-button" @click="confirmApprove(loan.id)">
-              Approve
-            </v-btn>
+          <td class="text-center">
+            <div class="button-group">
+              <v-btn class="mx-2 delete-button" @click="confirmDelete(loan.id)">
+                Delete
+              </v-btn>
+              <v-btn
+                class="mx-2 approve-button"
+                @click="confirmApprove(loan.id)"
+              >
+                Approve
+              </v-btn>
+            </div>
           </td>
         </tr>
       </tbody>
