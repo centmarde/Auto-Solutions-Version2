@@ -43,7 +43,7 @@
           <td class="text-center">
             <div class="button-group">
               <v-btn class="mx-2 delete-button" @click="confirmDelete(loan.id)">
-                Delete
+                Dissaprove
               </v-btn>
               <v-btn
                 class="mx-2 approve-button"

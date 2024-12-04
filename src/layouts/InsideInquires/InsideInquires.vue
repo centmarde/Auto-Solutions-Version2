@@ -98,10 +98,12 @@
       <v-card-title class="headline">Select Payment Method</v-card-title>
       <v-card-text>
         <p>Please select your payment option:</p>
+        <br />
         <v-btn color="green" text @click="choosePayment('online')"
           >Pay Online</v-btn
         >
-        <v-btn color="blue" text @click="choosePayment('in-person')"
+
+        <v-btn color="blue ms-3" text @click="choosePayment('in-person')"
           >Pay In Person</v-btn
         >
       </v-card-text>
