@@ -98,17 +98,17 @@
       <v-card-title class="headline">Select Payment Method</v-card-title>
       <v-card-text>
         <p>Please select your payment option:</p>
-        <v-btn color="green" text @click="choosePayment('online')"
-          >Pay Online</v-btn
-        >
-        <v-btn color="blue" text @click="choosePayment('in-person')"
-          >Pay In Person</v-btn
-        >
+        <v-btn color="green" text @click="choosePayment('online')" class="mr-4">
+          Pay Online
+        </v-btn>
+        <v-btn color="blue" text @click="choosePayment('in-person')">
+          Pay In Person
+        </v-btn>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="blue" text @click="isPaymentChoiceDialogVisible = false"
-          >Cancel</v-btn
-        >
+        <v-btn color="blue" text @click="isPaymentChoiceDialogVisible = false">
+          Cancel
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
