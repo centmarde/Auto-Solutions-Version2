@@ -44,7 +44,7 @@
           <td class="text-center">
             <div class="button-group">
               <v-btn class="mx-2 delete-button" @click="confirmDelete(car.id)"
-                >Delete</v-btn
+                >Disapprove</v-btn
               >
               <v-btn class="mx-2 approve-button" @click="confirmApprove(car.id)"
                 >Approve</v-btn

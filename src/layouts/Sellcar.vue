@@ -42,6 +42,8 @@
         </v-col>
       </v-row>
 
+      <br />
+      <br />
       <v-row class="d-flex justify-center my-2">
         <v-btn
           @click="handleSubmit"

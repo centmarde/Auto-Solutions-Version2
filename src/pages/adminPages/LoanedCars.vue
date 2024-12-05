@@ -40,12 +40,13 @@
           </td>
           <td>{{ loan.loan_duration }} months</td>
           <td>
-            ${{
+            {{
               loan.monthly_income.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })
             }}
+            PHP
           </td>
           <td>{{ loan.user_id }}</td>
           <td>{{ loan.car_id }}</td>
