@@ -31,21 +31,22 @@
                   :rules="[(v) => !!v || 'Last Name is required']"
                 />
               </v-col>
-              <!-- Mobile Number Field -->
-              <v-col cols="12" md="6" class="mb-2">
-                <v-text-field
-                  v-model="mobile_no"
-                  label="Mobile Number"
-                  :rules="[(v) => !!v || 'Mobile Number is required']"
-                />
-              </v-col>
               <!-- Gender Field -->
-              <v-col cols="12" md="12" class="mb-2">
+              <v-col cols="12" md="6" class="mb-2">
                 <v-select
                   v-model="gender"
                   :items="['Male', 'Female', 'Other']"
                   label="Gender"
                   :rules="[(v) => !!v || 'Gender is required']"
+                />
+              </v-col>
+              <!-- Contact Number -->
+              <v-col cols="12" md="12" class="mb-2">
+                <v-text-field
+                  v-model="mobile_no"
+                  label="Contact Number"
+                  :rules="[(v) => !!v || 'Contact Number is required']"
+                  type="tel"
                 />
               </v-col>
               <!-- Username Field -->
@@ -88,7 +89,7 @@
 
             <hr />
 
-            <!-- Address -->
+            <!-- Address (PGCI) -->
             <h4 class="text-start mt-2 mb-3">Address</h4>
             <v-row class="mb-3">
               <!-- Region Dropdown -->
@@ -246,24 +247,18 @@
 
 <script>
 import axios from "axios";
-import { supabase } from "../lib/supaBase"; // Adjust the import based on your project structure
-import {
-  requiredValidator,
-  emailValidator,
-  passwordValidator,
-  confirmedValidator,
-} from "../utils/validator.js";
+import { supabase } from "../lib/supaBase";
 
 export default {
   data() {
     return {
-      user_name: "",
-      email: "",
       first_name: "",
       middle_name: "",
       last_name: "",
-      mobile_no: "",
       gender: "",
+      mobile_no: "",
+      user_name: "",
+      email: "",
       password: "",
       passwordConfirm: "",
       regions: [],
@@ -283,31 +278,84 @@ export default {
   },
   methods: {
     async submitForm() {
+      if (
+        !this.first_name ||
+        !this.last_name ||
+        !this.middle_name ||
+        !this.gender ||
+        !this.mobile_no ||
+        !this.user_name ||
+        !this.email ||
+        !this.password ||
+        !this.passwordConfirm ||
+        !this.selectedRegionCode ||
+        !this.selectedProvinceCode ||
+        !this.selectedCityCode ||
+        !this.selectedBarangayCode
+      ) {
+        alert("Please fill out all required fields.");
+        return;
+      }
+
+      if (this.password !== this.passwordConfirm) {
+        alert("Passwords do not match.");
+        return;
+      }
+
       this.isSubmitting = true;
-      const { error } = await supabase.auth.signUp({
-        email: this.email,
-        password: this.password,
-        options: {
-          data: {
-            username: this.user_name,
+
+      try {
+        // Register the user in the auth.users table
+        const { data: authData, error: authError } = await supabase.auth.signUp(
+          {
+            email: this.email,
+            password: this.password,
+          }
+        );
+
+        if (authError) {
+          alert(`Sign-up failed: ${authError.message}`);
+          return;
+        }
+
+        if (authData.user) {
+          const { id: userId } = authData.user; // Extract the user ID from auth.users
+
+          // Concatenate the full address
+          const fullAddress = `${this.selectedBarangayName}, ${this.selectedCityName}, ${this.selectedProvinceName}, ${this.selectedRegionName}`;
+
+          // Additional user data to insert into the users table
+          const additionalUserData = {
+            user_id: userId, // Link to auth.users.id
+            address: fullAddress,
             first_name: this.first_name,
             middle_name: this.middle_name,
             last_name: this.last_name,
-            mobile_no: this.mobile_no,
             gender: this.gender,
-            region: this.selectedRegionName,
-            province: this.selectedProvinceName,
-            city: this.selectedCityName,
-            barangay: this.selectedBarangayName,
-          },
-        },
-      });
-      if (error) {
-        this.$toast.error(error.message);
+            mobile_no: this.mobile_no,
+            user_name: this.user_name,
+          };
+
+          // Insert the user data into the users table and fetch the inserted record
+          const { data, error: insertError } = await supabase
+            .from("users")
+            .insert([additionalUserData])
+            .select();
+
+          if (insertError) {
+            alert(`Failed to save user data: ${insertError.message}`);
+            return;
+          }
+
+          console.log("Inserted User Data:", data); // Debug: Check the inserted data
+          alert("Successfully registered!");
+          this.$router.push("/login"); // Redirect to login page
+        }
+      } catch (err) {
+        console.error("Registration error:", err);
+        alert("An unexpected error occurred.");
+      } finally {
         this.isSubmitting = false;
-      } else {
-        this.$toast.success("You have successfully registered.");
-        this.$router.push("/login");
       }
     },
     async fetchRegion() {
@@ -375,10 +423,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.dropdown-menu {
-  max-height: 300px;
-  overflow-y: auto;
-}
-</style>
