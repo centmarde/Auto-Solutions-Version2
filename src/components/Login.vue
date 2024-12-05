@@ -4,7 +4,11 @@
       <v-col cols="12" lg="8" md="6" sm="12">
         <v-img class="supra" src="./../assets/images/supra_logo.png"></v-img>
         <p class="text">45th anniversary edition</p>
-        <Animator v-if="!animatorStore.isLoaded" class="animator-bg" @loadComplete="handleLoadComplete" />
+        <Animator
+          v-if="!animatorStore.isLoaded"
+          class="animator-bg"
+          @loadComplete="handleLoadComplete"
+        />
       </v-col>
 
       <!-- Login form consuming 4 columns on large screens -->
@@ -34,7 +38,9 @@
                 outlined
                 required
                 class="mb-4"
-                :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+                :append-inner-icon="
+                  isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'
+                "
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 :rules="[requiredValidator]"
               ></v-text-field>
@@ -65,7 +71,10 @@
 
               <!-- Create Account & Go Back -->
               <div class="create-account mt-3 text-center">
-                <p>Create Account <router-link to="/register">Sign-up</router-link></p>
+                <p>
+                  Create Account
+                  <router-link to="/register">Sign-up</router-link>
+                </p>
                 <router-link to="/">Go-Back</router-link>
               </div>
             </v-form>
@@ -81,10 +90,9 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "../lib/supaBase";
 import axios from "axios";
-import { requiredValidator, emailValidator } from '../utils/validator.js';
+import { requiredValidator, emailValidator } from "../utils/validator.js";
 import Animator from "./Landing3d/Animator.vue";
-import { useAnimatorStore } from '../stores/loginStoreAnimator';
-
+import { useAnimatorStore } from "../stores/loginStoreAnimator";
 
 // udfw jvvl ikom emdl SMTP password
 
@@ -94,8 +102,6 @@ const isPasswordVisible = ref(false);
 const isSubmitting = ref(false);
 const router = useRouter();
 const animatorStore = useAnimatorStore();
-
-
 
 const handleLoadComplete = () => {
   animatorStore.setLoaded(true);
@@ -162,7 +168,6 @@ const login = async () => {
 };
 </script>
 
-
 <style scoped>
 /* Animator as background */
 .animator-bg {
@@ -171,12 +176,15 @@ const login = async () => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index:1;
+  z-index: 1;
 }
 
 /* Responsive adjustments for the login card */
 .logCard {
-  background-color: rgba(var(--v-theme-background), 0.5); /* Adjusts with light/dark mode */
+  background-color: rgba(
+    var(--v-theme-background),
+    0.5
+  ); /* Adjusts with light/dark mode */
   backdrop-filter: blur(10px); /* Apply blur for frosted glass effect */
   -webkit-backdrop-filter: blur(10px); /* Support for Safari */
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
@@ -195,7 +203,7 @@ const login = async () => {
   top: 24%;
   right: 75%;
   transform: translate(-50%, -50%);
-  color: #EEEEEE;
+  color: #eeeeee;
 }
 
 @media (max-width: 600px) {
@@ -203,15 +211,15 @@ const login = async () => {
     padding: 20px;
   }
   .supra {
-    width: 100%; 
+    width: 100%;
     bottom: auto;
-    top: 0%; 
-    right: 50%; 
-    transform: translateX(50%); 
+    top: 0%;
+    right: 50%;
+    transform: translateX(50%);
   }
   .text {
-    top: 5%; 
-    right: 50%; 
+    top: 5%;
+    right: 50%;
     transform: translate(50%, 0);
   }
 }
