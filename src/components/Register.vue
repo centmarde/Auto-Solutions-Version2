@@ -43,7 +43,7 @@
               <!-- Contact Number -->
               <v-col cols="12" md="12" class="mb-2">
                 <v-text-field
-                  v-model="contact_number"
+                  v-model="mobile_no"
                   label="Contact Number"
                   :rules="[(v) => !!v || 'Contact Number is required']"
                   type="tel"
@@ -256,7 +256,7 @@ export default {
       middle_name: "",
       last_name: "",
       gender: "",
-      contact_number: "",
+      mobile_no: "",
       user_name: "",
       email: "",
       password: "",
@@ -283,7 +283,7 @@ export default {
         !this.last_name ||
         !this.middle_name ||
         !this.gender ||
-        !this.contact_number ||
+        !this.mobile_no ||
         !this.user_name ||
         !this.email ||
         !this.password ||
@@ -318,26 +318,36 @@ export default {
           return;
         }
 
-        // Check if the user registration was successful
         if (authData.user) {
           const { id: userId } = authData.user; // Extract the user ID from auth.users
 
           // Concatenate the full address
           const fullAddress = `${this.selectedBarangayName}, ${this.selectedCityName}, ${this.selectedProvinceName}, ${this.selectedRegionName}`;
 
-          // Insert the user's address into the users table
-          const { error: insertError } = await supabase.from("users").insert([
-            {
-              user_id: userId, // Link to auth.users.id
-              address: fullAddress,
-            },
-          ]);
+          // Additional user data to insert into the users table
+          const additionalUserData = {
+            user_id: userId, // Link to auth.users.id
+            address: fullAddress,
+            first_name: this.first_name,
+            middle_name: this.middle_name,
+            last_name: this.last_name,
+            gender: this.gender,
+            mobile_no: this.mobile_no,
+            user_name: this.user_name,
+          };
+
+          // Insert the user data into the users table and fetch the inserted record
+          const { data, error: insertError } = await supabase
+            .from("users")
+            .insert([additionalUserData])
+            .select();
 
           if (insertError) {
-            alert(`Failed to save address: ${insertError.message}`);
+            alert(`Failed to save user data: ${insertError.message}`);
             return;
           }
 
+          console.log("Inserted User Data:", data); // Debug: Check the inserted data
           alert("Successfully registered!");
           this.$router.push("/login"); // Redirect to login page
         }
@@ -348,7 +358,6 @@ export default {
         this.isSubmitting = false;
       }
     },
-
     async fetchRegion() {
       const response = await axios.get("https://psgc.gitlab.io/api/regions/");
       this.regions = response.data;
