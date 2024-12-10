@@ -9,9 +9,11 @@
       ></v-img>
     </v-card>
   </v-dialog>
+
   <v-container class="p-5 mts">
     <h1 class="text-center fw-bolder">{{ title }}</h1>
 
+    <!-- User Table -->
     <v-table height="500px">
       <thead>
         <tr>
@@ -42,9 +44,9 @@
           <td>{{ user.birth_date }}</td>
           <td>{{ user.gender }}</td>
           <td class="text-center">
-            <v-btn class="mx-2 delete-button" @click="confirmDelete(user.id)"
-              >Delete</v-btn
-            >
+            <v-btn class="mx-2 delete-button" @click="confirmDelete(user.id)">
+              Delete
+            </v-btn>
           </td>
         </tr>
       </tbody>
@@ -60,11 +62,11 @@
     ></v-pagination>
   </v-container>
 </template>
-
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { supabase } from "../../../lib/supaBase";
 
+// Props
 const props = defineProps({
   title: {
     type: String,
@@ -76,25 +78,21 @@ const props = defineProps({
   },
 });
 
+// State
 const users = ref([]);
 const currentPage = ref(1);
 const itemsPerPage = 5;
-
-// State for dialog and selected image
 const dialog = ref(false);
 const selectedImage = ref("");
 
-// Fetch users from the database
-const fetchUsers = async () => {
-  const { data, error } = await supabase
-    .from("users")
-    .select(
-      "id, first_name, middle_name, last_name, img, address, birth_date, gender"
-    )
-    .eq("is_admin", props.isadmin);
+// Function to fetch users from Supabase function
+const fetchUsers = async (isAdmin) => {
+  const { data, error } = await supabase.rpc("fetch_users_by_admin_status", {
+    is_admin_input: isAdmin,
+  }); // Call Supabase function
 
   if (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching users via function:", error);
   } else {
     users.value = data;
   }
@@ -111,7 +109,7 @@ const pageCount = computed(() => {
   return Math.ceil(users.value.length / itemsPerPage);
 });
 
-// Confirm deletion
+// Confirm delete action
 const confirmDelete = (userId) => {
   const confirmed = confirm("Are you sure you want to delete this user?");
   if (confirmed) {
@@ -119,7 +117,7 @@ const confirmDelete = (userId) => {
   }
 };
 
-// Delete the user from the database
+// Delete user from the database
 const deleteUser = async (userId) => {
   const { error } = await supabase.from("users").delete().eq("id", userId);
   if (error) {
@@ -135,7 +133,10 @@ const openImage = (img) => {
   dialog.value = true;
 };
 
-onMounted(fetchUsers);
+// Fetch users when the component is mounted
+onMounted(() => {
+  fetchUsers(props.isadmin); // Call the function with the isadmin prop
+});
 </script>
 
 <style>
