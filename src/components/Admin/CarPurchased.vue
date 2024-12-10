@@ -29,7 +29,7 @@
           <td>{{ car.price }}</td>
           <td class="text-center">
             <v-btn color="warning" @click="openDisapproveDialog(car)"
-              >Disapprove</v-btn
+              >Delete</v-btn
             >
           </td>
         </tr>

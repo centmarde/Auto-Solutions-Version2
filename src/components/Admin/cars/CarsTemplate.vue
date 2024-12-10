@@ -94,7 +94,8 @@ const fetchCars = async () => {
   const { data, error } = await supabase
     .from("cars")
     .select("*")
-    .eq("is_pending", true);
+    .eq("is_pending", true)
+    .eq("is_disapproved", false);
 
   if (error) {
     console.error("Error fetching cars:", error);
@@ -123,40 +124,21 @@ const pageCount = computed(() => {
 });
 
 const confirmDelete = async (id) => {
-  const confirm = window.confirm("Are you sure you want to delete this car?");
+  const confirm = window.confirm(
+    "Are you sure you want to disapprove this car?"
+  );
   if (confirm) {
-    // First, delete the related conversations
-    const { error: conversationError } = await supabase
-      .from("conversations")
-      .delete()
-      .eq("car_id", id);
-
-    if (conversationError) {
-      console.error("Error deleting related conversations:", conversationError);
-      return;
-    }
-
-    // Second, delete the related loan_cars records
-    const { error: loanCarError } = await supabase
-      .from("loan_cars")
-      .delete()
-      .eq("car_id", id);
-
-    if (loanCarError) {
-      console.error("Error deleting related loan cars:", loanCarError);
-      return;
-    }
-
-    // Then, delete the car
-    const { error: carError } = await supabase
+    const { error } = await supabase
       .from("cars")
-      .delete()
+      .update({ is_disapproved: true }) // Set is_disapproved to true
       .eq("id", id);
 
-    if (carError) {
-      console.error("Error deleting car:", carError);
+    if (error) {
+      console.error("Error disapproving car:", error);
     } else {
+      // Optional: Filter the cars array to remove the updated car or fetch again
       cars.value = cars.value.filter((car) => car.id !== id);
+      console.log("Car successfully disapproved");
     }
   }
 };

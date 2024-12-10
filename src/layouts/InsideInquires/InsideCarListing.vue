@@ -125,7 +125,7 @@ export default {
       try {
         const { data, error } = await supabase
           .from("cars")
-          .select("*") // Make sure to select all necessary fields including price and years_owned
+          .select("*")
           .eq("user_id", loggedInUserId);
 
         if (error) throw error;
@@ -177,7 +177,11 @@ export default {
       }
     },
     carStatusMessage(carId) {
-      if (this.rentedCarIds.includes(carId)) {
+      const car = this.userCars.find((car) => car.id === carId);
+
+      if (car.is_disapproved) {
+        return "Your car has been disapproved";
+      } else if (this.rentedCarIds.includes(carId)) {
         return "Your car is rented";
       } else if (this.purchasedCarIds.includes(carId)) {
         return "Your car has been purchased";
