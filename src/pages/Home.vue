@@ -14,7 +14,7 @@
 
     <v-container>
       <v-row>
-        <v-col cols="12" sm="6" md="6" lg="3">
+        <v-col cols="12" sm="6" md="6" lg="4">
           <v-card elevation="8">
             <CarAction
               title="POST A CAR"
@@ -26,7 +26,7 @@
             />
           </v-card>
         </v-col>
-        <v-col cols="12" md="6" sm="6" lg="3">
+        <v-col cols="12" md="6" sm="6" lg="4">
           <v-card elevation="8">
             <CarAction
               title="RENT A CAR"
@@ -39,7 +39,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="12" md="6" sm="6" lg="3">
+        <v-col cols="12" md="6" sm="6" lg="4">
           <v-card elevation="8">
             <CarAction
               title="GARAGE"
@@ -47,18 +47,6 @@
               image="https://www.cars.com/images/garage-landing/garage-hero.webp"
               altText="Loan Image"
               redirectTo="/Garage"
-            />
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="6" sm="6" lg="3">
-          <v-card elevation="8">
-            <CarAction
-              title="LOAN A CAR"
-              subtitle=""
-              image="https://pngpix.com/images/hd/stylized-money-icon-vector-b7kfg9iwozjig9ie.jpg"
-              altText="Loan Image"
-              redirectTo="/LoanCarBase"
-              imgWidth="129px"
             />
           </v-card>
         </v-col>
