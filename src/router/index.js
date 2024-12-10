@@ -47,6 +47,7 @@ import MainComponent from "@/components/NavigationBar/MainComponent.vue";
 import Rented from "@/pages/adminPages/RentedCars.vue";
 import Unpaid from "@/components/Admin/Unpaid.vue";
 import InsideLoan from "@/components/LoanCar/LoanStatus.vue";
+import Exceed from "@/pages/adminPages/Exceed.vue";
 
 const routes = setupLayouts([
   ...autoRoutes,
@@ -212,6 +213,11 @@ const routes = setupLayouts([
     component: InsideLoan,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/Exceed",
+    component: Exceed,
+    meta: { requiresAuth: true },
+  },
 ]);
 
 const router = createRouter({
@@ -273,6 +279,7 @@ router.beforeEach((to, from, next) => {
     "/Rented",
     "/NotPaid",
     "/Loan",
+    "/Exceed",
   ];
 
   if (protectedPages.includes(to.path) && !isLoggedIn) {

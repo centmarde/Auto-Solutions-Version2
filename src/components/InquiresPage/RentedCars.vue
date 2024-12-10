@@ -39,14 +39,6 @@
                   </v-btn>
                 </router-link>
               </v-col>
-              <v-col cols="6" sm="6" md="12">
-                <router-link to="/Loan" class="d-block">
-                  <v-btn block color="primary">
-                    <v-icon left>mdi-cash</v-icon>
-                    Loan Status
-                  </v-btn>
-                </router-link>
-              </v-col>
 
               <v-col cols="6" sm="6" md="12">
                 <router-link to="/Home" class="d-block">

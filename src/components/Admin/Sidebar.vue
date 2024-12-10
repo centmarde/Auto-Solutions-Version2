@@ -98,7 +98,7 @@
 
       <!-- Fifth Link (Unpaid Cars) -->
       <div class="position-relative bot">
-        <v-icon class="lefts2">mdi-alert-circle</v-icon>
+        <v-icon class="lefts2 mb-5">mdi-alert-circle</v-icon>
         <router-link
           to="/NotPaid"
           class="btn wes fw-bold mt-1"
@@ -109,6 +109,23 @@
           }"
         >
           <p class="mt-4 fw-bold fst">Unpaid Cars</p>
+          <v-divider></v-divider>
+        </router-link>
+      </div>
+
+      <!-- Fifth Link (Unpaid Cars) -->
+      <div class="position-relative bot">
+        <v-icon>mdi-calendar-clock</v-icon>
+        <router-link
+          to="/Exceed"
+          class="btn wes fw-bold mt-1"
+          :class="{
+            'text-white': isDark,
+            'text-dark': !isDark,
+            underline: isActiveRoute('/Exceed').value,
+          }"
+        >
+          <p class="mt-4 fw-bold fst">Exceeded</p>
         </router-link>
       </div>
 
