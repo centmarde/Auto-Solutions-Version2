@@ -31,12 +31,6 @@
           :num="rentedCount"
         />
         <!-- New Card for Loaned Cars -->
-        <Card
-          class="col-6"
-          title="Loaned Cars"
-          link="/LoanedCars"
-          :num="loanedCount"
-        />
       </div>
     </div>
   </div>

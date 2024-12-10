@@ -61,22 +61,6 @@
         </router-link>
       </div>
 
-      <div class="position-relative bot">
-        <v-icon class="mb-3">mdi mdi-car-back</v-icon>
-        <router-link
-          to="/LoanReview"
-          class="btn wes fw-bold mt-1"
-          :class="{
-            'text-white': isDark,
-            'text-dark': !isDark,
-            underline: isActiveRoute('/LoanReview').value,
-          }"
-        >
-          <p class="mt-4 fw-bold fst">Loan Car Review</p>
-          <v-divider></v-divider>
-        </router-link>
-      </div>
-
       <!-- Third Link (Admin members) -->
       <div class="position-relative bot">
         <v-icon class="mb-5">mdi-account-cog</v-icon>
