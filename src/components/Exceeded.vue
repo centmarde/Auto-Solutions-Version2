@@ -22,7 +22,7 @@
     <v-row v-if="exceededRentals.length > 0" justify="center">
       <v-col
         v-for="item in exceededRentals"
-        :key="item.id"
+        :key="item.rental_id"
         cols="12"
         md="6"
         lg="4"
@@ -30,8 +30,8 @@
         <v-card elevation="6" class="rounded-lg overflow-hidden">
           <!-- Car Image -->
           <v-img
-            v-if="item.car && item.car.img"
-            :src="item.car.img"
+            v-if="item.car_image"
+            :src="item.car_image"
             alt="Car Image"
             height="200px"
             cover
@@ -47,7 +47,9 @@
           <!-- Card Content -->
           <v-card-title class="font-weight-bold text-black">
             {{
-              item.car ? `${item.car.brand} ${item.car.model}` : "Unknown Car"
+              item.car_brand && item.car_model
+                ? `${item.car_brand} ${item.car_model}`
+                : "Unknown Car"
             }}
           </v-card-title>
 
@@ -68,14 +70,15 @@
             <!-- Buyer Name -->
             <p class="mb-0 text-black">
               <strong>Buyer Name:</strong>
-              <span v-if="item.transaction && item.transaction.user">
-                {{ formatFullName(item.transaction.user) }}
-              </span>
-              <span v-else>Not available</span>
+              {{
+                item.first_name
+                  ? `${item.first_name} ${item.middle_name || ""} ${
+                      item.last_name
+                    }`
+                  : "Not available"
+              }}
             </p>
           </v-card-text>
-
-          <!-- Actions -->
         </v-card>
       </v-col>
     </v-row>
@@ -90,7 +93,6 @@
     </v-row>
   </v-container>
 </template>
-
 <script>
 import { supabase } from "../lib/supaBase";
 
@@ -107,26 +109,19 @@ export default {
     await this.fetchExceededRentals();
   },
   methods: {
-    // Fetch rentals that exceeded their end date
+    // Regular view
     async fetchExceededRentals() {
       this.loading = true;
       try {
-        const { data, error } = await supabase.from("rented_cars").select(`
-            *,
-            transaction:transaction_id(buyer_id, user:buyer_id(first_name, middle_name, last_name)),
-            car:cars_id(brand, model, img)
-          `);
+        const { data, error } = await supabase
+          .from("exceeded_rentals_summary") // Use the updated view
+          .select("*");
 
         if (error) throw error;
 
-        // Filter rentals where end date has passed
-        this.exceededRentals = data.filter((item) => {
-          const endDate = new Date(item.date_end);
-          const today = new Date(this.currentDate);
-          return endDate < today; // Check if the rental is overdue
-        });
+        this.exceededRentals = data;
       } catch (err) {
-        console.error("Error fetching exceeded rentals:", err);
+        console.error("Error fetching rentals:", err);
         this.error = "Failed to load data. Please try again.";
       } finally {
         this.loading = false;
