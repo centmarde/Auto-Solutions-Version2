@@ -102,32 +102,26 @@ const selectedImage = ref("");
 const disapproveDialog = ref(false);
 const selectedCar = ref(null);
 
+//materialized hehe
 const fetchCars = async () => {
-  // Query purchased_cars table and join with cars and transactions details, filtering by is_paid = true
-  const { data: purchasedCarsData, error } = await supabase
-    .from("purchased_cars")
-    .select(
-      `
-      car_id,
-      cars (id, model, img, price),
-      transactions (buyer_id, seller_id)
-    `
-    )
-    .eq("is_paid", true); // This filters only cars with is_paid = true
+  const { data, error } = await supabase
+    .from("mv_purchased_cars") // Use the Materialized View
+    .select("*"); // Fetch all columns pre-aggregated
 
   if (error) {
-    console.error("Error fetching purchased cars:", error);
+    console.error("Error fetching cars from Materialized View:", error);
     return;
   }
 
-  // Map the fetched data to include car and transaction details
-  cars.value = purchasedCarsData.map((item) => ({
+  cars.value = data.map((item) => ({
     car_id: item.car_id,
-    model: item.cars.model,
-    img: item.cars.img,
-    price: item.cars.price,
-    buyer_id: item.transactions.buyer_id,
-    seller_id: item.transactions.seller_id,
+    model: item.model,
+    img: item.img,
+    price: item.price,
+    buyer_id: item.buyer_id,
+    seller_id: item.seller_id,
+    purchase_count: item.purchase_count,
+    total_spending: item.total_spending,
   }));
 };
 
