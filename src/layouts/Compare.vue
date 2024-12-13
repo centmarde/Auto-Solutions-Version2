@@ -103,6 +103,7 @@ async function fetchModels(car) {
     try {
       const response = await axios.get(
         `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${make}?format=json`
+        
       );
       suggestedModels.value[car] = response.data.Results.map(
         (model) => model.Model_Name

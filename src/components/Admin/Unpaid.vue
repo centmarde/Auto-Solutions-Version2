@@ -186,25 +186,30 @@ const markAsPaid = async (car) => {
   const carId = car.id;
   const source = car.source;
 
-  let response = null;
-
+  //scalar hehe
   if (source === "purchased") {
-    response = await supabase
-      .from("purchased_cars")
-      .update({ is_paid: true })
-      .eq("car_id", carId);
+    const { error } = await supabase.rpc("mark_car_as_paid", {
+      target_car_id: carId,
+    });
+
+    if (error) {
+      console.error("Error marking car as paid:", error.message);
+    } else {
+      alert("Car marked as paid.");
+      await fetchCars();
+    }
   } else if (source === "rented") {
-    response = await supabase
+    const { error } = await supabase
       .from("rented_cars")
       .update({ is_paid: true })
       .eq("id", carId);
-  }
 
-  if (response?.error) {
-    console.error("Error marking car as paid:", response.error);
-  } else {
-    alert("Car marked as paid.");
-    await fetchCars();
+    if (error) {
+      console.error("Error marking car as paid:", error.message);
+    } else {
+      alert("Car marked as paid.");
+      await fetchCars();
+    }
   }
 };
 
@@ -214,30 +219,19 @@ const confirmDelete = async (car) => {
     let carId = car.id;
     let source = car.source;
 
-    if (source === "purchased") {
-      const { error } = await supabase
-        .from("purchased_cars")
-        .delete()
-        .eq("car_id", carId);
+    const tableName = source === "purchased" ? "purchased_cars" : "rented_cars";
+    const keyColumn = source === "purchased" ? "car_id" : "id";
 
-      if (error) {
-        console.error("Error deleting car from purchased_cars:", error);
-      } else {
-        alert("Car deleted successfully from purchased_cars.");
-        await fetchCars();
-      }
-    } else if (source === "rented") {
-      const { error } = await supabase
-        .from("rented_cars")
-        .delete()
-        .eq("id", carId);
+    const { error } = await supabase
+      .from(tableName)
+      .delete()
+      .eq(keyColumn, carId);
 
-      if (error) {
-        console.error("Error deleting car from rented_cars:", error);
-      } else {
-        alert("Car deleted successfully from rented_cars.");
-        await fetchCars();
-      }
+    if (error) {
+      console.error(`Error deleting car from ${tableName}:`, error.message);
+    } else {
+      alert(`Car deleted successfully from ${tableName}.`);
+      await fetchCars();
     }
   }
 };
