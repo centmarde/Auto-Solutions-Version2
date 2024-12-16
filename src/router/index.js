@@ -12,6 +12,9 @@ import Login from "@/components/Login.vue";
 import NotFound from "@/components/Notfoundpage.vue";
 import Register from "@/components/Register.vue";
 
+//activity log routers
+import ActivityLogs from "@/components/ActivityLogs/ActivityLogs.vue";
+
 import Home from "@/pages/Home.vue";
 import CarInRent from "@/pages/adminPages/CarInRent.vue";
 
@@ -64,6 +67,11 @@ const routes = setupLayouts([
   {
     path: "/LoanCarBase",
     component: LoanCarBase,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/ActivityLogs",
+    component: ActivityLogs,
     meta: { requiresAuth: true },
   },
 

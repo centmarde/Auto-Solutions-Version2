@@ -113,7 +113,7 @@
         </router-link>
       </div>
 
-      <!-- Fifth Link (Unpaid Cars) -->
+      <!-- Sixth Link (Exceeded deadline) -->
       <div class="position-relative bot">
         <v-icon>mdi-calendar-clock</v-icon>
         <router-link
@@ -126,6 +126,21 @@
           }"
         >
           <p class="mt-4 fw-bold fst">Exceeded</p>
+        </router-link>
+      </div>
+      <!-- Seventh Link (Exceeded deadline) -->
+      <div class="position-relative bot">
+        <v-icon>mdi-list-box-outline</v-icon>
+        <router-link
+          to="/ActivityLogs"
+          class="btn wes fw-bold mt-1"
+          :class="{
+            'text-white': isDark,
+            'text-dark': !isDark,
+            underline: isActiveRoute('/ActivityLogs').value,
+          }"
+        >
+          <p class="mt-4 fw-bold fst">Activity Logs</p>
         </router-link>
       </div>
 

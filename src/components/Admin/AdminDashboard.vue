@@ -161,7 +161,7 @@ const initializeBarChart = () => {
       "For Rent", // Label for cars for rent
       "Car Purchased", // Label for cars purchased
       "Car Rented", // Label for cars rented
-      "Loaned Cars", // Label for loaned cars
+      // "Loaned Cars", // Label for loaned cars
     ],
     datasets: [
       {

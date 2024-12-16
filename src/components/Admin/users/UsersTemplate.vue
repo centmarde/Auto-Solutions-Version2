@@ -85,11 +85,11 @@ const itemsPerPage = 5;
 const dialog = ref(false);
 const selectedImage = ref("");
 
-// Function to fetch users from Supabase function
+// table value function hehe
 const fetchUsers = async (isAdmin) => {
   const { data, error } = await supabase.rpc("fetch_users_by_admin_status", {
     is_admin_input: isAdmin,
-  }); // Call Supabase function
+  });
 
   if (error) {
     console.error("Error fetching users via function:", error);
