@@ -1,68 +1,3 @@
-<template>
-  <!-- Dialog for enlarged image -->
-  <v-dialog v-model="dialog" max-width="600px" class="high-z-index">
-    <v-card>
-      <v-img
-        :src="selectedImage"
-        class="enlarged-image"
-        aspect-ratio="16/9"
-      ></v-img>
-    </v-card>
-  </v-dialog>
-
-  <v-container class="p-5 mts">
-    <h1 class="text-center fw-bolder">{{ title }}</h1>
-
-    <!-- User Table -->
-    <v-table height="500px">
-      <thead>
-        <tr>
-          <th class="text-left">ID</th>
-          <th class="text-left">Name</th>
-          <th class="text-left">Image</th>
-          <th class="text-left">Address</th>
-          <th class="text-left">Birthday</th>
-          <th class="text-left">Gender</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(user, index) in paginatedUsers" :key="user.id">
-          <td>{{ user.id }}</td>
-          <td>
-            {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}
-          </td>
-          <td>
-            <img
-              :src="user.img"
-              alt="User Image"
-              class="user-image"
-              @click="openImage(user.img)"
-            />
-          </td>
-          <td>{{ user.address }}</td>
-          <td>{{ user.birth_date }}</td>
-          <td>{{ user.gender }}</td>
-          <td class="text-center">
-            <v-btn class="mx-2 delete-button" @click="confirmDelete(user.id)">
-              Delete
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-
-    <!-- Pagination -->
-    <v-pagination
-      v-model="currentPage"
-      :length="pageCount"
-      :total-visible="4"
-      @input="fetchUsers"
-      class="mt-4"
-    ></v-pagination>
-  </v-container>
-</template>
-
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { supabase } from "../../../lib/supaBase";
@@ -121,60 +56,10 @@ const confirmDelete = (userId) => {
 // Delete user and related records
 const deleteUser = async (userId) => {
   try {
-    // Step 1: Fetch all car_ids linked to the user from approved_loans
-    const { data: loans, error: fetchLoansError } = await supabase
-      .from("approved_loans")
-      .select("car_id")
-      .eq("user_id", userId);
+    // Step 1: Delete related data (conversations, loans, cars)
+    await deleteRelatedData(userId);
 
-    if (fetchLoansError) {
-      console.error("Error fetching approved loans:", fetchLoansError);
-      alert("Failed to fetch associated loans. Deletion aborted.");
-      return;
-    }
-
-    // Extract car IDs
-    const carIds = loans.map((loan) => loan.car_id);
-
-    // Step 2: Delete conversations where the user is a buyer or supplier
-    const { error: deleteConversationsError } = await supabase
-      .from("conversations")
-      .delete()
-      .or(`buyer_id.eq.${userId},supplier_id.eq.${userId}`);
-
-    if (deleteConversationsError) {
-      console.error("Error deleting conversations:", deleteConversationsError);
-      alert("Failed to delete conversations associated with the user.");
-      return;
-    }
-
-    // Step 3: Delete records in approved_loans referencing the user
-    const { error: deleteLoansError } = await supabase
-      .from("approved_loans")
-      .delete()
-      .eq("user_id", userId);
-
-    if (deleteLoansError) {
-      console.error("Error deleting approved loans:", deleteLoansError);
-      alert("Failed to delete approved loans.");
-      return;
-    }
-
-    // Step 4: Delete cars associated with the user
-    if (carIds.length > 0) {
-      const { error: deleteCarsError } = await supabase
-        .from("cars")
-        .delete()
-        .in("id", carIds);
-
-      if (deleteCarsError) {
-        console.error("Error deleting cars:", deleteCarsError);
-        alert("Failed to delete cars associated with the user.");
-        return;
-      }
-    }
-
-    // Step 5: Delete the user itself
+    // Step 2: Delete the user itself
     const { error: deleteUserError } = await supabase
       .from("users")
       .delete()
@@ -184,6 +69,22 @@ const deleteUser = async (userId) => {
       console.error("Error deleting user:", deleteUserError);
       alert("Failed to delete the user.");
       return;
+    }
+
+    // Step 3: Log the deletion activity
+    // Use `currentUser.id` in the logging statement
+    const { error: logError } = await supabase.from("activity_logs").insert({
+      user_id: users.id,
+      action: `Deleted user with ID ${userId}`,
+      timestamp: new Date().toISOString(),
+    });
+
+    if (logError) {
+      console.error("Error logging activity:", logError);
+    } else {
+      console.log(
+        `Activity log for user ${userId} deletion recorded successfully.`
+      );
     }
 
     // Update local UI state
@@ -196,42 +97,48 @@ const deleteUser = async (userId) => {
   }
 };
 
-// Delete car function
-const deleteCar = async (carId) => {
-  try {
-    // Step 1: Delete records in approved_loans table referencing this car_id
-    const { error: loansError } = await supabase
-      .from("approved_loans")
-      .delete()
-      .eq("car_id", carId);
+// Delete related data
+const deleteRelatedData = async (userId) => {
+  // Delete conversations
+  const { error: deleteConversationsError } = await supabase
+    .from("conversations")
+    .delete()
+    .or(`buyer_id.eq.${userId},supplier_id.eq.${userId}`);
+  if (deleteConversationsError) {
+    throw new Error("Failed to delete conversations.");
+  }
 
-    if (loansError) {
-      console.error("Error deleting approved loans for car:", loansError);
-      alert("Failed to delete related loan records. Deletion aborted.");
-      return; // Exit early if deletion fails
-    }
+  // Delete loans
+  const { data: loans, error: fetchLoansError } = await supabase
+    .from("approved_loans")
+    .select("car_id")
+    .eq("user_id", userId);
+  if (fetchLoansError) {
+    throw new Error("Failed to fetch loans.");
+  }
 
-    // Step 2: Delete the car itself from the cars table
-    const { error: carError } = await supabase
+  const carIds = loans.map((loan) => loan.car_id);
+  const { error: deleteLoansError } = await supabase
+    .from("approved_loans")
+    .delete()
+    .eq("user_id", userId);
+  if (deleteLoansError) {
+    throw new Error("Failed to delete loans.");
+  }
+
+  // Delete cars
+  if (carIds.length > 0) {
+    const { error: deleteCarsError } = await supabase
       .from("cars")
       .delete()
-      .eq("id", carId);
-
-    if (carError) {
-      console.error("Error deleting car:", carError);
-      alert("Failed to delete the car.");
-      return; // Exit early if deletion fails
+      .in("id", carIds);
+    if (deleteCarsError) {
+      throw new Error("Failed to delete cars.");
     }
-
-    console.log(`Car with ID ${carId} deleted successfully.`);
-  } catch (err) {
-    console.error("Unexpected error during car deletion:", err);
-    alert("An unexpected error occurred while deleting the car.");
   }
 };
 
 // Open image dialog
-
 const openImage = (img) => {
   selectedImage.value = img;
   dialog.value = true;
@@ -243,28 +150,70 @@ onMounted(() => {
 });
 </script>
 
+<template>
+  <v-container class="p-5 mts">
+    <h1 class="text-center fw-bolder">{{ title }}</h1>
+    <v-table height="500px">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Address</th>
+          <th>Birthday</th>
+          <th>Gender</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in paginatedUsers" :key="user.id">
+          <td>{{ user.id }}</td>
+          <td>
+            {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}
+          </td>
+          <td>
+            <img
+              :src="user.img"
+              alt="User Image"
+              class="user-image"
+              @click="openImage(user.img)"
+            />
+          </td>
+          <td>{{ user.address }}</td>
+          <td>{{ user.birth_date }}</td>
+          <td>{{ user.gender }}</td>
+          <td class="text-center">
+            <v-btn class="delete-button" @click="confirmDelete(user.id)">
+              Delete
+            </v-btn>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+    <v-pagination
+      v-model="currentPage"
+      :length="pageCount"
+      @input="fetchUsers"
+      class="mt-4"
+    />
+  </v-container>
+</template>
+
 <style>
 .mts {
   margin-top: 40px;
 }
-
 .user-image {
   cursor: pointer;
   width: 100px;
   height: auto;
   transition: transform 0.3s;
 }
-
 .user-image:hover {
   transform: scale(1.05);
 }
-
-.high-z-index .v-overlay__content {
-  z-index: 2000 !important;
-}
-
 .delete-button {
-  background-color: #ff6962 !important;
-  color: white !important;
+  background-color: #ff6962;
+  color: white;
 }
 </style>
