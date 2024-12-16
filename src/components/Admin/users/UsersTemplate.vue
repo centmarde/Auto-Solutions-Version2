@@ -56,6 +56,13 @@ const confirmDelete = (userId) => {
 // Delete user and related records
 const deleteUser = async (userId) => {
   try {
+    const currentAdminId = localStorage.getItem("user_id");
+    if (!currentAdminId) {
+      console.error("No admin ID found in localStorage.");
+      alert("Failed to identify the current admin.");
+      return;
+    }
+
     // Step 1: Delete related data (conversations, loans, cars)
     await deleteRelatedData(userId);
 
@@ -72,9 +79,8 @@ const deleteUser = async (userId) => {
     }
 
     // Step 3: Log the deletion activity
-    // Use `currentUser.id` in the logging statement
     const { error: logError } = await supabase.from("activity_logs").insert({
-      user_id: users.id,
+      user_id: currentAdminId,
       action: `Deleted user with ID ${userId}`,
       timestamp: new Date().toISOString(),
     });
