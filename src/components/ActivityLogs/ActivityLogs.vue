@@ -8,7 +8,8 @@
 
             <ul v-if="logs && logs.length">
               <li v-for="log in logs" :key="log.id">
-                {{ log.timestamp }} - {{ log.action }}
+                {{ log.timestamp }} - {{ log.action }} by User ID:
+                {{ log.user_id }}
               </li>
             </ul>
 
@@ -28,18 +29,19 @@ import { supabase } from "../../lib/supaBase";
 const logs = ref([]);
 
 // Function to fetch activity logs
+// Function to fetch activity logs
 const fetchActivityLogs = async () => {
   try {
     const { data, error } = await supabase
       .from("activity_logs")
-      .select("*")
+      .select("id, timestamp, action, user_id") // Include user_id in the query
       .order("timestamp", { ascending: false });
 
     if (error) {
       console.error("Error fetching activity logs:", error.message);
       return;
     }
-    logs.value = data;
+    logs.value = data; // Update logs with the fetched data
   } catch (err) {
     console.error("Unexpected error:", err);
   }
