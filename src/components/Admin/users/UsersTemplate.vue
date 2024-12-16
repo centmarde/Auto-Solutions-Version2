@@ -116,17 +116,30 @@ const confirmDelete = (userId) => {
     deleteUser(userId);
   }
 };
-
-// Delete user from the database
 const deleteUser = async (userId) => {
-  const { error } = await supabase.from("users").delete().eq("id", userId);
-  if (error) {
-    console.error("Error deleting user:", error);
-  } else {
-    users.value = users.value.filter((user) => user.id !== userId);
+  try {
+    // Delete related records in approved_loans table
+    await supabase.from("approved_loans").delete().eq("user_id", userId);
+
+    //  Delete related conversations (buyer and supplier)
+    await supabase
+      .from("conversations")
+      .delete()
+      .or("buyer_id.eq.${userId},supplier_id.eq.${userId}");
+
+    // Step 3: Delete the user
+    const { error } = await supabase.from("users").delete().eq("id", userId);
+
+    if (error) {
+      console.error("Error deleting user:", error);
+    } else {
+      users.value = users.value.filter((user) => user.id !== userId);
+      console.log("User with ID ${userId} deleted successfully.");
+    }
+  } catch (err) {
+    console.error("Error during deletion:", err);
   }
 };
-
 // Open image in dialog
 const openImage = (img) => {
   selectedImage.value = img;
