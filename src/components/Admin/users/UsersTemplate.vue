@@ -62,6 +62,7 @@
     ></v-pagination>
   </v-container>
 </template>
+
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { supabase } from "../../../lib/supaBase";
@@ -85,7 +86,7 @@ const itemsPerPage = 5;
 const dialog = ref(false);
 const selectedImage = ref("");
 
-// table value function hehe
+// Fetch users
 const fetchUsers = async (isAdmin) => {
   const { data, error } = await supabase.rpc("fetch_users_by_admin_status", {
     is_admin_input: isAdmin,
@@ -98,18 +99,18 @@ const fetchUsers = async (isAdmin) => {
   }
 };
 
-// Paginated users based on current page
+// Paginated users
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   return users.value.slice(start, start + itemsPerPage);
 });
 
-// Calculate total number of pages
+// Total pages
 const pageCount = computed(() => {
   return Math.ceil(users.value.length / itemsPerPage);
 });
 
-// Confirm delete action
+// Confirm delete
 const confirmDelete = (userId) => {
   const confirmed = confirm("Are you sure you want to delete this user?");
   if (confirmed) {
@@ -117,25 +118,122 @@ const confirmDelete = (userId) => {
   }
 };
 
-// Delete user from the database
+// Delete user and related records
 const deleteUser = async (userId) => {
-  const { error } = await supabase.from("users").delete().eq("id", userId);
-  if (error) {
-    console.error("Error deleting user:", error);
-  } else {
+  try {
+    // Step 1: Fetch all car_ids linked to the user from approved_loans
+    const { data: loans, error: fetchLoansError } = await supabase
+      .from("approved_loans")
+      .select("car_id")
+      .eq("user_id", userId);
+
+    if (fetchLoansError) {
+      console.error("Error fetching approved loans:", fetchLoansError);
+      alert("Failed to fetch associated loans. Deletion aborted.");
+      return;
+    }
+
+    // Extract car IDs dynamically
+    const carIds = loans.map((loan) => loan.car_id);
+
+    // Step 2: Delete rows in approved_loans referencing the car_ids
+    if (carIds.length > 0) {
+      const { error: deleteLoansError } = await supabase
+        .from("approved_loans")
+        .delete()
+        .in("car_id", carIds);
+
+      if (deleteLoansError) {
+        console.error(
+          "Error deleting loans referencing the cars:",
+          deleteLoansError
+        );
+        alert("Failed to delete loans referencing the cars.");
+        return;
+      }
+    }
+
+    // Step 3: Delete the cars themselves
+    if (carIds.length > 0) {
+      const { error: deleteCarsError } = await supabase
+        .from("cars")
+        .delete()
+        .in("id", carIds);
+
+      if (deleteCarsError) {
+        console.error("Error deleting cars:", deleteCarsError);
+        alert("Failed to delete cars associated with the user.");
+        return;
+      }
+    }
+
+    // Step 4: Delete the user after clearing all dependencies
+    const { error: deleteUserError } = await supabase
+      .from("users")
+      .delete()
+      .eq("id", userId);
+
+    if (deleteUserError) {
+      console.error("Error deleting user:", deleteUserError);
+      alert("Failed to delete the user.");
+      return;
+    }
+
+    // Update local UI state
     users.value = users.value.filter((user) => user.id !== userId);
+    console.log(
+      `User with ID ${userId} and related data deleted successfully.`
+    );
+    alert("User and associated data deleted successfully!");
+  } catch (err) {
+    console.error("Unexpected error during deletion:", err);
+    alert("An unexpected error occurred. Please try again.");
   }
 };
 
-// Open image in dialog
+// Delete car function
+const deleteCar = async (carId) => {
+  try {
+    // Step 1: Delete records in approved_loans table referencing this car_id
+    const { error: loansError } = await supabase
+      .from("approved_loans")
+      .delete()
+      .eq("car_id", carId);
+
+    if (loansError) {
+      console.error("Error deleting approved loans for car:", loansError);
+      alert("Failed to delete related loan records. Deletion aborted.");
+      return; // Exit early if deletion fails
+    }
+
+    // Step 2: Delete the car itself from the cars table
+    const { error: carError } = await supabase
+      .from("cars")
+      .delete()
+      .eq("id", carId);
+
+    if (carError) {
+      console.error("Error deleting car:", carError);
+      alert("Failed to delete the car.");
+      return; // Exit early if deletion fails
+    }
+
+    console.log(`Car with ID ${carId} deleted successfully.`);
+  } catch (err) {
+    console.error("Unexpected error during car deletion:", err);
+    alert("An unexpected error occurred while deleting the car.");
+  }
+};
+
+// Open image dialog
 const openImage = (img) => {
   selectedImage.value = img;
   dialog.value = true;
 };
 
-// Fetch users when the component is mounted
+// Fetch users on component mount
 onMounted(() => {
-  fetchUsers(props.isadmin); // Call the function with the isadmin prop
+  fetchUsers(props.isadmin);
 });
 </script>
 
@@ -155,7 +253,6 @@ onMounted(() => {
   transform: scale(1.05);
 }
 
-/* Ensure the dialog appears in front */
 .high-z-index .v-overlay__content {
   z-index: 2000 !important;
 }
