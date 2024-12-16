@@ -133,27 +133,34 @@ const deleteUser = async (userId) => {
       return;
     }
 
-    // Extract car IDs dynamically
+    // Extract car IDs
     const carIds = loans.map((loan) => loan.car_id);
 
-    // Step 2: Delete rows in approved_loans referencing the car_ids
-    if (carIds.length > 0) {
-      const { error: deleteLoansError } = await supabase
-        .from("approved_loans")
-        .delete()
-        .in("car_id", carIds);
+    // Step 2: Delete conversations where the user is a buyer or supplier
+    const { error: deleteConversationsError } = await supabase
+      .from("conversations")
+      .delete()
+      .or(`buyer_id.eq.${userId},supplier_id.eq.${userId}`);
 
-      if (deleteLoansError) {
-        console.error(
-          "Error deleting loans referencing the cars:",
-          deleteLoansError
-        );
-        alert("Failed to delete loans referencing the cars.");
-        return;
-      }
+    if (deleteConversationsError) {
+      console.error("Error deleting conversations:", deleteConversationsError);
+      alert("Failed to delete conversations associated with the user.");
+      return;
     }
 
-    // Step 3: Delete the cars themselves
+    // Step 3: Delete records in approved_loans referencing the user
+    const { error: deleteLoansError } = await supabase
+      .from("approved_loans")
+      .delete()
+      .eq("user_id", userId);
+
+    if (deleteLoansError) {
+      console.error("Error deleting approved loans:", deleteLoansError);
+      alert("Failed to delete approved loans.");
+      return;
+    }
+
+    // Step 4: Delete cars associated with the user
     if (carIds.length > 0) {
       const { error: deleteCarsError } = await supabase
         .from("cars")
@@ -167,7 +174,7 @@ const deleteUser = async (userId) => {
       }
     }
 
-    // Step 4: Delete the user after clearing all dependencies
+    // Step 5: Delete the user itself
     const { error: deleteUserError } = await supabase
       .from("users")
       .delete()
@@ -181,13 +188,11 @@ const deleteUser = async (userId) => {
 
     // Update local UI state
     users.value = users.value.filter((user) => user.id !== userId);
-    console.log(
-      `User with ID ${userId} and related data deleted successfully.`
-    );
+    console.log(`User with ID ${userId} and their data deleted successfully.`);
     alert("User and associated data deleted successfully!");
   } catch (err) {
     console.error("Unexpected error during deletion:", err);
-    alert("An unexpected error occurred. Please try again.");
+    alert("An unexpected error occurred while deleting the user.");
   }
 };
 
