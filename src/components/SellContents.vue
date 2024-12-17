@@ -290,6 +290,10 @@ export default {
         console.error("Admin ID not found in localStorage.");
         return;
       }
+      // Skip logging for AI suggestions
+      if (action.includes("AI suggestions")) {
+        return;
+      }
 
       const { error } = await supabase.from("activity_logs").insert({
         user_id: adminId,
@@ -377,7 +381,6 @@ export default {
                 break;
             }
           });
-          await this.logActivity("Generated AI suggestions for car details");
           alert("AI suggestions generated successfully!");
         } catch (error) {
           console.log("Error generating AI suggestions:", error);
@@ -389,23 +392,6 @@ export default {
         alert("No additional suggestions needed. All fields are filled.");
       }
     },
-    // Added the validateNumericInputs method for input validation
-    validateNumericInputs() {
-      const numericFields = {
-        price: this.car.price,
-      };
-
-      for (const [key, value] of Object.entries(numericFields)) {
-        if (value !== null && isNaN(value)) {
-          alert(
-            `Invalid input for ${key}. Please enter a valid number (e.g., 123980.00 for price).`
-          );
-          return false;
-        }
-      }
-
-      return true;
-    },
 
     async submitCarDetails() {
       if (
@@ -416,11 +402,6 @@ export default {
       ) {
         alert("Please fill in all required fields!");
         return;
-      }
-
-      // Added call to validateNumericInputs before submission
-      if (!this.validateNumericInputs()) {
-        return; // Stop submission if validation fails
       }
 
       this.loading = true;
@@ -453,12 +434,7 @@ export default {
           .select();
 
         if (insertError) {
-          // Specific handling for authorization errors
-          if (insertError.statusCode === "403") {
-            alert("Unauthorized: Please check your permissions.");
-          } else {
-            throw insertError;
-          }
+          throw insertError;
         }
 
         console.log("Car Details Submitted:", insertData);

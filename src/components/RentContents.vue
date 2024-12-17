@@ -286,6 +286,28 @@ export default {
   },
 
   methods: {
+    async logActivity(action) {
+      const adminId = localStorage.getItem("user_id");
+      if (!adminId) {
+        console.error("Admin ID not found in localStorage.");
+        return;
+      }
+      // Skip logging for AI suggestions
+      if (action.includes("AI suggestions")) {
+        return;
+      }
+
+      const { error } = await supabase.from("activity_logs").insert({
+        user_id: adminId,
+        action,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Error logging activity:", error.message);
+      }
+    },
+
     showDialog() {
       this.dialog = true;
     },
@@ -409,7 +431,7 @@ export default {
         torque: this.car.torque,
         top_speed: this.car.top_speed,
         transmission: this.car.transmission,
-        years_owned: this.car.year_sowned,
+        years_owned: this.car.years_owned,
         for_sale: false,
         for_rent: true,
         is_garage: false,
@@ -435,6 +457,9 @@ export default {
             .update({ img: imageUrl })
             .match({ id: insertData[0].id });
         }
+        await this.logActivity(
+          `Submitted car details for ${this.car.brand} ${this.car.model}`
+        );
 
         this.showDialog();
       } catch (error) {
