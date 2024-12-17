@@ -79,6 +79,13 @@
               }}
             </p>
           </v-card-text>
+
+          <!-- Actions -->
+          <v-card-actions>
+            <v-btn color="primary" @click="viewDetails(item)"
+              >View Details</v-btn
+            >
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -93,6 +100,7 @@
     </v-row>
   </v-container>
 </template>
+
 <script>
 import { supabase } from "../lib/supaBase";
 
@@ -109,7 +117,7 @@ export default {
     await this.fetchExceededRentals();
   },
   methods: {
-    // Regular view
+    // Fetch exceeded rentals
     async fetchExceededRentals() {
       this.loading = true;
       try {
@@ -120,6 +128,9 @@ export default {
         if (error) throw error;
 
         this.exceededRentals = data;
+
+        // Log activity
+        await this.logActivity(`Fetched rentals exceeding end date`);
       } catch (err) {
         console.error("Error fetching rentals:", err);
         this.error = "Failed to load data. Please try again.";
@@ -135,16 +146,30 @@ export default {
       const exceededDays = Math.floor((today - end) / (1000 * 60 * 60 * 24));
       return exceededDays > 0 ? exceededDays : 0;
     },
-    // Format full name
-    formatFullName(user) {
-      const { first_name = "", middle_name = "", last_name = "" } = user;
-      return `${first_name} ${middle_name} ${last_name}`.trim();
-    },
-    // Dummy View Details Action
-    viewDetails(item) {
-      alert(
-        `Viewing details for car: ${item.car ? item.car.brand : "Unknown"}`
+    // View rental details and log action
+    async viewDetails(item) {
+      alert(`Viewing details for car: ${item.car_brand || "Unknown Car"}`);
+      await this.logActivity(
+        `Viewed details for rental with ID: ${item.rental_id}`
       );
+    },
+    // Log activity in the activity_logs table
+    async logActivity(action) {
+      const adminId = localStorage.getItem("user_id");
+      if (!adminId) {
+        console.error("Admin ID not found in localStorage.");
+        return;
+      }
+
+      const { error } = await supabase.from("activity_logs").insert({
+        user_id: adminId,
+        action,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Error logging activity:", error.message);
+      }
     },
   },
 };
