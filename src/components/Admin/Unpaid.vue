@@ -181,12 +181,31 @@ const openImage = (img) => {
   dialog.value = true;
 };
 
+// Log activity
+const logActivity = async (action) => {
+  const adminId = localStorage.getItem("user_id");
+
+  if (!adminId) {
+    console.error("Admin ID not found in localStorage.");
+    return;
+  }
+
+  const { error } = await supabase.from("activity_logs").insert({
+    user_id: adminId,
+    action,
+    timestamp: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("Error logging activity:", error.message);
+  }
+};
+
 // Mark car as paid
 const markAsPaid = async (car) => {
   const carId = car.id;
   const source = car.source;
 
-  //scalar hehe
   if (source === "purchased") {
     const { error } = await supabase.rpc("mark_car_as_paid", {
       target_car_id: carId,
@@ -195,6 +214,7 @@ const markAsPaid = async (car) => {
     if (error) {
       console.error("Error marking car as paid:", error.message);
     } else {
+      await logActivity(`Marked car with ID ${carId} as paid.`);
       alert("Car marked as paid.");
       await fetchCars();
     }
@@ -207,6 +227,7 @@ const markAsPaid = async (car) => {
     if (error) {
       console.error("Error marking car as paid:", error.message);
     } else {
+      await logActivity(`Marked rented car with ID ${carId} as paid.`);
       alert("Car marked as paid.");
       await fetchCars();
     }
@@ -230,6 +251,7 @@ const confirmDelete = async (car) => {
     if (error) {
       console.error(`Error deleting car from ${tableName}:`, error.message);
     } else {
+      await logActivity(`Deleted ${source} car with ID ${carId}.`);
       alert(`Car deleted successfully from ${tableName}.`);
       await fetchCars();
     }

@@ -4,7 +4,7 @@
       <v-container class="p-5 mts">
         <div class="main-content">
           <div class="content">
-            <h1 class="text-center fw-bolder">Activity Logs</h1>
+            <h1 class="text-center fw-bolder mb-16">Activity Logs</h1>
 
             <ul v-if="logs && logs.length">
               <li v-for="log in logs" :key="log.id">
