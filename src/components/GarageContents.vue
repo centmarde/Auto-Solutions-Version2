@@ -33,7 +33,11 @@
               placeholder="Enter car brand"
               required
             ></v-text-field>
-            <v-list v-if="suggestedBrands.length" class="position-absolute w-100" style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+            <v-list
+              v-if="suggestedBrands.length"
+              class="position-absolute w-100"
+              style="z-index: 1000; max-height: 200px; overflow-y: auto"
+            >
               <v-list-item-group>
                 <v-list-item
                   v-for="(brand, index) in suggestedBrands"
@@ -55,7 +59,11 @@
               placeholder="Enter car model"
               required
             ></v-text-field>
-            <v-list v-if="suggestedModels.length" class="position-absolute w-100" style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+            <v-list
+              v-if="suggestedModels.length"
+              class="position-absolute w-100"
+              style="z-index: 1000; max-height: 200px; overflow-y: auto"
+            >
               <v-list-item-group>
                 <v-list-item
                   v-for="(model, index) in suggestedModels"
@@ -68,8 +76,6 @@
             </v-list>
           </v-col>
 
-        
-
           <!-- Description -->
           <v-col cols="12" class="mb-3">
             <v-textarea
@@ -81,8 +87,8 @@
           </v-col>
 
           <v-col cols="12" class="text-center mb-4">
-              <h5>Additional Contents (Optional)</h5>
-            </v-col>
+            <h5>Additional Contents (Optional)</h5>
+          </v-col>
 
           <!-- Year of Manufacture -->
           <v-col cols="12" md="6" class="mb-3">
@@ -143,50 +149,59 @@
             ></v-text-field>
           </v-col>
 
-          
-
           <v-container>
             <v-row>
               <v-col cols="12" md="4" class="text-center">
-                <v-btn 
-    @click="generateAISuggestions" 
-    :loading="loading2" 
-    class="attention-btn" 
-    ref="attentionBtn"
-    style="width: 30rem; position: relative; overflow: hidden; transition: all 0.3s ease-in-out;"
-  >
-    <template v-if="loading2">
-      <v-progress-circular 
-        indeterminate 
-        color="white" 
-        size="20" 
-        class="mr-2"
-      ></v-progress-circular>
-      Loading...
-    </template>
-    <template v-else>
-      Generate AI Suggestions
-    </template>
-    <v-icon right ref="lightbulbIcon">mdi-lightbulb</v-icon>
-  </v-btn>
+                <v-btn
+                  @click="generateAISuggestions"
+                  :loading="loading2"
+                  class="attention-btn"
+                  ref="attentionBtn"
+                  style="
+                    width: 30rem;
+                    position: relative;
+                    overflow: hidden;
+                    transition: all 0.3s ease-in-out;
+                  "
+                >
+                  <template v-if="loading2">
+                    <v-progress-circular
+                      indeterminate
+                      color="white"
+                      size="20"
+                      class="mr-2"
+                    ></v-progress-circular>
+                    Loading...
+                  </template>
+                  <template v-else> Generate AI Suggestions </template>
+                  <v-icon right ref="lightbulbIcon">mdi-lightbulb</v-icon>
+                </v-btn>
               </v-col>
 
               <v-col cols="12" md="4" class="text-center">
-                <v-btn @click="submitCarDetails" :loading="loading" class="lofi" style="width: 30rem;">
+                <v-btn
+                  @click="submitCarDetails"
+                  :loading="loading"
+                  class="lofi"
+                  style="width: 30rem"
+                >
                   <template v-if="loading">
-                    <v-progress-circular indeterminate color="white" size="20" class="mr-2"></v-progress-circular>
+                    <v-progress-circular
+                      indeterminate
+                      color="white"
+                      size="20"
+                      class="mr-2"
+                    ></v-progress-circular>
                     Loading...
                   </template>
-                  <template v-else>
-                    Submit
-                  </template>
+                  <template v-else> Submit </template>
                   <v-icon right>mdi-arrow-right</v-icon>
                 </v-btn>
               </v-col>
 
               <v-col cols="12" md="4" class="text-center">
                 <router-link to="/Home" class="tr" exact>
-                  <v-btn class="lofi" style="width: 30rem;">
+                  <v-btn class="lofi" style="width: 30rem">
                     Exit
                     <v-icon right>mdi-arrow-left</v-icon>
                   </v-btn>
@@ -194,7 +209,6 @@
               </v-col>
             </v-row>
           </v-container>
-
         </v-row>
       </v-form>
     </v-card>
@@ -202,264 +216,306 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { supabase } from '../lib/supaBase';
-import { getChatCompletion } from '../seed/generate-car-details';
+import axios from "axios";
+import { supabase } from "../lib/supaBase";
+import { getChatCompletion } from "../seed/generate-car-details";
 
 export default {
-    data() {
-        return {
-            car: {
-                brand: '',
-                model: '',
-                year: null,
-                mileage: null,
-             
-                description: '',
-                engine: '',
-                horse_power: '',
-                torque: '',
-                top_speed: '',
-                transmission: '',
-              
-            },
-            
-            carData: [],
-            makesData: [],
-            suggestedBrands: [],
-            suggestedModels: [],
-            imagePreview: null,
-            selectedImage: null,
-            loading: false,
-            loading2: false,
-        };
-    },
-    
-    methods: {
-      async generateAISuggestions() {
-    // Check if required fields are filled
-    const requiredFields = [];
-    if (!this.car.brand) requiredFields.push('Brand');
-    if (!this.car.model) requiredFields.push('Model');
-   
-   
+  data() {
+    return {
+      car: {
+        brand: "",
+        model: "",
+        year: null,
+        mileage: null,
 
-    if (requiredFields.length > 0) {
-        alert(`Please fill in the following required fields: ${requiredFields.join(', ')}`);
+        description: "",
+        engine: "",
+        horse_power: "",
+        torque: "",
+        top_speed: "",
+        transmission: "",
+      },
+
+      carData: [],
+      makesData: [],
+      suggestedBrands: [],
+      suggestedModels: [],
+      imagePreview: null,
+      selectedImage: null,
+      loading: false,
+      loading2: false,
+    };
+  },
+
+  methods: {
+    async logActivity(action) {
+      const adminId = localStorage.getItem("user_id");
+      if (!adminId) {
+        console.error("Admin ID not found in localStorage.");
+        return;
+      }
+      // Skip logging for AI suggestions
+      if (action.includes("AI suggestions")) {
+        return;
+      }
+
+      const { error } = await supabase.from("activity_logs").insert({
+        user_id: adminId,
+        action,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Error logging activity:", error.message);
+      }
+    },
+    showDialog() {
+      this.dialog = true;
+    },
+
+    async generateAISuggestions() {
+      // Check if required fields are filled
+      const requiredFields = [];
+      if (!this.car.brand) requiredFields.push("Brand");
+      if (!this.car.model) requiredFields.push("Model");
+
+      if (requiredFields.length > 0) {
+        alert(
+          `Please fill in the following required fields: ${requiredFields.join(
+            ", "
+          )}`
+        );
         return; // Stop further execution if required fields are missing
-    }
+      }
 
-    // Identify the optional fields that need AI suggestions
-    const fieldsToFill = [];
-    if (!this.car.mileage) fieldsToFill.push('Mileage');
-    if (!this.car.engine) fieldsToFill.push('Engine');
-    if (!this.car.description) fieldsToFill.push('Description');
-    if (!this.car.horse_power) fieldsToFill.push('Horsepower');
-    if (!this.car.torque) fieldsToFill.push('Torque');
-    if (!this.car.top_speed) fieldsToFill.push('TopSpeed');
-    if (!this.car.year) fieldsToFill.push('YearModel');
-    if (!this.car.transmission) fieldsToFill.push('Transmission');
+      // Identify the optional fields that need AI suggestions
+      const fieldsToFill = [];
+      if (!this.car.mileage) fieldsToFill.push("Mileage");
+      if (!this.car.engine) fieldsToFill.push("Engine");
+      if (!this.car.description) fieldsToFill.push("Description");
+      if (!this.car.horse_power) fieldsToFill.push("Horsepower");
+      if (!this.car.torque) fieldsToFill.push("Torque");
+      if (!this.car.top_speed) fieldsToFill.push("TopSpeed");
+      if (!this.car.year) fieldsToFill.push("YearModel");
+      if (!this.car.transmission) fieldsToFill.push("Transmission");
 
-    // If there are fields that need AI suggestions, call the AI API
-    if (fieldsToFill.length > 0) {
+      // If there are fields that need AI suggestions, call the AI API
+      if (fieldsToFill.length > 0) {
         try {
-            this.loading2 = true;
-            const aiResponse = await getChatCompletion(this.car.brand, this.car.model, fieldsToFill);
-            const lines = aiResponse.split('\n').map(line => line.trim()).filter(line => line);
+          this.loading2 = true;
+          const aiResponse = await getChatCompletion(
+            this.car.brand,
+            this.car.model,
+            fieldsToFill
+          );
+          const lines = aiResponse
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line);
 
-            // Parse AI response into car data
-            lines.forEach(line => {
-                const [key, value] = line.split(':').map(part => part.trim());
-                switch (key) {
-                    case 'Mileage':
-                        this.car.mileage = value;
-                        break;
-                    case 'Engine':
-                        this.car.engine = value;
-                        break;
-                    case 'Description':
-                        this.car.description = value;
-                        break;
-                    case 'Horsepower':
-                        this.car.horse_power = value;
-                        break;
-                    case 'Torque':
-                        this.car.torque = value;
-                        break;
-                    case 'TopSpeed':
-                        this.car.top_speed = value;
-                        break;
-                    case 'YearModel':
-                        this.car.year = value;
-                        break;
-                    case 'Transmission':
-                        this.car.transmission = value;
-                        break;
-                }
-            });
-            alert("AI suggestions generated successfully!");
+          // Parse AI response into car data
+          lines.forEach((line) => {
+            const [key, value] = line.split(":").map((part) => part.trim());
+            switch (key) {
+              case "Mileage":
+                this.car.mileage = value;
+                break;
+              case "Engine":
+                this.car.engine = value;
+                break;
+              case "Description":
+                this.car.description = value;
+                break;
+              case "Horsepower":
+                this.car.horse_power = value;
+                break;
+              case "Torque":
+                this.car.torque = value;
+                break;
+              case "TopSpeed":
+                this.car.top_speed = value;
+                break;
+              case "YearModel":
+                this.car.year = value;
+                break;
+              case "Transmission":
+                this.car.transmission = value;
+                break;
+            }
+          });
+          alert("AI suggestions generated successfully!");
         } catch (error) {
-            console.log("Error generating AI suggestions:", error);
-           console.log("Failed to generate AI suggestions.");
+          console.log("Error generating AI suggestions:", error);
+          console.log("Failed to generate AI suggestions.");
         } finally {
-            this.loading2 = false;
+          this.loading2 = false;
         }
-    } else {
+      } else {
         alert("No additional suggestions needed. All fields are filled.");
-    }
-},
-
-
-        async submitCarDetails() {
-            if (!this.car.model || !this.car.brand) {
-                alert('Please fill in all required fields!');
-                return;
-            }
-
-            this.loading = true;
-            const userId = localStorage.getItem('user_id');
-
-            const carDetails = {
-                brand: this.car.brand,
-                model: this.car.model,
-                year: this.car.year,
-                mileage: this.car.mileage,
-              
-                description: this.car.description,
-                engine: this.car.engine,
-                horse_power: this.car.horse_power,
-                torque: this.car.torque,
-                top_speed: this.car.top_speed,
-                transmission: this.car.transmission,
-              
-                for_sale: false,
-                for_rent: false,
-                is_garage: true,
-                user_id: userId,
-            };
-
-            try {
-                const { data: insertData, error: insertError } = await supabase
-                    .from('cars')
-                    .insert([carDetails])
-                    .select();
-
-                if (insertError) throw insertError;
-
-                console.log('Car Details Submitted:', insertData);
-
-                if (this.selectedImage) {
-                    const imageUrl = await this.imageUpload();
-
-                    await supabase
-                        .from('cars')
-                        .update({ img: imageUrl })
-                        .match({ id: insertData[0].id });
-                }
-
-                alert('Car details submitted successfully!');
-            } catch (error) {
-                console.error('Error submitting car details:', error);
-                alert('Failed to submit car details.');
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        async imageUpload() {
-            if (!this.selectedImage) {
-                console.log('No image selected for upload.');
-                return;
-            }
-
-            const fileName = `public/${Date.now()}_${this.selectedImage.name}`;
-            try {
-                const { data, error } = await supabase
-                    .storage
-                    .from('cars')
-                    .upload(fileName, this.selectedImage, {
-                        cacheControl: "3600",
-                        upsert: true,
-                    });
-
-                if (error) throw error;
-
-                const imageUrl = `https://xgjgtijbrkcwwsliqubk.supabase.co/storage/v1/object/public/cars/${fileName}`;
-                console.log('Image uploaded successfully:', imageUrl);
-
-                return imageUrl;
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                alert('Failed to upload image.');
-            }
-        },
-
-        async fetchCarData() {
-            try {
-                const response1 = await axios.get("https://raw.githubusercontent.com/centmarde/carsMockdata/main/allcars.json");
-                this.carData = response1.data;
-
-                const response2 = await axios.get("https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json");
-                this.makesData = response2.data.Results.map(item => item.MakeName);
-            } catch (error) {
-                console.error("Error fetching car data:", error);
-            }
-        },
-
-        async fetchModelsForMake(make) {
-            try {
-                const response = await axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${make}?format=json`);
-                this.suggestedModels = response.data.Results.map(model => model.Model_Name);
-            } catch (error) {
-                console.error(`Error fetching models for make ${make}:`, error);
-            }
-        },
-
-        filterBrands() {
-            const inputBrand = this.car.brand.toLowerCase();
-            this.suggestedBrands = this.makesData
-                .filter(brand => brand.toLowerCase().includes(inputBrand));
-        },
-
-        async selectBrand(brand) {
-            this.car.brand = brand;
-            this.suggestedBrands = [];
-            await this.fetchModelsForMake(brand);
-        },
-
-        filterModels() {
-            const inputModel = this.car.model.toLowerCase();
-            this.suggestedModels = this.suggestedModels
-                .filter(model => model.toLowerCase().includes(inputModel));
-        },
-
-        selectModel(model) {
-            this.car.model = model;
-            this.suggestedModels = [];
-        },
-       
-
-        onImageChange(event) {
-            const file = event.target.files[0];
-            if (file) {
-                this.selectedImage = file;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.imagePreview = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+      }
     },
 
-    mounted() {
-        this.fetchCarData();
-     
+    async submitCarDetails() {
+      if (!this.car.model || !this.car.brand) {
+        alert("Please fill in all required fields!");
+        return;
+      }
 
-    }
+      this.loading = true;
+      const userId = localStorage.getItem("user_id");
+
+      const carDetails = {
+        brand: this.car.brand,
+        model: this.car.model,
+        year: this.car.year,
+        mileage: this.car.mileage,
+
+        description: this.car.description,
+        engine: this.car.engine,
+        horse_power: this.car.horse_power,
+        torque: this.car.torque,
+        top_speed: this.car.top_speed,
+        transmission: this.car.transmission,
+
+        for_sale: false,
+        for_rent: false,
+        is_garage: true,
+        user_id: userId,
+      };
+
+      try {
+        const { data: insertData, error: insertError } = await supabase
+          .from("cars")
+          .insert([carDetails])
+          .select();
+
+        if (insertError) throw insertError;
+
+        console.log("Car Details Submitted:", insertData);
+
+        if (this.selectedImage) {
+          const imageUrl = await this.imageUpload();
+
+          await supabase
+            .from("cars")
+            .update({ img: imageUrl })
+            .match({ id: insertData[0].id });
+        }
+        await this.logActivity(
+          `Submitted car details for ${this.car.brand} ${this.car.model}`
+        );
+
+        this.showDialog();
+
+        alert("Car details submitted successfully!");
+      } catch (error) {
+        console.error("Error submitting car details:", error);
+        alert("Failed to submit car details.");
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async imageUpload() {
+      if (!this.selectedImage) {
+        console.log("No image selected for upload.");
+        return;
+      }
+
+      const fileName = `public/${Date.now()}_${this.selectedImage.name}`;
+      try {
+        const { data, error } = await supabase.storage
+          .from("cars")
+          .upload(fileName, this.selectedImage, {
+            cacheControl: "3600",
+            upsert: true,
+          });
+
+        if (error) throw error;
+
+        const imageUrl = `https://xgjgtijbrkcwwsliqubk.supabase.co/storage/v1/object/public/cars/${fileName}`;
+        console.log("Image uploaded successfully:", imageUrl);
+
+        return imageUrl;
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image.");
+      }
+    },
+
+    async fetchCarData() {
+      try {
+        const response1 = await axios.get(
+          "https://raw.githubusercontent.com/centmarde/carsMockdata/main/allcars.json"
+        );
+        this.carData = response1.data;
+
+        const response2 = await axios.get(
+          "https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json"
+        );
+        this.makesData = response2.data.Results.map((item) => item.MakeName);
+      } catch (error) {
+        console.error("Error fetching car data:", error);
+      }
+    },
+
+    async fetchModelsForMake(make) {
+      try {
+        const response = await axios.get(
+          `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${make}?format=json`
+        );
+        this.suggestedModels = response.data.Results.map(
+          (model) => model.Model_Name
+        );
+      } catch (error) {
+        console.error(`Error fetching models for make ${make}:`, error);
+      }
+    },
+
+    filterBrands() {
+      const inputBrand = this.car.brand.toLowerCase();
+      this.suggestedBrands = this.makesData.filter((brand) =>
+        brand.toLowerCase().includes(inputBrand)
+      );
+    },
+
+    async selectBrand(brand) {
+      this.car.brand = brand;
+      this.suggestedBrands = [];
+      await this.fetchModelsForMake(brand);
+    },
+
+    filterModels() {
+      const inputModel = this.car.model.toLowerCase();
+      this.suggestedModels = this.suggestedModels.filter((model) =>
+        model.toLowerCase().includes(inputModel)
+      );
+    },
+
+    selectModel(model) {
+      this.car.model = model;
+      this.suggestedModels = [];
+    },
+
+    onImageChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.selectedImage = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imagePreview = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+  },
+
+  mounted() {
+    this.fetchCarData();
+  },
 };
 </script>
-
 
 <style scoped>
 .attention-btn {
@@ -509,4 +565,5 @@ export default {
   top: 0;
   left: -100px;
   opacity: 0.6;
-}</style>
+}
+</style>
