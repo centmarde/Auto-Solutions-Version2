@@ -32,9 +32,9 @@
           <td>{{ car.date_end }}</td>
           <td>{{ car.total_days }}</td>
           <td>{{ car.is_paid ? "Yes" : "No" }}</td>
-          <td>{{ car.total_amount }}</td>
+          <td>{{ formatPrice(car.total_amount) }}</td>
           <td class="text-center">
-            <v-btn color="error" @click="confirmDelete(car.id)">Delete</v-btn>
+            <v-btn color="error" @click="confirmDelete(car)">Delete</v-btn>
           </td>
         </tr>
       </tbody>
@@ -97,7 +97,7 @@ const fetchCars = async () => {
       transactions (buyer_id)
     `
     )
-    .eq("is_paid", true); // Filter only rented cars where is_paid is true
+    .eq("is_paid", true);
 
   if (error) {
     console.error("Error fetching rented cars:", error);
@@ -134,17 +134,49 @@ const openImage = (img) => {
   dialog.value = true;
 };
 
+// Format price as PHP currency
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  }).format(price);
+};
+
+// Log activity in activity_logs table
+const logActivity = async (action) => {
+  const adminId = localStorage.getItem("user_id");
+  if (!adminId) {
+    console.error("Admin ID not found in localStorage.");
+    return;
+  }
+
+  const { error } = await supabase.from("activity_logs").insert({
+    user_id: adminId,
+    action,
+    timestamp: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("Error logging activity:", error.message);
+  }
+};
+
 // Confirm and delete a rented car record
-const confirmDelete = async (rentedCarId) => {
+const confirmDelete = async (car) => {
   if (confirm("Are you sure you want to delete this rental record?")) {
     const { error } = await supabase
       .from("rented_cars")
       .delete()
-      .eq("id", rentedCarId);
+      .eq("id", car.id);
 
     if (error) {
       console.error("Error deleting rented car:", error);
     } else {
+      // Log the activity
+      await logActivity(
+        `Deleted rented car record with ID ${car.id} (${car.model}).`
+      );
+
       alert("Rental record deleted successfully.");
       await fetchCars(); // Refresh the list after deletion
     }
