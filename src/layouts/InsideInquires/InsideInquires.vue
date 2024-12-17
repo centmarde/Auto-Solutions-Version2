@@ -200,6 +200,24 @@ export default {
     await this.fetchCars();
   },
   methods: {
+    async logActivity(action) {
+      const adminId = localStorage.getItem("user_id");
+      if (!adminId) {
+        console.error("Admin ID not found in localStorage.");
+        return;
+      }
+
+      const { error } = await supabase.from("activity_logs").insert({
+        user_id: adminId,
+        action,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Error logging activity:", error.message);
+      }
+    },
+
     openCancelDialog(carId, transactionId) {
       console.log("Car ID:", carId);
       console.log("Transaction ID:", transactionId);
@@ -269,6 +287,7 @@ export default {
         }
 
         console.log("Transaction and related records deleted successfully.");
+        await this.logActivity(`Deleted transaction with ID ${transactionId}`);
       } catch (error) {
         console.error("Error in deleting transaction:", error.message);
       }
@@ -284,6 +303,9 @@ export default {
           await this.deleteTransaction(this.transactionIdToCancel); // Proceed with cancellation
           this.isCancelDialogVisible = false; // Close the dialog
           await this.fetchCars(); // Reload the cars list
+          await this.logActivity(
+            `Cancelled transaction with ID ${this.transactionIdToCancel}`
+          );
         } catch (error) {
           console.error("Cancellation failed:", error.message);
           this.error = "Failed to cancel transaction. Please try again.";
@@ -335,6 +357,9 @@ export default {
       if (transaction) {
         this.currentTransaction = transaction;
         this.isPaymentChoiceDialogVisible = true;
+        await this.logActivity(
+          `Initiated purchase for transaction ID ${transactionId}`
+        );
       }
     },
 
@@ -395,6 +420,9 @@ export default {
           ]);
 
           if (error) throw error;
+          await this.logActivity(
+            `Processed online payment for transaction ID ${transaction.id}`
+          );
         } else {
           throw new Error(
             result.errors[0]?.detail || "Payment link creation failed"
@@ -423,6 +451,9 @@ export default {
         ]);
 
         if (error) throw error;
+        await this.logActivity(
+          `Processed in-person payment for transaction ID ${transaction.id}`
+        );
 
         alert(
           "You have chosen to pay in person. Please complete your payment within 3 days."
