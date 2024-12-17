@@ -26,7 +26,7 @@
               @click="openImage(car.img)"
             />
           </td>
-          <td>{{ car.price }}</td>
+          <td>{{ formatPrice(car.price) }}</td>
           <td class="text-center">
             <v-btn color="warning" @click="openDisapproveDialog(car)"
               >Delete</v-btn
@@ -102,11 +102,9 @@ const selectedImage = ref("");
 const disapproveDialog = ref(false);
 const selectedCar = ref(null);
 
-//materialized hehe
+// Fetch cars from the materialized view
 const fetchCars = async () => {
-  const { data, error } = await supabase
-    .from("mv_purchased_cars") // Use the Materialized View
-    .select("*"); // Fetch all columns pre-aggregated
+  const { data, error } = await supabase.from("mv_purchased_cars").select("*");
 
   if (error) {
     console.error("Error fetching cars from Materialized View:", error);
@@ -148,6 +146,25 @@ const openDisapproveDialog = (car) => {
   disapproveDialog.value = true;
 };
 
+// Log activity in activity_logs table
+const logActivity = async (action) => {
+  const adminId = localStorage.getItem("user_id");
+  if (!adminId) {
+    console.error("Admin ID not found in localStorage.");
+    return;
+  }
+
+  const { error } = await supabase.from("activity_logs").insert({
+    user_id: adminId,
+    action,
+    timestamp: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("Error logging activity:", error.message);
+  }
+};
+
 // Confirm disapprove and remove car from purchased_cars table
 const confirmDisapprove = async () => {
   if (!selectedCar.value) return;
@@ -165,6 +182,9 @@ const confirmDisapprove = async () => {
     return;
   }
 
+  // Log the activity
+  await logActivity(`Disapproved car with ID ${carId}.`);
+
   // Remove the car from the local state
   cars.value = cars.value.filter((car) => car.car_id !== carId);
 
@@ -173,10 +193,12 @@ const confirmDisapprove = async () => {
   selectedCar.value = null;
 };
 
-// Confirm delete function (to be implemented)
-const confirmDelete = (carId) => {
-  // Logic for deleting a car
-  console.log("Delete car with ID:", carId);
+// Format price as PHP currency
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  }).format(price);
 };
 
 onMounted(async () => {
