@@ -118,6 +118,24 @@ export default {
     await this.fetchPurchasedCarIds();
   },
   methods: {
+    async logActivity(action) {
+      const userId = localStorage.getItem("user_id");
+      if (!userId) {
+        console.error("User ID not found in localStorage.");
+        return;
+      }
+
+      const { error } = await supabase.from("activity_logs").insert({
+        user_id: userId,
+        action,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Error logging activity:", error.message);
+      }
+    },
+
     async fetchUserCars() {
       this.loading = true;
       const loggedInUserId = localStorage.getItem("user_id");
@@ -210,6 +228,7 @@ export default {
 
         this.userCars = this.userCars.filter((car) => car.id !== carId);
         alert("Car Deleted Successfully!");
+        await this.logActivity(`Deleted car with ID ${carId}`);
       } catch (err) {
         this.error = err.message;
       }
