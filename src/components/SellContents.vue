@@ -284,6 +284,23 @@ export default {
   },
 
   methods: {
+    async logActivity(action) {
+      const adminId = localStorage.getItem("user_id");
+      if (!adminId) {
+        console.error("Admin ID not found in localStorage.");
+        return;
+      }
+
+      const { error } = await supabase.from("activity_logs").insert({
+        user_id: adminId,
+        action,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Error logging activity:", error.message);
+      }
+    },
     showDialog() {
       this.dialog = true;
     },
@@ -360,6 +377,7 @@ export default {
                 break;
             }
           });
+          await this.logActivity("Generated AI suggestions for car details");
           alert("AI suggestions generated successfully!");
         } catch (error) {
           console.log("Error generating AI suggestions:", error);
@@ -453,6 +471,9 @@ export default {
             .update({ img: imageUrl })
             .match({ id: insertData[0].id });
         }
+        await this.logActivity(
+          `Submitted car details for ${this.car.brand} ${this.car.model}`
+        );
 
         this.showDialog();
       } catch (error) {
