@@ -43,10 +43,10 @@
           <td>{{ car.for_rent }}</td>
           <td class="text-center">
             <div class="button-group">
-              <v-btn class="mx-2 delete-button" @click="confirmDelete(car.id)"
+              <v-btn class="mx-2 delete-button" @click="confirmDelete(car)"
                 >Disapprove</v-btn
               >
-              <v-btn class="mx-2 approve-button" @click="confirmApprove(car.id)"
+              <v-btn class="mx-2 approve-button" @click="confirmApprove(car)"
                 >Approve</v-btn
               >
             </div>
@@ -123,7 +123,27 @@ const pageCount = computed(() => {
   return Math.ceil(cars.value.length / itemsPerPage);
 });
 
-const confirmDelete = async (id) => {
+// Log activity
+const logActivity = async (action) => {
+  const adminId = localStorage.getItem("user_id");
+  if (!adminId) {
+    console.error("Admin ID not found in localStorage.");
+    return;
+  }
+
+  const { error } = await supabase.from("activity_logs").insert({
+    user_id: adminId,
+    action,
+    timestamp: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("Error logging activity:", error.message);
+  }
+};
+
+// Confirm and disapprove a car
+const confirmDelete = async (car) => {
   const confirm = window.confirm(
     "Are you sure you want to disapprove this car?"
   );
@@ -131,31 +151,32 @@ const confirmDelete = async (id) => {
     const { error } = await supabase
       .from("cars")
       .update({ is_disapproved: true }) // Set is_disapproved to true
-      .eq("id", id);
+      .eq("id", car.id);
 
     if (error) {
       console.error("Error disapproving car:", error);
     } else {
-      // Optional: Filter the cars array to remove the updated car or fetch again
-      cars.value = cars.value.filter((car) => car.id !== id);
+      await logActivity(`Disapproved car with ID ${car.id}.`);
+      cars.value = cars.value.filter((c) => c.id !== car.id);
       console.log("Car successfully disapproved");
     }
   }
 };
 
 // Confirm approval
-const confirmApprove = async (id) => {
+const confirmApprove = async (car) => {
   const confirm = window.confirm("Are you sure you want to approve this car?");
   if (confirm) {
     const { error } = await supabase
       .from("cars")
       .update({ is_pending: false })
-      .eq("id", id);
+      .eq("id", car.id);
 
     if (error) {
       console.error("Error approving car:", error);
     } else {
-      cars.value = cars.value.filter((car) => car.id !== id);
+      await logActivity(`Approved car with ID ${car.id}.`);
+      cars.value = cars.value.filter((c) => c.id !== car.id);
     }
   }
 };
