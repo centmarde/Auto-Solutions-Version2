@@ -90,11 +90,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "../lib/supaBase";
 import axios from "axios";
-import { requiredValidator, emailValidator } from "../utils/validator.js";
-import Animator from "./Landing3d/Animator.vue";
 import { useAnimatorStore } from "../stores/loginStoreAnimator";
-
-// udfw jvvl ikom emdl SMTP password
 
 const email = ref("");
 const password = ref("");
@@ -106,6 +102,26 @@ const animatorStore = useAnimatorStore();
 const handleLoadComplete = () => {
   animatorStore.setLoaded(true);
 };
+
+// Log activity function
+const logActivity = async (action) => {
+  const userId = localStorage.getItem("user_id");
+  if (!userId) {
+    console.error("User ID not found in localStorage.");
+    return;
+  }
+
+  const { error } = await supabase.from("activity_logs").insert({
+    user_id: userId,
+    action,
+    timestamp: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("Error logging activity:", error.message);
+  }
+};
+
 const login = async () => {
   isSubmitting.value = true;
 
@@ -141,6 +157,9 @@ const login = async () => {
       localStorage.setItem("user_id", profiles[0].id);
       localStorage.setItem("Role", profiles[0].is_admin ? "true" : "false");
 
+      // Log login activity
+      await logActivity("User logged in");
+
       router.push("/Home");
     } else {
       // Axios fallback for custom login API (Optional)
@@ -152,6 +171,9 @@ const login = async () => {
       if (response.data && response.data.success) {
         localStorage.setItem("access_token", response.data.access_token);
         localStorage.setItem("axios_id", response.data.user_id);
+
+        // Log login activity
+        await logActivity("User logged in via Axios");
 
         alert("Login Successfully");
         router.push("/Home");
