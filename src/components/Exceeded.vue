@@ -129,8 +129,8 @@ export default {
 
         this.exceededRentals = data;
 
-        // Log activity
-        await this.logActivity(`Fetched rentals exceeding end date`);
+        // Remove log activity
+        // await this.logActivity(`Fetched rentals exceeding end date`);
       } catch (err) {
         console.error("Error fetching rentals:", err);
         this.error = "Failed to load data. Please try again.";
