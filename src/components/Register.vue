@@ -277,6 +277,23 @@ export default {
     };
   },
   methods: {
+    async logActivity(action) {
+      const userId = localStorage.getItem("register_id");
+      if (!userId) {
+        console.error("User ID not found in localStorage.");
+        return;
+      }
+
+      const { error } = await supabase.from("activity_logs").insert({
+        register_id: userId,
+        action,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Error logging activity:", error.message);
+      }
+    },
     async submitForm() {
       if (
         !this.first_name ||
@@ -346,6 +363,10 @@ export default {
             alert(`Failed to save user data: ${insertError.message}`);
             return;
           }
+
+          // Log registration activity
+          localStorage.setItem("register_id", userId); // Temporarily store user ID
+          await this.logActivity("User registered");
 
           console.log("Inserted User Data:", data); // Debug: Check the inserted data
           alert("Successfully registered!");
