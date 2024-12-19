@@ -4,20 +4,27 @@
       <v-container class="p-5 mts">
         <div class="main-content">
           <div class="content">
-            <h1 class="text-center fw-bolder mb-16">Activity Logs</h1>
+            <h1 class="text-center fw-bolder mb-16 mt-10">Activity Logs</h1>
 
-            <ul v-if="logs && logs.length">
-              <li v-for="log in logs" :key="log.id">
-                {{ log.timestamp }} - {{ log.action }} by
-                {{
-                  log.user_id
-                    ? `User ID: ${log.user_id}`
-                    : `Register ID: ${log.register_id}`
-                }}
-              </li>
-            </ul>
+            <div v-if="logs && logs.length" class="activity-logs">
+              <ul class="log-list">
+                <li v-for="log in logs" :key="log.id" class="log-item">
+                  <div class="log-timestamp">{{ log.timestamp }}</div>
+                  <div class="log-details">
+                    {{ log.action }} by
+                    {{
+                      log.user_id
+                        ? `User ID: ${log.user_id}`
+                        : `Register ID: ${log.register_id}`
+                    }}
+                  </div>
+                </li>
+              </ul>
+            </div>
 
-            <p v-else class="text-center">No activity logs available.</p>
+            <p v-else class="text-center text-muted">
+              No activity logs available.
+            </p>
           </div>
         </div>
       </v-container>
@@ -56,3 +63,49 @@ onMounted(fetchActivityLogs);
 // Provide logs to child components
 provide("logs", logs);
 </script>
+
+<style scoped>
+.activity-logs {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+}
+
+.log-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.log-item {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.log-item:last-child {
+  border-bottom: none;
+}
+
+.log-timestamp {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.log-details {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.text-primary {
+  color: #1976d2;
+}
+
+.text-muted {
+  color: #999;
+}
+</style>
