@@ -7,12 +7,13 @@
     }"
   >
     <div
-      class="d-flex justify-content-center align-items-center flex-column position-fixed top-5"
+      class="d-flex justify-content-center align-items-left flex-column position-fixed top-5"
       style="height: 60vh"
     >
       >
       <!-- First Link (Dashboard) -->
-      <div class="mt-10 position-relative lefts">
+      <v-divider></v-divider>
+      <div class="mt-10 position-relative bot">
         <v-icon class="mb-3">mdi-view-dashboard</v-icon>
         <router-link
           to="/Admin"
@@ -30,7 +31,7 @@
 
       <!-- Second Link (View As Client) -->
       <div class="position-relative bot">
-        <i class="mb-3 fa-solid fa-user fa-lg"></i>
+        <v-icon class="mb-3">mdi-account-arrow-up</v-icon>
         <router-link
           to="/Home"
           class="btn wes fw-bold mt-1"
@@ -45,6 +46,7 @@
         </router-link>
       </div>
 
+      <!-- Third Link (View As Client) -->
       <div class="position-relative bot">
         <v-icon class="mb-5">mdi mdi-car-clock</v-icon>
         <router-link
@@ -61,7 +63,7 @@
         </router-link>
       </div>
 
-      <!-- Third Link (Admin members) -->
+      <!-- Fourth Link (Admin members) -->
       <div class="position-relative bot">
         <v-icon class="mb-5">mdi-account-cog</v-icon>
         <router-link
@@ -78,7 +80,7 @@
         </router-link>
       </div>
 
-      <!-- Fourth Link (Client members) -->
+      <!-- Fifth Link (Client members) -->
       <div class="position-relative bot">
         <v-icon class="mb-4">mdi-account-group</v-icon>
 
@@ -96,9 +98,9 @@
         </router-link>
       </div>
 
-      <!-- Fifth Link (Unpaid Cars) -->
+      <!-- Sixth Link (Unpaid Cars) -->
       <div class="position-relative bot">
-        <v-icon class="lefts2 mb-5">mdi-alert-circle</v-icon>
+        <v-icon class="mb-5">mdi-alert-circle</v-icon>
         <router-link
           to="/NotPaid"
           class="btn wes fw-bold mt-1"
@@ -113,9 +115,9 @@
         </router-link>
       </div>
 
-      <!-- Sixth Link (Exceeded deadline) -->
+      <!-- Seventh Link (Exceeded deadline) -->
       <div class="position-relative bot">
-        <v-icon>mdi-calendar-clock</v-icon>
+        <v-icon class="mb-5">mdi-calendar-clock</v-icon>
         <router-link
           to="/Exceed"
           class="btn wes fw-bold mt-1"
@@ -126,11 +128,12 @@
           }"
         >
           <p class="mt-4 fw-bold fst">Exceeded</p>
+          <v-divider></v-divider>
         </router-link>
       </div>
-      <!-- Seventh Link (Exceeded deadline) -->
+      <!-- Eighth Link (Exceeded deadline) -->
       <div class="position-relative bot">
-        <v-icon>mdi-list-box-outline</v-icon>
+        <v-icon class="mb-5">mdi-list-box-outline</v-icon>
         <router-link
           to="/ActivityLogs"
           class="btn wes fw-bold mt-1"
@@ -141,6 +144,7 @@
           }"
         >
           <p class="mt-4 fw-bold fst">Activity Logs</p>
+          <v-divider></v-divider>
         </router-link>
       </div>
 
